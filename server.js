@@ -1,14 +1,12 @@
-var express = require( 'express' ),
-	app = express(),
-	commander = require('commander'),
-	server, serverConfig,
-	config = require('./defaults.js');
-
 require('rconsole');
 
-app.get( '/', function( req, res ){
-  res.send( "Fundraising Dashboard Y'all" );
-});
+var express 	= require( 'express' ),
+	app 		= express(),
+	commander 	= require( 'commander' ),
+	config 		= require( './defaults.js' ),
+	routes		= require( './routes' ),
+	server,
+	serverConfig;
 
 commander
 	.version('0.0.1')
@@ -29,7 +27,26 @@ if (!serverConfig) {
 	console.err("Server cannot listen on '%s', invalid format.", config.listen)
 	process.exit(1);
 }
+
+app.configure(function(){
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
+  app.set('view options', { pretty: true });
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
+});
+
+
+//Routes
+
+app.get('/', routes.index);
+app.get('/library', routes.library);
+app.get('/tests', routes.tests);
+
+var port = config.port;
+
 server = app.listen( serverConfig[3], serverConfig[2], function() {
 	console.log( 'listening on port %d', server.address().port );
 });
-
