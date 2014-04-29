@@ -1,7 +1,7 @@
 var express = require( 'express' ),
 	app = express(),
 	commander = require('commander'),
-	server,
+	server, serverConfig,
 	config = require('./defaults.js');
 
 require('rconsole');
@@ -20,11 +20,16 @@ try {
 		config = require(commander.config)(config);
 	}
 } catch(err) {
-	console.log("Could not open configuration file %s! %s", commander.config, err);
+	console.err("Could not open configuration file %s! %s", commander.config, err);
+	process.exit(1);
 }
 
-server = app.listen( config.port, function() {
+serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec(config.listen);
+if (!serverConfig) {
+	console.err("Server cannot listen on '%s', invalid format.", config.listen)
+	process.exit(1);
+}
+server = app.listen( serverConfig[3], serverConfig[2], function() {
 	console.log( 'listening on port %d', server.address().port );
 });
 
-//require commander, rconsole
