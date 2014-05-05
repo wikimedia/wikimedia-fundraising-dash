@@ -24,18 +24,18 @@ try {
 
 serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec(config.listen);
 if (!serverConfig) {
-	console.err("Server cannot listen on '%s', invalid format.", config.listen)
+	console.err("Server cannot listen on '%s', invalid format.", config.listen);
 	process.exit(1);
 }
 
 app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.set('view options', { pretty: true });
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
+  app.set( 'views', __dirname + '/views' );
+  app.set( 'view engine', 'jade' );
+  app.set( 'view options', { pretty: true } );
+  app.use( express.bodyParser() );
+  app.use( express.methodOverride() );
+  app.use( app.router );
+  app.use( express.static(__dirname + '/public') );
 });
 
 

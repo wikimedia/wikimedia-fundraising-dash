@@ -7,18 +7,14 @@
 	optimize: "none",
 
 	paths: {
-		"jquery": "require-jquery",
+		"jquery": "jquery-1.11.1",
 		"underscore": "libs/underscore",
 		"backbone": "libs/backbone"
 	},
 
 	modules: [
 		{
-			name: "require-jquery"
-		},
-		{
-			name: "main",
-			exclude: ["jquery"]
+			name: "jquery-1.11.1"
 		}
 	]
 })
