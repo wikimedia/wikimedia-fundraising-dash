@@ -1,9 +1,9 @@
 define([
-  'jquery', 
-  'backbone', 
-  'underscore', 
-  'views/view'], 
-function($, Backbone, _, mainView){
+  'jquery',
+  'underscore',
+  'backbone',
+  'views/view'],
+function($, _, Backbone, mainView){
   var Router = Backbone.Router.extend({
     initialize: function(){
       this.mainView = mainView;
@@ -16,6 +16,6 @@ function($, Backbone, _, mainView){
       this.mainView.render();
     }
   });
-  
+
   return Router;
 });

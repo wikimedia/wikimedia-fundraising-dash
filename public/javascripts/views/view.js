@@ -1,10 +1,10 @@
 define([
-    'jquery', 
+    'jquery',
+    'underscore',
     'backbone',
-    'underscore', 
     'models/model',
-    'text!templates/main.html'], 
-function($, Backbone, _, model, template){
+    'text!templates/main.html'],
+function($, _, Backbone, model, template){
   var View = Backbone.View.extend({
     el: 'body',
     initialize: function(){
@@ -17,6 +17,6 @@ function($, Backbone, _, model, template){
       $(this.el).append( this.template );
     }
   });
-  
+
   return new View();
 });
