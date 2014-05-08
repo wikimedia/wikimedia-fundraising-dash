@@ -1,5 +1,16 @@
-script(data-main="javascripts/app", src='javascripts/require.js')
+link(rel="stylesheet", type="text/css", href="./javascripts/vendor/bootstrap/dist/css/bootstrap.css")
+link(rel="stylesheet", type="text/css", href="./css/style.css")
+script(data-main="main", src='./javascripts/vendor/requirejs/require.js')
 
-h1 Fundraising Dash Y'all
-h2 It's cool
-p You're gonna love it
+
+- var navclasses = ['navbar', 'navbar-fixed-top']
+nav#mainNav(class=navclasses)
+	span.pull-left
+		h2.titlebrand Dash
+	ul.pull-right
+		.btn-group
+			button(class=['btn', 'btn-default']) Library
+			button(class=['btn', 'btn-default']) Login
+.container-fluid
+	.row-fluid
+		.col-md-12

@@ -9,3 +9,7 @@ exports.library = function(req, res){
 exports.tests = function(req, res){
   res.render('tests', { title: 'Tests' });
 };
+
+exports.other = function(req, res){
+  res.render('other', { title: 'Tests' });
+};

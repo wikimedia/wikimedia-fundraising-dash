@@ -1,8 +1,8 @@
 "use strict";
 require.config({
     paths: {
-        'QUnit': 'libs/qunit',
-        'text': 'libs/text'
+        'QUnit': 'vendor/qunit/qunit/qunit',
+        'text': 'vendor/requirejs-text/text'
     },
     shim: {
        'QUnit': {

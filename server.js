@@ -44,6 +44,7 @@ app.configure(function(){
 app.get('/', routes.index);
 app.get('/library', routes.library);
 app.get('/tests', routes.tests);
+app.get('/other', routes.other);
 
 var port = config.port;
 
