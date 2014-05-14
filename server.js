@@ -29,7 +29,7 @@ if (!serverConfig) {
 }
 
 app.configure(function(){
-  app.set( 'views', __dirname + '/public/views' );
+  app.set( 'views', __dirname + '/public/views/templates' );
   app.set( 'view engine', 'jade' );
   app.set( 'view options', { pretty: true } );
   app.use( express.bodyParser() );

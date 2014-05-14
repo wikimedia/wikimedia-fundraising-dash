@@ -5,6 +5,7 @@ define([
     'models/model',
     'text!templates/main.html'],
 function($, _, Backbone, model, template){
+
   var View = Backbone.View.extend({
     el: 'body',
     initialize: function(){
@@ -19,4 +20,5 @@ function($, _, Backbone, model, template){
   });
 
   return new View();
+
 });
