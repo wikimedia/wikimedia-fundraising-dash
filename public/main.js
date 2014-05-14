@@ -1,12 +1,12 @@
 require.config({
     'paths': {
-        'bootstrap': 'javascripts/vendor/bootstrap/dist/css/bootstrap.css',
-        "style": "css/style.css",
-        'QUnit': 'javascripts/vendor/qunit/qunit/qunit',
-        'jquery': 'javascripts/vendor/jquery/dist/jquery',
+        'bootstrap':  'javascripts/vendor/bootstrap/dist/css/bootstrap.css',
+        'style':      'css/style.css',
+        'QUnit':      'javascripts/vendor/qunit/qunit/qunit',
+        'jquery':     'javascripts/vendor/jquery/dist/jquery',
         'underscore': 'javascripts/vendor/underscore/underscore',
-        'backbone': 'javascripts/vendor/backbone/backbone',
-        'text': 'javascripts/vendor/requirejs-text/text'
+        'backbone':   'javascripts/vendor/backbone/backbone',
+        'text':       'javascripts/vendor/requirejs-text/text'
     },
     shim: {
        'QUnit': {
@@ -35,20 +35,14 @@ require.config({
 });
 
 require([
-    'underscore',
     'backbone',
-    'text',
-    'text!bootstrap',
-    'text!css/style.css',
-    'views/index.js',
-    'routers/home'
+    'views/app',
+    'routers/routes'
     ],
-    function( _, Backbone, bootstrap, text, style, App ){
-        App.init();
-        // run the tests.
-        base_test.run();
-        maps_test.run();
-        // start QUnit.
-        QUnit.load();
-        QUnit.start();
+    function( Backbone, AppView, MainRouter ){
+
+        new MainRouter();
+        Backbone.history.start();
+        new AppView();
+
 });

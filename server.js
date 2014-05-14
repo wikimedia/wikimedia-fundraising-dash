@@ -4,7 +4,7 @@ var express 	= require( 'express' ),
 	app 		= express(),
 	commander 	= require( 'commander' ),
 	config 		= require( './defaults.js' ),
-	routes		= require( './routes' ),
+	//routes		= require( './routes' ),
 	server,
 	serverConfig;
 
@@ -29,7 +29,7 @@ if (!serverConfig) {
 }
 
 app.configure(function(){
-  app.set( 'views', __dirname + '/views' );
+  app.set( 'views', __dirname + '/public/views' );
   app.set( 'view engine', 'jade' );
   app.set( 'view options', { pretty: true } );
   app.use( express.bodyParser() );
@@ -38,13 +38,10 @@ app.configure(function(){
   app.use( express.static(__dirname + '/public') );
 });
 
-
-//Routes
-
-app.get('/', routes.index);
-app.get('/library', routes.library);
-app.get('/tests', routes.tests);
-app.get('/other', routes.other);
+app.get('/', function(req, res) { res.render('index'); });
+app.get('/tests', function(req, res) { res.render('tests'); });
+app.get('/library', function(req, res) { res.render('library'); });
+app.get('/config', function(req, res) { res.render('config'); });
 
 var port = config.port;
 
