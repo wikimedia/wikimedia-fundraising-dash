@@ -1,5 +1,52 @@
+body {
+	background-color: #f5f5f5;
+}
+
 #mainNav {
-    background-color: #555;
+    background-color: #5e668a;
     color: #f5f5f5;
     padding: 1em;
 }
+
+#mainNav ul{
+	list-style-type: none;
+}
+
+#appContent {
+	margin: 120px auto;
+	width: 90%;
+}
+
+#welcomeSection {
+	text-align: center;
+}
+
+/* WIDGET BASE STYLINGS */
+
+.widgetbox {
+	padding: 1em;
+	box-shadow: 1px 1px 2px 1px #ccc;
+	background-color: #fff;
+}
+
+.widgetbox-title {
+	background-color: #5e668a;
+    color: #f5f5f5;
+    padding: 1em;
+}
+
+.widgetbox_content {
+	overflow: hidden;
+}
+
+.widgetbox-half {
+	width: 45%;
+}
+
+.widgetbox-third {
+	width: 30%;
+}
+
+
+
+

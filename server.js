@@ -1,10 +1,10 @@
 require('rconsole');
 
-var express 	= require( 'express' ),
-	app 		= express(),
-	commander 	= require( 'commander' ),
+var express		= require( 'express' ),
+	app			= express(),
+	commander	= require( 'commander' ),
 	config 		= require( './defaults.js' ),
-	//routes		= require( './routes' ),
+	routes		= require( './public/routers' ),
 	server,
 	serverConfig;
 
@@ -34,14 +34,11 @@ app.configure(function(){
   app.set( 'view options', { pretty: true } );
   app.use( express.bodyParser() );
   app.use( express.methodOverride() );
-  app.use( app.router );
   app.use( express.static(__dirname + '/public') );
+  app.use( function(req, res) {
+	res.render('index');
+  } );
 });
-
-app.get('/', function(req, res) { res.render('index'); });
-app.get('/tests', function(req, res) { res.render('tests'); });
-app.get('/library', function(req, res) { res.render('library'); });
-app.get('/config', function(req, res) { res.render('config'); });
 
 var port = config.port;
 

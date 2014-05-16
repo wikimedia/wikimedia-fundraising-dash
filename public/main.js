@@ -6,7 +6,8 @@ require.config({
         'jquery':     'javascripts/vendor/jquery/dist/jquery',
         'underscore': 'javascripts/vendor/underscore/underscore',
         'backbone':   'javascripts/vendor/backbone/backbone',
-        'text':       'javascripts/vendor/requirejs-text/text'
+        'text':       'javascripts/vendor/requirejs-text/text',
+        'chartjs':    'javascripts/vendor/chartjs/Chart'
     },
     shim: {
        'QUnit': {
@@ -36,13 +37,11 @@ require.config({
 
 require([
     'backbone',
-    'views/app',
-    'routers/routes'
+    'routers/approuter',
     ],
-    function( Backbone, AppView, MainRouter ){
+    function( Backbone, MainRouter ){
 
         new MainRouter();
         Backbone.history.start();
-        new AppView();
 
 });

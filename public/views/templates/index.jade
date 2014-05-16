@@ -1,16 +1,7 @@
 link(rel="stylesheet", type="text/css", href="./javascripts/vendor/bootstrap/dist/css/bootstrap.css")
 link(rel="stylesheet", type="text/css", href="./css/style.css")
 script(data-main="main", src='./javascripts/vendor/requirejs/require.js')
-
-
-- var navclasses = ['navbar', 'navbar-fixed-top']
-nav#mainNav(class=navclasses)
-	span.pull-left
-		h2.titlebrand Dash
-	ul.pull-right
-		.btn-group
-			button(class=['btn', 'btn-default']) Library
-			button(class=['btn', 'btn-default']) Login
-.container-fluid
-	.row-fluid
-		.col-md-12
+body
+	.container-fluid#dashApp
+		.row-fluid#navContainer
+		.row-fluid#appContent
