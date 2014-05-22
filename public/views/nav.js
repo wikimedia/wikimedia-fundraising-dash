@@ -13,10 +13,11 @@ define( [
           //if user is logged in, show their avatar/name
             //that code here
           //otherwise, show login button
-
+          console.log('nav events: ', this.events);
         },
 
         events: {
+            'hover .titleBrandToggle': this.toggleViewLink,
             'click #login': this.login
         },
 
@@ -29,6 +30,11 @@ define( [
         login: function(){
             console.log("what");
             alert('you need to login! There is no way to do that yet though, so, sorry.');
+        },
+
+        toggleViewLink: function() {
+            console.log('hover');
+            $('.titleBrandToggle').text('Library');
         }
 
     });

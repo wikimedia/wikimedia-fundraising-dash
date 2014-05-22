@@ -108,7 +108,7 @@ function($, _, Backbone, Colors, widgetTemplate, chartjs){
         dataSet.push({ value: row.count, color: colorArray[colorArray.length - n] });
 
         $('#DonationsByBracketLegend').append(
-          $( '<div>' ).addClass( 'row-fluid' ).append(
+          $( '<div>' ).addClass( 'row' ).append(
             $( '<div>' ).addClass( 'col-md-1' ).append(
               $( '<i>' )
                 .addClass( 'glyphicon glyphicon-stop' )
