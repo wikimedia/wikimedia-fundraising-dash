@@ -109,12 +109,12 @@ function($, _, Backbone, Colors, widgetTemplate, chartjs){
 
         $('#DonationsByBracketLegend').append(
           $( '<div>' ).addClass( 'row' ).append(
-            $( '<div>' ).addClass( 'col-md-1' ).append(
+            $( '<div>' ).addClass( 'col-xs-1 col-sm-1 col-md-1 col-lg-1' ).append(
               $( '<i>' )
                 .addClass( 'glyphicon glyphicon-stop' )
                 .css( 'color', colorArray[colorArray.length - n] )
             ),
-            $( '<div>' ).addClass( 'col-md-10' ).append(
+            $( '<div>' ).addClass( 'col-xs-10 col-sm-10 col-md-10 col-lg-10' ).append(
               $( '<p>' ).text( '$' + row.bracket_max )
             )
           )

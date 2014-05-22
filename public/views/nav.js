@@ -13,12 +13,12 @@ define( [
           //if user is logged in, show their avatar/name
             //that code here
           //otherwise, show login button
-          console.log('nav events: ', this.events);
         },
 
         events: {
             'hover .titleBrandToggle': this.toggleViewLink,
-            'click #login': this.login
+            'click #loginNavBtn': this.login,
+            'click #libraryNavBtn': this.getLibrary
         },
 
         render: function(){
@@ -28,8 +28,12 @@ define( [
         },
 
         login: function(){
-            console.log("what");
-            alert('you need to login! There is no way to do that yet though, so, sorry.');
+
+            window.alert('you need to login! There is no way to do that yet though, so, sorry.');
+        },
+
+        getLibrary: function(){
+            //tell app view to render library
         },
 
         toggleViewLink: function() {

@@ -55,11 +55,15 @@ body {
 }
 
 .widgetbox-half {
-	width: 45%;
+
 }
 
 .widgetbox-third {
-	width: 30%;
+
+}
+
+.widgetbox-twothird {
+
 }
 
 /* BOOTSTRAP OVERRIDES */
