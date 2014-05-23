@@ -13,17 +13,18 @@ define( [
           //if user is logged in, show their avatar/name
             //that code here
           //otherwise, show login button
-        },
-
-        events: {
-            'hover .titleBrandToggle': this.toggleViewLink,
+          this.events = {
+            'mouseover .titlebrandToggle': this.toggleViewLink,
+            'mouseout .titlebrandToggle': this.toggleViewLink,
             'click #loginNavBtn': this.login,
             'click #libraryNavBtn': this.getLibrary
+            };
         },
 
         render: function(){
 
             $(this.el).append(this.template);
+            return this;
 
         },
 
@@ -34,11 +35,15 @@ define( [
 
         getLibrary: function(){
             //tell app view to render library
+            //bubble to appContent.js
         },
 
         toggleViewLink: function() {
-            console.log('hover');
-            $('.titleBrandToggle').text('Library');
+            if($('.titleBrandToggle').text()==='Board'){
+                $('.titleBrandToggle').text('Library');
+            } else {
+                $('.titleBrandToggle').text('Board');
+            }
         }
 
     });

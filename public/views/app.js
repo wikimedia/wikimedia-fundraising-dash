@@ -2,10 +2,9 @@ define( [
     'jquery',
     'underscore',
     'backbone',
-    'routers/approuter',
     'views/nav',
     'views/appContent'
-], function( $, _, Backbone, router, navView, appContentView ){
+], function( $, _, Backbone, navView, appContentView ){
 
     var App = Backbone.View.extend({
 
@@ -19,6 +18,7 @@ define( [
             //this app content view takes care of which page to display:
             //the user's selected Board, or the Library (or filtered Libraries)
             this.appView = new appContentView({el: '.row-fluid #appContent'});
+
 
         },
 

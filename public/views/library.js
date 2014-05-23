@@ -2,10 +2,11 @@ define( [
     'jquery',
     'underscore',
     'backbone',
-    'routers/approuter',
+    //TODO: make the retrieval of these widgets dynamic based on user
+    //and board selected. Import collections rather than individual views.
     'views/widgetViews/DonationsByBracket',
     'text!views/templates/library.html'
-], function( $, _, Backbone, router, DonationsByBracket, libraryTemplate ){
+], function( $, _, Backbone, DonationsByBracket, libraryTemplate ){
 
     var Library = Backbone.View.extend({
 

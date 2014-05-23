@@ -3,10 +3,11 @@ define( [
 	'jquery',
 	'underscore',
 	'backbone',
-	'routers/approuter',
 	'views/library',
-	'text!views/templates/appContent'
-], function( $, _, Backbone, router, libraryView, appContent ){
+	'views/welcome',
+	'text!views/templates/appContent',
+	'utils/dispatcher'
+], function( $, _, Backbone, libraryView, welcomeView, appContent, dispatcher ){
 
 	var AppContent = Backbone.View.extend({
 
@@ -22,15 +23,15 @@ define( [
 			//if board,
 				//get default board
 			//else return a welcome message
+			//this.welcome = new welcomeView({el: '#appContent'});
 
 		},
 
 		render: function(){
 
-			$(this.el).append(this.template);
-
 			this.library.render();
 
+			$(this.el).append(this.template);
 		}
 
 	});

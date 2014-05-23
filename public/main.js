@@ -37,11 +37,11 @@ require.config({
 
 require([
     'backbone',
-    'routers/approuter',
+    'views/app'
     ],
-    function( Backbone, MainRouter ){
+    function( Backbone, App ){
 
-        new MainRouter();
-        Backbone.history.start();
+        var app = new App();
+        app.render();
 
 });

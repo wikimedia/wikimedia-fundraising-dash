@@ -16,8 +16,12 @@ body {
 }
 
 #appContent {
-	margin: 120px auto;
+	margin: 90px auto;
 	width: 90%;
+}
+
+.libraryTitle {
+	margin-bottom: .5em;
 }
 
 .titlebrand, .titlebrandToggle {
@@ -34,6 +38,7 @@ body {
 
 .titlebrandToggle:hover {
 	background-color: #fff;
+	color: #F15854;
 }
 
 /* WIDGET BASE STYLINGS */
@@ -47,6 +52,7 @@ body {
 	background-color: #5e668a;
     color: #f5f5f5;
     padding: 1em;
+    margin-bottom: 1em;
 }
 
 .widgetbox_content {
@@ -71,6 +77,16 @@ body {
 .btn {
 	border-radius: 0;
 	padding: .7em;
+}
+
+.btn-mint {
+	background-color: rgb(220,245,242);
+	color: #5e668a;
+}
+
+.btn-mint:hover {
+	background-color: rgba(220,245,242,0.9);
+	color: #000;
 }
 
 .navbar-fixed-top {
