@@ -7,7 +7,8 @@ require.config({
         'underscore': 'javascripts/vendor/underscore/underscore',
         'backbone':   'javascripts/vendor/backbone/backbone',
         'text':       'javascripts/vendor/requirejs-text/text',
-        'chartjs':    'javascripts/vendor/chartjs/Chart'
+        'chartjs':    'javascripts/vendor/chartjs/Chart',
+        'momentjs':   'javascripts/vendor/moment/moment'
     },
     shim: {
        'QUnit': {
