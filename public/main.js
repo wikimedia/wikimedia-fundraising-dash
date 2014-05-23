@@ -8,7 +8,8 @@ require.config({
         'backbone':   'javascripts/vendor/backbone/backbone',
         'text':       'javascripts/vendor/requirejs-text/text',
         'chartjs':    'javascripts/vendor/chartjs/Chart',
-        'momentjs':   'javascripts/vendor/moment/moment'
+        'momentjs':   'javascripts/vendor/moment/moment',
+        'handlebars': 'javascripts/vendor/handlebars/handlebars'
     },
     shim: {
        'QUnit': {
@@ -32,15 +33,19 @@ require.config({
             deps: [
                 'jquery'
             ]
+        },
+        'handlebars': {
+            exports: 'Handlebars'
         }
     }
 });
 
 require([
     'backbone',
-    'views/app'
+    'views/app',
+    'handlebars'
     ],
-    function( Backbone, App ){
+    function( Backbone, App, Handlebars ){
 
         var app = new App();
         app.render();

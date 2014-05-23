@@ -6,28 +6,30 @@ define([
 	'backbone',
 	'utils/colors',
 	'text!views/templates/date.html',
+	'handlebars',
 	'momentjs'
 ],
-function($, _, Backbone, Colors, widgetTemplate){
+function($, _, Backbone, Colors, widgetTemplate, Handlebars){
 
 	var DateView = Backbone.View.extend({
 
 		initialize: function(){
 
 			this.el = '#widgetSection';
-			this.template = _.template(widgetTemplate);
+			this.template = Handlebars.compile(widgetTemplate);
+			this.context = {today: this.today};
+			this.html = this.template(this.context);
 
 		},
 
 		render: function(){
 
-			console.log(this.today());
-			$(this.el).append( this.template );
+			$(this.el).append( this.html );
 
 		},
 
 		today: function(){
-			return "Today is " + moment().format('MMMM Do, YYYY');
+			return moment().format('MMMM Do, YYYY');
 		}
 	});
 
