@@ -35,10 +35,23 @@ app.configure(function(){
   app.use( express.bodyParser() );
   app.use( express.methodOverride() );
   app.use( express.static(__dirname + '/public') );
-  app.use( function(req, res) {
-	res.render('index');
-  } );
+ //  app.use( function(req, res) {
+	// res.render('index');
+ //  } );
 });
+
+app.get('/', function( req, res ){
+	res.render('index');
+});
+
+app.get('/admin', function( req, res ){
+	res.render('admin');
+});
+
+app.get('/tests', function( req, res){
+	res.render('tests');
+});
+
 
 var port = config.port;
 

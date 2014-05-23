@@ -5,7 +5,7 @@ define( [
 	'backbone',
 	'views/library',
 	'views/welcome',
-	'text!views/templates/appContent',
+	'text!views/templates/appContent.html',
 	'utils/dispatcher'
 ], function( $, _, Backbone, libraryView, welcomeView, appContent, dispatcher ){
 

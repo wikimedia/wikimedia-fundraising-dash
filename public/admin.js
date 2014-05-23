@@ -45,12 +45,12 @@ require.config({
 
 require([
     'backbone',
-    'views/app',
+    'views/admin',
     'handlebars'
     ],
-    function( Backbone, App, Handlebars ){
+    function( Backbone, Admin, Handlebars ){
 
-        var app = new App();
-        app.render();
+        var admin = new Admin();
+        admin.render();
 
 });

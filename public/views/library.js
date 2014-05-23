@@ -24,7 +24,8 @@ define( [
             //TODO: attach all widgets for this view
             $(this.el).append(this.template);
             this.donationsByBracket.render();
-            this.date.render();
+            //TODO: render this widget when it is more interesting :)
+            //this.date.render();
 
         }
 

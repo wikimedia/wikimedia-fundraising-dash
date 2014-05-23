@@ -2,8 +2,10 @@ define( [
     'jquery',
     'underscore',
     'backbone',
-    'text!views/templates/mainNav.html'
-], function( $, _, Backbone, navTemplate ){
+    'handlebars',
+    'text!views/templates/mainNav.html',
+    'momentjs'
+], function( $, _, Backbone, Handlebars, navTemplate, momentjs ){
 
     var Nav = Backbone.View.extend({
 
@@ -19,11 +21,15 @@ define( [
             'click #loginNavBtn': this.login,
             'click #libraryNavBtn': this.getLibrary
             };
+
+          this.context = { thisMoment: moment().format('MMMM Do, YYYY')};
+          this.template = Handlebars.compile(navTemplate);
+          this.html = this.template(this.context);
         },
 
         render: function(){
 
-            $(this.el).append(this.template);
+            $(this.el).append(this.html);
             return this;
 
         },
