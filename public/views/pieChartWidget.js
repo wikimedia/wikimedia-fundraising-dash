@@ -97,8 +97,6 @@ function($, _, Backbone, Pie, Colors, template, chartjs){
           dataSet = [],
           colorArray = this.chart.colors;
 
-      console.log('colorArray: ', colorArray);
-
       this.getChartData();
 
       this.chart.data.forEach( function( row, i ){

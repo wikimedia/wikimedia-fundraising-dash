@@ -24,7 +24,7 @@ function($, _, Backbone, Colors, widgetTemplate, chartjs){
     },
 
     render: function(){
-        console.log(this.el);
+
         $(this.el).append( this.template );
         this.renderChart();
 
@@ -96,8 +96,6 @@ function($, _, Backbone, Colors, widgetTemplate, chartjs){
       var context = $('#DonationsByBracket').get(0).getContext('2d'),
           dataSet = [],
           colorArray = this.chart.colors;
-
-      console.log('colorArray: ', colorArray);
 
       this.getChartData();
 

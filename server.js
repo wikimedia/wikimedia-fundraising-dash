@@ -4,7 +4,6 @@ var express		= require( 'express' ),
 	app			= express(),
 	commander	= require( 'commander' ),
 	config 		= require( './defaults.js' ),
-	routes		= require( './public/routers' ),
 	server,
 	serverConfig;
 
@@ -35,9 +34,6 @@ app.configure(function(){
   app.use( express.bodyParser() );
   app.use( express.methodOverride() );
   app.use( express.static(__dirname + '/public') );
- //  app.use( function(req, res) {
-	// res.render('index');
- //  } );
 });
 
 app.get('/', function( req, res ){
@@ -51,7 +47,6 @@ app.get('/admin', function( req, res ){
 app.get('/tests', function( req, res){
 	res.render('tests');
 });
-
 
 var port = config.port;
 
