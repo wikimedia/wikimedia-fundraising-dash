@@ -4,12 +4,14 @@ define([
 	'backbone',
 	'utils/dispatcher',
 	'utils/colors',
-	'text!views/templates/date.html',
+	'text!views/templates/widgets/dailyBreakdowns.html',
 	'handlebars',
-	'jquery-ui',
+	'jquery.ui.slider',
+	'flot',
+	'd3',
 	'momentjs'
 ],
-function($, _, Backbone, Dispatcher, Colors, widgetTemplate, Handlebars, jquery_ui){
+function($, _, Backbone, Dispatcher, Colors, widgetTemplate, Handlebars, slider, d3, flot){
 
 	var DailyBreakdownsView = Backbone.View.extend({
 
@@ -19,6 +21,9 @@ function($, _, Backbone, Dispatcher, Colors, widgetTemplate, Handlebars, jquery_
 					'2012-13-fiscal-donationdata-medium-breakdown.json',
 					'2012-13-fiscal-donationdata-method-breakdown.json'
 				];
+
+				this.el = '#widgetSection';
+				this.template = _.template( widgetTemplate );
 
 			},
 
@@ -44,6 +49,7 @@ function($, _, Backbone, Dispatcher, Colors, widgetTemplate, Handlebars, jquery_
 
 			render: function(){
 
+				$(this.el).append( this.template );
 				this.getData();
 
 			},
@@ -62,10 +68,10 @@ function($, _, Backbone, Dispatcher, Colors, widgetTemplate, Handlebars, jquery_
 						var mediums = {};
 
 						//break out into dates
-						_.each(this.mediumData, function(row){
-							if(!mediums[row.date]){
-								mediums[row.date] = [ row ];
-							}else{
+						_.each( this.mediumData, function( row ) {
+							if( !mediums[row.date] ){
+								mediums[row.date] = [row];
+							} else {
 								mediums[row.date].push(row);
 							}
 						});

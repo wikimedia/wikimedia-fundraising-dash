@@ -4,6 +4,7 @@ require.config({
         'style':            'css/style.css',
         'QUnit':            'javascripts/vendor/qunit/qunit/qunit',
         'jquery':           'javascripts/vendor/jquery/dist/jquery',
+        'd3':               'javascripts/vendor/d3/d3',
         'underscore':       'javascripts/vendor/underscore/underscore',
         'backbone':         'javascripts/vendor/backbone/backbone',
         'text':             'javascripts/vendor/requirejs-text/text',
@@ -13,7 +14,12 @@ require.config({
         'jquery.ui.core':   'javascripts/vendor/jquery.ui/ui/jquery.ui.core',
         'jquery.ui.widget': 'javascripts/vendor/jquery.ui/ui/jquery.ui.widget',
         'jquery.ui.mouse':  'javascripts/vendor/jquery.ui/ui/jquery.ui.mouse',
-        'jquery-ui':        'javascripts/vendor/jquery.ui/ui/jquery.ui.slider',
+        'jquery.ui.slider': 'javascripts/vendor/jquery.ui/ui/jquery.ui.slider',
+        'flot':             'javascripts/vendor/flot/jquery.flot',
+        'flot.pie':         'javascripts/vendor/flot/jquery.flot.pie',
+        'flot.stack':       'javascripts/vendor/flot/jquery.flot.stack',
+        'flot.resize':      'javascripts/vendor/flot/jquery.flot.resize',
+        'flot.time':        'javascripts/vendor/flot/jquery.flot.time'
     },
     shim: {
        'QUnit': {
@@ -44,12 +50,20 @@ require.config({
         'momentjs': {
             exports: 'moment'
         },
-        'jquery-ui': {
+        'jquery.ui.slider': {
             deps: [
                 'jquery',
                 'jquery.ui.core',
                 'jquery.ui.mouse',
                 'jquery.ui.widget'
+            ]
+        },
+        'flot': {
+            deps: [
+                'flot.pie',
+                'flot.stack',
+                'flot.resize',
+                'flot.time'
             ]
         }
     }

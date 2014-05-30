@@ -15,8 +15,8 @@ define( [
         initialize: function(){
 
             this.template = _.template( libraryTemplate );
-            this.donationsByBracket = new DonationsByBracket({el: '#widgetSection'});
             this.dailyBreakdowns = new DailyBreakdowns({el: '#widgetSection'});
+            this.donationsByBracket = new DonationsByBracket({el: '#widgetSection'});
             this.date = new DateTime();
 
         },
@@ -25,8 +25,8 @@ define( [
 
             //TODO: attach all widgets for this view
             $(this.el).append(this.template);
-            this.donationsByBracket.render();
             this.dailyBreakdowns.render();
+            this.donationsByBracket.render();
             //TODO: render this widget when it is more interesting :)
                 //this.date.render();
 
