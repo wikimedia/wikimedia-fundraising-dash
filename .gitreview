@@ -2,5 +2,5 @@
 host=gerrit.wikimedia.org
 port=29418
 project=wikimedia/fundraising/dash.git
-defaultbranch=StyleTemplating
+defaultbranch=master
 defaultrebase=0
