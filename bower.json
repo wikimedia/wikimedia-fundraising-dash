@@ -1,0 +1,28 @@
+{
+  "name": "dash",
+  "version": "0.0.0",
+  "authors": [
+    "Sherah Smith <ssmith@wikimedia.org>"
+  ],
+  "description": "A Data Visualization Dashboard for Wikimedia Foundation Fundraising",
+  "main": "server.js",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "public/javascripts/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "backbone": "~1.1.2",
+    "jquery": "~2.1.1",
+    "qunit": "~1.14.0",
+    "requirejs-text": "~2.0.12",
+    "requirejs": "~2.1.11",
+    "lato": "~0.2.0"
+  }
+}
