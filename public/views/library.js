@@ -4,19 +4,17 @@ define( [
     'backbone',
     //TODO: make the retrieval of these widgets dynamic based on user
     //and board selected. Import collections rather than individual views.
-    'views/widgetViews/DonationsByBracket',
-    'views/widgetViews/DailyBreakdowns',
+    'views/welcome.js',
     'views/date',
     'text!views/templates/library.html'
-], function( $, _, Backbone, DonationsByBracket, DailyBreakdowns, DateTime, libraryTemplate ){
+], function( $, _, Backbone, welcomeView, DateTime, libraryTemplate ){
 
     var Library = Backbone.View.extend({
 
         initialize: function(){
 
             this.template = _.template( libraryTemplate );
-            this.dailyBreakdowns = new DailyBreakdowns({el: '#widgetSection'});
-            this.donationsByBracket = new DonationsByBracket({el: '#widgetSection'});
+            this.welcomeMessage = new welcomeView({el: '#widgetSection'});
             this.date = new DateTime();
 
         },
@@ -25,8 +23,7 @@ define( [
 
             //TODO: attach all widgets for this view
             $(this.el).append(this.template);
-            this.dailyBreakdowns.render();
-            this.donationsByBracket.render();
+            this.welcomeMessage.render();
             //TODO: render this widget when it is more interesting :)
                 //this.date.render();
 

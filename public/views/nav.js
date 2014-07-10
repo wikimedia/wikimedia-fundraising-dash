@@ -35,13 +35,13 @@ define( [
         },
 
         login: function(){
-
             window.alert('you need to login! There is no way to do that yet though, so, sorry.');
         },
 
         getLibrary: function(){
             //tell app view to render library
             //bubble to appContent.js
+            window.alert("this link will take you to the library from your current Board view. but it hasn't been built yet so...sorry!");
         },
 
         toggleViewLink: function() {

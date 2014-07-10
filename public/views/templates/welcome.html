@@ -1,9 +1,123 @@
+<div class="row-fluid" id="welcomeTitle">
+	<h1>Welcome to the internal Dashboard app for Fundraising! It's cool.</h1>
+	<h3>Still under development, widgets to come soon! In the meantime, here's a bunch of technical info.</h3>
+</div>
 <div class="col-md-12" id="welcomeSection">
 	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
+		<div class="col-md-10 col-md-offset-1">
+
 			<div class="row-fluid">
-				<h1>Welcome to the Fundraising Dash App!</h1>
-				<p>Where all your Fundraising Dash App dreams come true right before your very eyes!</p>
+				<p class="text-center">Visit the repo <a href="https://gerrit.wikimedia.org/r/#/admin/projects/wikimedia/fundraising/dash,branches">on Gerrit.</a></p>
+
+				<p class="text-center"><a href="http://slides.com/sherahsmith/dash">Here's the demo slide deck</a> - but this readme is more complete.</p>
+
+				<iframe src="//slides.com/sherahsmith/dash/embed?style=light" width="800" height="600" scrolling="no" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+				<h1>Prerequisites</h1>
+
+				<p>To play with Dash (as a developer), you will need:</p>
+
+					<ul>
+						<li>Node v. 0.8 (I recommend using <a href="https://github.com/creationix/nvm">nvm</a> to manage node versions if you already have another version on your machine.)</li>
+						<li><a href="https://www.npmjs.org/">npm</a> to manage backend packages and because you need Bower.</li>
+						<li><a href="http://bower.io/">Bower</a>, a package manager specifically optimized for front-end packages.</li>
+					</ul>
+
+				<p>To use the live version with actual Fundraising data, you will need special permissions. Please contact ssmith@wikimedia.org.</p>
+
+				<h1>Framework / Libraries</h1>
+
+				<p>Dash is a <a href="http://nodejs.org/">NodeJS</a>/<a href="http://expressjs.com/">Express</a> app.
+				The front end uses <a href="http://requirejs.org/">RequireJS</a> for optimal module loading, with <a href="http://backbonejs.org/">BackboneJS</a> for MVC. The front-end templating is handled by <a href="http://handlebarsjs.com/">Handlebars</a>.
+				For now, <a href="http://getbootstrap.com/">Boostrap</a> provides the main grid structure and basic styling. This is so that collaboration is easier, but may be replaced with something better and/or custom in the future.</p>
+
+				<p>Various charting and mapping libraries, such as d3, ChartJS, and flot, are being used with Dash. More will be added as needs grow. Dash is happy to include all the cool kids on the block.</p>
+
+				<p>All front-end Javascript is managed and maintained with <a href="http://bower.io/">Bower</a>. In this project, Bower installs all such packages into the public/javascripts/vendor directory. To upgrade any front-end library (listed below), simply run <code>bower update</code>.</p>
+
+				<h3>All libraries Dash relies upon:</h3>
+
+				<h4>Backend</h4>
+
+				<ul>
+					<li><a href="http://nodejs.org/">NodeJS</a></li>
+					<li><a href="http://expressjs.com/">Express</a></li>
+					<li><a href="http://jade-lang.com/">Jade</a></li>
+					<li><a href="https://github.com/visionmedia/commander.js/">Commander</a></li>
+					<li><a href="https://github.com/tblobaum/rconsole">rConsole</a></li>
+				</ul>
+
+				<h4>Front end</h4>
+
+				<ul>
+					<li><a href="http://backbonejs.org/">Backbone</a></li>
+					<li><a href="http://getbootstrap.com/">Bootstrap</a></li>
+					<li><a href="http://www.chartjs.org/">ChartJS</a></li>
+					<li><a href="http://d3js.org/">D3</a></li>
+					<li><a href="http://www.flotcharts.org/">Flot</a></li>
+					<li><a href="http://handlebarsjs.com/">Handlebars</a></li>
+					<li><a href="http://jquery.com/">jQuery</a></li>
+					<li><a href="http://jqueryui.com/">jQueryUI</a></li>
+					<li><a href="http://momentjs.com/">MomentJS</a></li>
+					<li><a href="http://qunitjs.com/">qUnit</a></li>
+					<li><a href="http://requirejs.org/">RequireJS</a></li>
+					<li><a href="http://underscorejs.org/">Underscore</a></li>
+				</ul>
+
+				<h1>App Structure</h1>
+
+				<p>Dash is organized as follows:</p>
+
+				<ul>
+					<li>collections: this is where database tables will be reflected/held</li>
+					<li>css: main css folder</li>
+					<li>javascripts:
+					<ul><li>tests: main test javascripts for qUnit</li>
+					<li>vendor: all vendor javascripts, managed with Bower</li>
+					<li>test files (right now to test testing; these will go away once real tests start happening)</li></ul></li>
+					<li>models: boilerplate models folder</li>
+					<li>routers: boilerplate routers folder</li>
+					<li>utils: app-wide utility functions that can be used by multiple views</li>
+					<li>views: there are two types of viewing-type files; "templates" and "views".
+					<ul><li>templates: the actual html that views are rendered as.</li>
+					<li>widgets: widget-specific html file bucket.</li>
+					<li>everything else here is either a jade template (used by express/node from the backend), or an html file/partial.</li>
+					<li>widgetViews: each individual widget in the Dash is represented here as a widget View object file.</li>
+					<li>everything else here is a Javascript file containing non-widget-related View objects.</li></ul></li>
+					<li>admin.js: configuration and instantiation of admin area (under development).</li>
+					<li>main.js: configuration and instantiation of app container.</li>
+					<li>defaults.js: server defaults.</li>
+					<li>package.json: specifies which server packages npm needs to manage for the project.</li>
+					<li>server.js: boot file.</li>
+				</ul>
+
+				<h2>Phase 1 (the current state of things!):</h2>
+
+				<p>There is one main view: the widget Library view. (This is because there are &lt; a lot of widgets in existence at the moment.)</p>
+
+				<p>There is also a "secret" admin view, for admins. But this hasn't been built out yet.</p>
+
+				<p>The Library view contains the subviews of all available widgets. Each subview manages its own data and events.</p>
+
+				<h1>Next Steps</h1>
+
+				<ul>
+					<li>"Build new board," Default Board, All Boards views introduced.</li>
+					<li>My Boards, general sharing with Tags and Favorites introduced.</li>
+					<li>Eternal bliss and happiness</li>
+				</ul>
+
+				<h1>Testing</h1>
+
+				<p>Dash is set up to use qUnit for testing. More info when tests are actually written and running.</p>
+
+				<h1>Prototypes</h1>
+
+				<p>You can see the app prototypes as well as individual widget prototypes in <code>public/collections/prototypes</code>.</p>
+
+				<h1 class="text-center">More to come!</h1>
+
+
 			</div>
 		</div>
 	</div>
