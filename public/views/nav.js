@@ -18,8 +18,12 @@ define( [
           this.events = {
             'mouseover .titlebrandToggle': this.toggleViewLink,
             'mouseout .titlebrandToggle': this.toggleViewLink,
-            'click #loginNavBtn': this.login,
-            'click #libraryNavBtn': this.getLibrary
+            'click #collapseNavMenu': this.collapseNavMenu,
+            'click #showNavMenu': this.showNavMenu,
+            'click #navDefaultBoard': this.getDefaultBoard,
+            'click #navProfileSettings': this.getProfileSettings,
+            'click #navFavorites': this.getFavorites,
+            'click #navLibrary': this.getLibrary
             };
 
           this.context = { thisMoment: moment().format('MMMM Do, YYYY')};
@@ -34,14 +38,35 @@ define( [
 
         },
 
-        login: function(){
+        collapseNavMenu: function(){
+            //make the nav menu fold out of view.
+            $('#navContainer .navWrapper').addClass('hidden');
+            $('#showNavMenu').css('display', 'inline');
+            $('#dashApp').css('padding', '0');
+        },
 
-            window.alert('you need to login! There is no way to do that yet though, so, sorry.');
+        showNavMenu: function() {
+            window.setTimeout(function(){
+                $('#navContainer .navWrapper').removeClass('hidden').addClass('show');
+            }, 200);
+        },
+
+        getDefaultBoard: function(){
+            window.alert("This takes you to your default board.");
+        },
+
+        getProfileSettings: function(){
+            window.alert("Goes to Profile Settings to change or view settings.");
+        },
+
+        getFavorites: function(){
+            window.alert("Takes you to see your favorited stuff.");
         },
 
         getLibrary: function(){
             //tell app view to render library
             //bubble to appContent.js
+            window.alert("this link will take you to the library from your current Board view. but it hasn't been built yet so...sorry!");
         },
 
         toggleViewLink: function() {
