@@ -1,10 +1,9 @@
 require('rconsole');
 
-var express 	= require( 'express' ),
-	app 		= express(),
-	commander 	= require( 'commander' ),
+var express		= require( 'express' ),
+	app			= express(),
+	commander	= require( 'commander' ),
 	config 		= require( './defaults.js' ),
-	routes		= require( './routes' ),
 	server,
 	serverConfig;
 
@@ -29,21 +28,25 @@ if (!serverConfig) {
 }
 
 app.configure(function(){
-  app.set( 'views', __dirname + '/views' );
+  app.set( 'views', __dirname + '/public/views/templates' );
   app.set( 'view engine', 'jade' );
   app.set( 'view options', { pretty: true } );
   app.use( express.bodyParser() );
   app.use( express.methodOverride() );
-  app.use( app.router );
   app.use( express.static(__dirname + '/public') );
 });
 
+app.get('/', function( req, res ){
+	res.render('index');
+});
 
-//Routes
+app.get('/admin', function( req, res ){
+	res.render('admin');
+});
 
-app.get('/', routes.index);
-app.get('/library', routes.library);
-app.get('/tests', routes.tests);
+app.get('/tests', function( req, res){
+	res.render('tests');
+});
 
 var port = config.port;
 
