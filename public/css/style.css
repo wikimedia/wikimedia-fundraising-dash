@@ -117,13 +117,12 @@ body {
 .widgetbox {
     box-shadow: 1px 1px 2px 1px #ccc;
     background-color: #fff;
-    margin: 5px;
+    margin: 15px 5px 5px 5px;
     padding-top: 5px;
 }
 
-.widgetbox-title {
-    color: #f5f5f5;
-    padding: 1em;
+.widgetbox-header {
+    color: #777;
     margin-bottom: 1em;
 }
 

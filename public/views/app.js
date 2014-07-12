@@ -2,9 +2,10 @@ define( [
     'jquery',
     'underscore',
     'backbone',
+    'justGage',
     'views/nav',
     'views/appContent'
-], function( $, _, Backbone, navView, appContentView ){
+], function( $, _, Backbone, justGage, navView, appContentView ){
 
     var App = Backbone.View.extend({
 

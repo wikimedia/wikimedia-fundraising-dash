@@ -48,6 +48,7 @@ define( [
         showNavMenu: function() {
             window.setTimeout(function(){
                 $('#navContainer .navWrapper').removeClass('hidden').addClass('show');
+                $('#dashApp').css('padding-left', '175px');
             }, 200);
         },
 

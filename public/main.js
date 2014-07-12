@@ -19,7 +19,9 @@ require.config({
         'flot.pie':         'javascripts/vendor/flot/jquery.flot.pie',
         'flot.stack':       'javascripts/vendor/flot/jquery.flot.stack',
         'flot.resize':      'javascripts/vendor/flot/jquery.flot.resize',
-        'flot.time':        'javascripts/vendor/flot/jquery.flot.time'
+        'flot.time':        'javascripts/vendor/flot/jquery.flot.time',
+        'raphael':          'javascripts/vendor/raphael/raphael',
+        'justGage':         'javascripts/vendor/justgage/justgage'
     },
     shim: {
        'QUnit': {
@@ -65,7 +67,12 @@ require.config({
                 'flot.resize',
                 'flot.time'
             ]
-        }
+        },
+        'justGage': {
+            deps: [
+                'raphael'
+            ]
+        },
     }
 });
 
