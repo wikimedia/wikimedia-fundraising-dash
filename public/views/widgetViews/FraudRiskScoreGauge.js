@@ -20,18 +20,30 @@ function($, _, Backbone, model, justGage, template){
 
     },
 
+    getFraudFailurePercent: function(){
+
+      //TODO: run query and get the real percentage ;p
+      //for now make it easy to visualize for testing
+      var randomishVals = [2222, 5555, 8888];
+      var numberOfFails = randomishVals[parseInt(Math.random() * 3)],
+          numberOfTransactions = 10000;
+
+      return (numberOfFails/numberOfTransactions) * 100;
+
+    },
+
     render: function(){
 
       $(this.el).append( this.template );
 
       this.gauge = new JustGage({
-        id: "gauge",
-        value: getRandomInt(350, 980),
+        id: "FraudRiskScoreGauge",
+        value: this.getFraudFailurePercent(),
         min: 0,
         max: 100,
-        title: "Green",
-        label: "",
-        levelColorsGradient: false
+        relativeGaugeSize: true,
+        label: "% Failures",
+        levelColorsGradient: true
       });
     }
 

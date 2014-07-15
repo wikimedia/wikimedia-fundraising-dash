@@ -242,7 +242,7 @@
 
     // relativeGaugeSize : bool
     // whether gauge size should follow changes in container element size
-    relativeGaugeSize : (config.relativeGaugeSize) ? config.relativeGaugeSize : false,
+    relativeGaugeSize : (config.relativeGaugeSize) ? config.relativeGaugeSize : true,
 
     // counter : bool
     // animate level number change
