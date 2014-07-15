@@ -129,6 +129,7 @@ body {
 .widgetbox-content {
     padding: 1em;
     overflow: hidden;
+    color: #555;
 }
 
 .widgetbox-half {
@@ -141,6 +142,13 @@ body {
 
 .widgetbox-twothird {
 
+}
+
+/* Gauges */
+
+.gauge {
+    max-height: 250px;
+    width: 100%;
 }
 
 /* BOOTSTRAP OVERRIDES */
