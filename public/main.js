@@ -1,6 +1,6 @@
 require.config({
     'paths': {
-        'bootstrap':        'javascripts/vendor/bootstrap/dist/css/bootstrap.css',
+        'bootstrap':        'javascripts/vendor/bootstrap/dist/js/bootstrap',
         'style':            'css/style.css',
         'QUnit':            'javascripts/vendor/qunit/qunit/qunit',
         'jquery':           'javascripts/vendor/jquery/dist/jquery',
@@ -78,10 +78,11 @@ require.config({
 
 require([
     'backbone',
+    'bootstrap',
     'views/app',
     'handlebars'
     ],
-    function( Backbone, App, Handlebars ){
+    function(Backbone, Bootstrap, App, Handlebars){
 
         var app = new App();
         app.render();

@@ -9,15 +9,50 @@ function($, _, Backbone, model, justGage, template){
 
   var View = Backbone.View.extend({
 
-    el: '#appContent',
+    el: $('#appContent'),
 
     template: _.template( template ),
 
+    events: {
+      'click .filterCheckbox': 'addFilters',
+      'click .subfilterCheckbox': 'addFilters'
+    },
+
     initialize: function(){
 
-      this.el = '#appContent';
+      this.setElement($('#appContent'));
+      this.setupRangeSlider();
+      this.updateFilterValues();
 
+    },
 
+    addFilters: function(event){
+      var filterType = event.target.id,
+          subFilters = "$('#" + filterType + "Subfilters'" + ')';
+
+      $("#" + event.target.id + 'Subfilters').toggleClass('hide');
+    },
+
+    setupRangeSlider: function(){
+
+      //uses jQuery UI slider to allow user to set up own ranges
+      //for red/yellow/green values
+      $('#fraudPercentSlider').slider({
+        range: true,
+        min: 0,
+        max: 100,
+        //default is to split into thirds evenly
+        values: [ 33, 66 ],
+        slide: function( event, ui ){
+          $('#fraudPercent').val( $('#fraudPercentSlider').slider( "values", 0 ) + " - " + $('#fraudPercentSlider').slider( "values", 0 ) + "%" );
+        },
+      });
+
+    },
+
+    updateFilterValues: function(){
+      //TODO: check to see if these values have changed in the db
+      //if not, use cached values
     },
 
     getFraudFailurePercent: function(){
@@ -45,6 +80,11 @@ function($, _, Backbone, model, justGage, template){
         label: "% Failures",
         levelColorsGradient: true
       });
+
+      this.events = {
+        'click .filterCheckbox': this.addFilters
+      };
+
     }
 
   });
