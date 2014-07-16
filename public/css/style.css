@@ -146,9 +146,16 @@ body {
 
 /* Gauges */
 
-.gauge {
-    max-height: 250px;
-    width: 100%;
+#fraudGaugeWidget {
+    max-width: 330px;
+}
+
+#FraudRiskScoreGauge {
+    height: 205px;
+}
+
+#fraudGauge-header{
+    margin-bottom: -30px;
 }
 
 /* BOOTSTRAP OVERRIDES */

@@ -19,7 +19,7 @@ define( [
 			//if library,
 				//TODO: write logic that discerns the type of library:
 		        //Widget, Board, Favorite
-				this.library = new libraryView({el: '#appContent'});
+				this.library = new libraryView({el: $('#appContent')});
 			//if board,
 				//get default board
 			//else return a welcome message

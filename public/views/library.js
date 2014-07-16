@@ -1,5 +1,6 @@
 define( [
     'jquery',
+    'jquery.ui.slider',
     'underscore',
     'backbone',
     'justGage',
@@ -9,7 +10,7 @@ define( [
     'views/date',
     'views/widgetViews/FraudRiskScoreGauge',
     'text!views/templates/library.html'
-], function( $, _, Backbone, justGage, welcomeView, DateTime, FraudRiskScoreGauge, libraryTemplate ){
+], function( $, jQuerySlider, _, Backbone, justGage, welcomeView, DateTime, FraudRiskScoreGauge, libraryTemplate ){
 
     var Library = Backbone.View.extend({
 
@@ -17,7 +18,7 @@ define( [
 
             this.template = _.template( libraryTemplate );
             //this.welcomeMessage = new welcomeView({el: '#widgetSection'});
-            this.fraudRiskScoreGauge = new FraudRiskScoreGauge({el: '#widgetSection'});
+            this.fraudRiskScoreGauge = new FraudRiskScoreGauge({el: $('#widgetSection')});
             this.date = new DateTime();
 
         },
