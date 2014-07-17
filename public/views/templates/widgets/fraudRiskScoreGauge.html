@@ -3,7 +3,10 @@
     <div class="widgetbox-content">
         <div class="row">
             <div class="col-md-12 gauge">
-                <h2 id="fraudGauge-header">Fraud Risk Score Gauge</h2>
+                <h2 id="fraudGauge-header">
+                    Fraud Rejections: {{chosenTimePeriod}}
+                    {{#if chosenFilters}} {{chosenFilters}} {{/if}}
+                </h2>
                 <div class="row">
                     <div id="FraudRiskScoreGauge"></div>
                 </div>
@@ -12,15 +15,18 @@
 
                     <div class="col-md-12" id ="FraudRiskScoreGaugeSetup">
 
-                        <div class="panel panel-default">
+                        <div class="panel panel-purple">
 
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#filterCollapse">Fraud Widget Setup</a>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#filterCollapse">
+                                        Modify
+                                        <i class="fa fa-caret-down pull-right collapse-caret"></i>
+                                    </a>
                                 </h4>
                             </div>
 
-                            <div id="filterCollapse" class="panel-collapse collapse in">
+                            <div id="filterCollapse" class="panel-collapse collapse">
                                 <div class="panel-body">
 
                                     <form role="form">
@@ -34,21 +40,18 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <div class="dropdown">
-                                                <button class="btn btn-default dropdown-toggle" type="button" id="fraudTimePeriodDropdown" data-toggle="dropdown">For Time Period... <span class="caret"></span>
-                                                </button>
-
-                                                <ul class="dropdown-menu" role="menu" aria-labelledby="fraudTimePeriodDropdown">
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Last 15 Minutes (Default)</a></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Last Hour</a></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Last 24 Hours</a></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Last 5 Minutes</a></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Custom...</a></li>
-                                                </ul>
-                                            </div>
+                                            <select class="form-control" id="fraudTimePeriodDropdown">
+                                                <option>For Time Period...</option>
+                                                <option>Last 15 Minutes (Default)</option>
+                                                <option>Last Hour</option>
+                                                <option>Last 24 Hours</option>
+                                                <option>Last 5 Minutes</option>
+                                                <option>Custom...</option>
+                                            </select>
                                         </div>
 
                                         <div class="form-group">
+                                            <label>Filter By:</label>
                                             <!--Currency-->
                                             <div class="checkbox">
                                                 <label>
@@ -321,6 +324,8 @@
                                                     </div>
                                                 </div>
                                         </div>
+
+                                        <div class="btn btn-block btn-danger text-center" id="submitFraudGaugeOptions">OK</div>
                                     </form>
 
                                 </div>

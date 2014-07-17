@@ -77,7 +77,7 @@ body {
 #showNavMenu {
     display: none;
     position: fixed;
-    top: 10px;
+    top: 15px;
     left: 10px;
     color: #333;
     font-size: 18px;
@@ -144,6 +144,10 @@ body {
 
 }
 
+.collapse-caret {
+
+}
+
 /* Gauges */
 
 #fraudGaugeWidget {
@@ -158,6 +162,10 @@ body {
     margin-bottom: -30px;
 }
 
+/*#fraudTimePeriodDropdown {
+    width: 100%;
+}*/
+
 /* BOOTSTRAP OVERRIDES */
 
 .btn {
@@ -165,14 +173,17 @@ body {
     padding: .7em;
 }
 
-.btn-mint {
-    background-color: rgb(220,245,242);
-    color: #5e668a;
+.btn-purple {
+    background-color: rgba(94,102,138,0.8);
+    color: #f5f5f5;
 }
 
-.btn-mint:hover {
-    background-color: rgba(220,245,242,0.9);
-    color: #000;
+.btn-purple:hover {
+    background-color: rgba(94,102,138,0.5);
+}
+
+.btn .caret {
+    margin-top: 7px;
 }
 
 .navbar-fixed-top {
@@ -181,6 +192,21 @@ body {
 
 .padded {
     padding: 1em;
+}
+
+.panel-purple {
+  border-color: #5e668a;
+}
+.panel-purple > .panel-heading {
+  color: #f5f5f5;
+  background-color: rgb(94,102,138);
+  border-color: #5e668a;
+}
+.panel-purple > .panel-heading + .panel-collapse .panel-body {
+  border-top-color: #5e668a;
+}
+.panel-purple > .panel-footer + .panel-collapse .panel-body {
+  border-bottom-color: #5e668a;
 }
 
 

@@ -40,14 +40,14 @@ define( [
 
         collapseNavMenu: function(){
             //make the nav menu fold out of view.
-            $('#navContainer .navWrapper').addClass('hidden');
+            $('#navContainer .navWrapper').toggleClass('hide');
             $('#showNavMenu').css('display', 'inline');
-            $('#dashApp').css('padding', '0');
+            $('#dashApp').css('padding', '0 0 0 55px');
         },
 
         showNavMenu: function() {
             window.setTimeout(function(){
-                $('#navContainer .navWrapper').removeClass('hidden').addClass('show');
+                $('#navContainer .navWrapper').toggleClass('hide');
                 $('#dashApp').css('padding-left', '175px');
             }, 200);
         },

@@ -4,33 +4,59 @@ define([
     'backbone',
     'models/model',
     'justGage',
+    'models/FraudScore',
+    'handlebars',
     'text!views/templates/widgets/fraudRiskScoreGauge.html'],
-function($, _, Backbone, model, justGage, template){
+function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, template){
 
   var View = Backbone.View.extend({
 
     el: $('#appContent'),
 
+    model: FraudScoreModel,
+
     template: _.template( template ),
 
     events: {
-      'click .filterCheckbox': 'addFilters',
-      'click .subfilterCheckbox': 'addFilters'
+      'click .filterCheckbox': 'showFilters',
+      'click .subfilterCheckbox': 'addFilters',
+      'click #submitFraudGaugeOptions': 'submit'
     },
 
     initialize: function(){
 
       this.setElement($('#appContent'));
+      //set up defaults
       this.setupRangeSlider();
       this.updateFilterValues();
+      this.getWidgetParams();
+
+      this.template = Handlebars.compile(template);
+      this.context = {
+        chosenTimePeriod: this.chosenTimePeriod,
+        chosenFilters:    this.chosenFilters
+      };
+      this.html = this.template(this.context);
 
     },
 
-    addFilters: function(event){
+    getWidgetParams: function(){
+      //default
+      this.chosenFilters = "by Currency";
+      this.chosenTimePeriod = "Last 15 Minutes";
+
+      //when changed, do the things.
+    },
+
+    showFilters: function(event){
       var filterType = event.target.id,
           subFilters = "$('#" + filterType + "Subfilters'" + ')';
 
       $("#" + event.target.id + 'Subfilters').toggleClass('hide');
+    },
+
+    selectTimePeriod: function(){
+      console.log('time period');
     },
 
     setupRangeSlider: function(){
@@ -67,9 +93,22 @@ function($, _, Backbone, model, justGage, template){
 
     },
 
+    submit: function(event){
+      event.preventDefault();
+      console.log('submit');
+
+      //get all the selections into options object
+
+      //uncollapse setup area
+      $("#filterCollapse").removeClass('in');
+
+      //update options display
+
+    },
+
     render: function(){
 
-      $(this.el).append( this.template );
+      $(this.el).append(this.html);
 
       this.gauge = new JustGage({
         id: "FraudRiskScoreGauge",
