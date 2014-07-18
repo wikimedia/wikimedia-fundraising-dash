@@ -2,6 +2,12 @@
 
     <div class="widgetbox-content">
         <div class="row">
+            <span class="smallIcon pull-right">
+                <span id="queryButton" class="popover-dismiss" data-container="body" data-toggle="popover" data-placement="right" title="This widget's SQL" data-content="Fraud Rejections: {{chosenTimePeriod}} {{#if chosenFilters}} {{chosenFilters}} {{/if}}"><i class="fa fa-database"></i>
+                </span>
+            </span>
+        </div>
+        <div class="row">
             <div class="col-md-12 gauge">
                 <h2 id="fraudGauge-header">
                     Fraud Rejections: {{chosenTimePeriod}}

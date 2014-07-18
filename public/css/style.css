@@ -79,11 +79,6 @@ body {
     position: fixed;
     top: 15px;
     left: 10px;
-    color: #333;
-    font-size: 18px;
-    color: rgba(0,0,0,0.2);
-    background-color: rgba(0,0,0,0.05);
-    padding: .5em;
 }
 
 #welcomeTitle {
@@ -112,6 +107,23 @@ body {
     color: #F15854;
 }
 
+/* MAIN BASE QUALITY STYLEINGS */
+
+.boxedIcon {
+    color: #333;
+    font-size: 18px;
+    color: rgba(0,0,0,0.2);
+    background-color: rgba(0,0,0,0.05);
+    padding: .5em;
+}
+
+.smallIcon {
+    color: #333;
+    font-size: 13px;
+    color: rgba(0,0,0,0.2);
+    padding: .5em;
+}
+
 /* WIDGET BASE STYLINGS */
 
 .widgetbox {
@@ -127,7 +139,7 @@ body {
 }
 
 .widgetbox-content {
-    padding: 1em;
+    padding: .5em 1em;
     overflow: hidden;
     color: #555;
 }
@@ -159,7 +171,7 @@ body {
 }
 
 #fraudGauge-header{
-    margin-bottom: -30px;
+    margin: 0 0 -30px 0;
 }
 
 /*#fraudTimePeriodDropdown {

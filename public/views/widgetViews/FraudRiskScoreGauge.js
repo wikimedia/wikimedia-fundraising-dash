@@ -18,18 +18,25 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, template)
     template: _.template( template ),
 
     events: {
-      'click .filterCheckbox': 'showFilters',
-      'click .subfilterCheckbox': 'addFilters',
-      'click #submitFraudGaugeOptions': 'submit'
+      'click .filterCheckbox':          'showFilters',
+      'click .subfilterCheckbox':       'addFilters',
+      'click #submitFraudGaugeOptions': 'submit',
+      'click #queryButton':             'togglePopover'
     },
 
     initialize: function(){
 
+      //set up default values
       this.setElement($('#appContent'));
-      //set up defaults
       this.setupRangeSlider();
       this.updateFilterValues();
-      this.getWidgetParams();
+
+      //update default options
+      this.chosenFilters = [];
+      this.chosenTimePeriod = "Last 15 Minutes";
+
+      //initialize query popover
+      //this.initializeQueryPopover();
 
       this.template = Handlebars.compile(template);
       this.context = {
@@ -40,12 +47,14 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, template)
 
     },
 
-    getWidgetParams: function(){
-      //default
-      this.chosenFilters = "by Currency";
-      this.chosenTimePeriod = "Last 15 Minutes";
+    togglePopover: function(){
+      $('#queryButton').popover('toggle');
+    },
 
-      //when changed, do the things.
+    updateOptions: function(){
+      //time period
+      this.chosenTimePeriod = $('#fraudTimePeriodDropdown').val();
+      console.log('chosenTimePeriod: ', this.chosenTimePeriod);
     },
 
     showFilters: function(event){
