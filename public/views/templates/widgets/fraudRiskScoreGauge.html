@@ -3,7 +3,7 @@
     <div class="widgetbox-content">
         <div class="row">
             <span class="smallIcon pull-right">
-                <span id="queryButton" class="popover-dismiss" data-container="body" data-toggle="popover" data-placement="right" title="This widget's SQL" data-content="Fraud Rejections: {{chosenTimePeriod}} {{#if chosenFilters}} {{chosenFilters}} {{/if}}"><i class="fa fa-database"></i>
+                <span id="queryButton" class="popover-dismiss" data-container="body" data-toggle="popover" data-placement="right" title="This widget's SQL query" data-content="Fraud Rejections: {{chosenTimePeriod}} {{#if chosenFilters}} {{chosenFilters}} {{/if}}"><i class="fa fa-database"></i>
                 </span>
             </span>
         </div>
@@ -45,16 +45,7 @@
                                             </p>
                                         </div>
 
-                                        <div class="form-group">
-                                            <select class="form-control" id="fraudTimePeriodDropdown">
-                                                <option>For Time Period...</option>
-                                                <option>Last 15 Minutes (Default)</option>
-                                                <option>Last Hour</option>
-                                                <option>Last 24 Hours</option>
-                                                <option>Last 5 Minutes</option>
-                                                <option>Custom...</option>
-                                            </select>
-                                        </div>
+                                        <div id="fraudDatePickers"></div>
 
                                         <div class="form-group">
                                             <label>Filter By:</label>

@@ -6,8 +6,29 @@ define([
     'justGage',
     'models/FraudScore',
     'handlebars',
+    'text!views/templates/datePickers.html',
     'text!views/templates/widgets/fraudRiskScoreGauge.html'],
-function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, template){
+function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, datePickersTemplate, template){
+
+  var DatePickerSubView = Backbone.View.extend({
+
+    el: $('#fraudDatePickers'),
+
+    template: _.template( datePickersTemplate ),
+
+    initialize: function(){
+
+      this.setElement($('#fraudDatePickers'));
+
+    },
+
+    render: function(){
+
+      $(this.el).html(datePickersTemplate);
+
+    }
+
+  });
 
   var View = Backbone.View.extend({
 
@@ -18,10 +39,10 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, template)
     template: _.template( template ),
 
     events: {
-      'click .filterCheckbox':          'showFilters',
-      'click .subfilterCheckbox':       'addFilters',
-      'click #submitFraudGaugeOptions': 'submit',
-      'click #queryButton':             'togglePopover'
+      'click .filterCheckbox':                  'showFilters',
+      'click .subfilterCheckbox':               'addFilters',
+      'click #submitFraudGaugeOptions':         'submit',
+      'click #queryButton':                     'togglePopover'
     },
 
     initialize: function(){
@@ -62,10 +83,6 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, template)
           subFilters = "$('#" + filterType + "Subfilters'" + ')';
 
       $("#" + event.target.id + 'Subfilters').toggleClass('hide');
-    },
-
-    selectTimePeriod: function(){
-      console.log('time period');
     },
 
     setupRangeSlider: function(){
@@ -118,6 +135,11 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, template)
     render: function(){
 
       $(this.el).append(this.html);
+
+      //subviews
+      this.datepickers = new DatePickerSubView();
+      $(this.el).append(this.datepickers.el);
+
 
       this.gauge = new JustGage({
         id: "FraudRiskScoreGauge",
