@@ -69,7 +69,10 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, datePicke
     },
 
     togglePopover: function(){
-      $('#queryButton').popover('toggle');
+
+      //get SQL query into popover (fake SQL for now)
+      this.thisQuery = "SELECT SUM(total_amount) FROM civicrm_contribution WHERE receive_date BETWEEN '20130701' AND '20140701';";
+      $('#queryButton').attr('data-content', this.thisQuery).popover('toggle');
     },
 
     updateOptions: function(){

@@ -11,9 +11,9 @@ require.config({
         'chartjs':              'javascripts/vendor/chartjs/Chart',
         'momentjs':             'javascripts/vendor/moment/moment',
         'handlebars':           'javascripts/vendor/handlebars/handlebars',
-        'jquery.ui.core':       'javascripts/vendor/jquery.ui/ui/jquery.ui.core',
         'jquery.ui.widget':     'javascripts/vendor/jquery.ui/ui/jquery.ui.widget',
         'jquery.ui.mouse':      'javascripts/vendor/jquery.ui/ui/jquery.ui.mouse',
+        'jquery.ui.core':       'javascripts/vendor/jquery.ui/ui/jquery.ui.core',
         'jquery.ui.slider':     'javascripts/vendor/jquery.ui/ui/jquery.ui.slider',
         'flot':                 'javascripts/vendor/flot/jquery.flot',
         'flot.pie':             'javascripts/vendor/flot/jquery.flot.pie',
@@ -53,12 +53,16 @@ require.config({
         'momentjs': {
             exports: 'moment'
         },
+        'jquery.ui.mouse': {
+            deps: [
+                'jquery.ui.widget'
+            ]
+        },
         'jquery.ui.slider': {
             deps: [
                 'jquery',
                 'jquery.ui.core',
-                'jquery.ui.mouse',
-                'jquery.ui.widget'
+                'jquery.ui.mouse'
             ]
         },
         'flot': {
