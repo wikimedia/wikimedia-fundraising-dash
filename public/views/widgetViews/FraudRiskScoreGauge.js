@@ -141,7 +141,7 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, datePicke
 
       //subviews
       this.datepickers = new DatePickerSubView();
-      $(this.el).append(this.datepickers.el);
+      this.datepickers.render();
 
 
       this.gauge = new JustGage({
