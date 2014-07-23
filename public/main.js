@@ -22,7 +22,7 @@ require.config({
         'flot.time':            'javascripts/vendor/flot/jquery.flot.time',
         'raphael':              'javascripts/vendor/raphael/raphael',
         'justGage':             'javascripts/vendor/justgage/justgage',
-        'bootstrap-datepicker': 'javascripts/bootstrap-datepicker/js/bootstrap-datepicker'
+        'bootstrap-datepicker': 'javascripts/vendor/bootstrap-datepicker/js/bootstrap-datepicker'
     },
     shim: {
        'QUnit': {

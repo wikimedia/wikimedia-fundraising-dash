@@ -6,9 +6,10 @@ define([
     'justGage',
     'models/FraudScore',
     'handlebars',
+    'bootstrap-datepicker',
     'text!views/templates/datePickers.html',
     'text!views/templates/widgets/fraudRiskScoreGauge.html'],
-function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, datePickersTemplate, template){
+function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, DatePicker, datePickersTemplate, template){
 
   var DatePickerSubView = Backbone.View.extend({
 
@@ -16,15 +17,52 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, datePicke
 
     template: _.template( datePickersTemplate ),
 
+    events: {
+      'click input[type="radio"]':        'selectDateType',
+      'click .datepicker':                'pickDates',
+      'click #submitTimePeriod':          'submitTimePeriod'
+    },
+
     initialize: function(){
 
-      this.setElement($('#fraudDatePickers'));
+      this.chosenTimePeriod = "Last 15 Minutes";
 
+      this.setElement($('#fraudDatePickers'));
+      this.template = Handlebars.compile(datePickersTemplate);
+      this.context = {
+        chosenTimePeriod: this.chosenTimePeriod
+      };
+      this.html = this.template(this.context);
+
+    },
+
+    selectDateType: function(event){
+      var dateType = event.target.id;
+      switch(dateType) {
+        case 'byIncrement':
+          console.log('its by increment');
+          break;
+        case 'byPreset':
+          console.log('its by preset');
+          break;
+        case 'byTwoValues':
+          console.log('its by two values');
+          break;
+      }
+    },
+
+    pickDates: function(){
+      console.log('pickin dates');
+      $('.datepicker').datepicker();
+    },
+
+    submitTimePeriod: function(){
+      console.log('The chosen dates were: ' );
     },
 
     render: function(){
 
-      $(this.el).html(datePickersTemplate);
+      $(this.el).append(this.html);
 
     }
 
@@ -54,14 +92,14 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, datePicke
 
       //update default options
       this.chosenFilters = [];
-      this.chosenTimePeriod = "Last 15 Minutes";
 
       //initialize query popover
       //this.initializeQueryPopover();
 
+
       this.template = Handlebars.compile(template);
       this.context = {
-        chosenTimePeriod: this.chosenTimePeriod,
+        chosenTimePeriod: 'etc',
         chosenFilters:    this.chosenFilters
       };
       this.html = this.template(this.context);
@@ -143,7 +181,6 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, datePicke
       this.datepickers = new DatePickerSubView();
       this.datepickers.render();
 
-
       this.gauge = new JustGage({
         id: "FraudRiskScoreGauge",
         value: this.getFraudFailurePercent(),
@@ -151,6 +188,7 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, datePicke
         max: 100,
         relativeGaugeSize: true,
         label: "% Failures",
+        levelColors: ['#89CC23', '#FFE146', '#c12e2a'],
         levelColorsGradient: true
       });
 

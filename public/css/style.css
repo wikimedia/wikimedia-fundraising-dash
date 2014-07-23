@@ -133,9 +133,9 @@ body {
     padding-top: 5px;
 }
 
-.widgetbox-header {
+.widget-header {
     color: #777;
-    margin-bottom: 1em;
+    margin: 0 -1em ;
 }
 
 .widgetbox-content {
@@ -171,7 +171,8 @@ body {
 }
 
 #fraudGauge-header{
-    margin: 0 0 -40px 0;
+    margin: 0 0 -60px 0;
+    padding: 7px 17px 0 0;
 }
 
 /*#fraudTimePeriodDropdown {

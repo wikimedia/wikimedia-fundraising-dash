@@ -1,18 +1,19 @@
 <div class="widgetbox col-md-4" id="fraudGaugeWidget">
 
     <div class="widgetbox-content">
-        <div class="row">
-            <span class="smallIcon pull-right">
-                <span id="queryButton" class="popover-dismiss" data-container="body" data-toggle="popover" data-placement="bottom" title="This widget's SQL query:" data-content=""><i class="fa fa-database"></i>
-                </span>
-            </span>
-        </div>
+
         <div class="row">
             <div class="col-md-12 gauge">
                 <h3 id="fraudGauge-header">
                     Fraud Rejections: {{chosenTimePeriod}}
                     {{#if chosenFilters}} {{chosenFilters}} {{/if}}
                 </h3>
+                <div class="row">
+                    <span class="smallIcon pull-right">
+                        <span id="queryButton" class="popover-dismiss" data-container="body" data-toggle="popover" data-placement="bottom" title="This widget's SQL query:" data-content=""><i class="fa fa-database"></i>
+                        </span>
+                    </span>
+                </div>
                 <div class="row">
                     <div id="FraudRiskScoreGauge"></div>
                 </div>

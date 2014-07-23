@@ -2,7 +2,7 @@
     <div class="well well-small">
         <label>Choose Time Period:</label>
         <div class="radio">
-            <label><input type="radio" name="chooseTimePeriod" id="byPreset" value="byPreset" checked>By Preset
+            <label><input type="radio" name="chooseTimePeriod" id="byPreset" value="byPreset" checked>By Preset:
                 <select class="form-control" id="timePeriodDropdown">
                     <option>Last 15 Minutes (Default)</option>
                     <option>Last Hour</option>
@@ -12,7 +12,7 @@
             </label>
         </div>
         <div class="radio">
-            <label><input type="radio" name="chooseTimePeriod" id="byIncrement" value="byIncrement">By Increment
+            <label><input type="radio" name="chooseTimePeriod" id="byIncrement" value="byIncrement">By Increment:
                 <select class="form-control" id="timePeriodDropdown">
                     <option>Hour</option>
                     <option>Day</option>
@@ -24,9 +24,13 @@
         </div>
         <div class="radio">
             <label><input type="radio" name="chooseTimePeriod" id="byTwoValues" value="byTwoValues">Between...
-                <input type="text">
-                <input type-"text">
+                <input type="text" data-provide='datepicker'> and
+                <input type-"text" data-provide='datepicker'>
             </label>
         </div>
+        <div class="alert alert-danger">
+            <p id="timePeriodSelections">You have chosen: {{chosenTimePeriod}}</p>
+        </div>
+        <div class="btn btn-block btn-danger text-center" id="submitTimePeriod">OK</div>
     </div>
 </div>
