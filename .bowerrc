@@ -1,3 +1,3 @@
 {
-  "directory": "public/javascripts/vendor"
+  "directory": "src/bower_modules"
 }
