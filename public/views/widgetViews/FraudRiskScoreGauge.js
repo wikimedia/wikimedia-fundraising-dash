@@ -28,12 +28,19 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, DatePicke
       this.chosenTimePeriod = "Last 15 Minutes";
 
       this.setElement($('#fraudDatePickers'));
+
+      this.setupTemplate();
+
+    },
+
+    setupTemplate: function(){
+      console.log('setting up...');
+      console.log(this.chosenTimePeriod);
       this.template = Handlebars.compile(datePickersTemplate);
       this.context = {
         chosenTimePeriod: this.chosenTimePeriod
       };
       this.html = this.template(this.context);
-
     },
 
     selectDateType: function(event){
@@ -57,11 +64,13 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, DatePicke
     },
 
     submitTimePeriod: function(){
-      console.log('The chosen dates were: ' );
+      this.chosenTimePeriod = "hi";
+      this.setupTemplate();
     },
 
     render: function(){
 
+      this.setupTemplate();
       $(this.el).append(this.html);
 
     }
@@ -99,7 +108,8 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, DatePicke
 
       this.template = Handlebars.compile(template);
       this.context = {
-        chosenTimePeriod: 'etc',
+        //fix this to bubble up, or refactor
+        chosenTimePeriod: 'Last 15 minutes',
         chosenFilters:    this.chosenFilters
       };
       this.html = this.template(this.context);
@@ -107,7 +117,6 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, DatePicke
     },
 
     togglePopover: function(){
-
       //get SQL query into popover (fake SQL for now)
       this.thisQuery = "SELECT SUM(total_amount) FROM civicrm_contribution WHERE receive_date BETWEEN '20130701' AND '20140701';";
       $('#queryButton').attr('data-content', this.thisQuery).popover('toggle');
@@ -127,7 +136,6 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, DatePicke
     },
 
     setupRangeSlider: function(){
-
       //uses jQuery UI slider to allow user to set up own ranges
       //for red/yellow/green values
       $('#fraudPercentSlider').slider({
@@ -178,8 +186,7 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, DatePicke
       $(this.el).append(this.html);
 
       //subviews
-      this.datepickers = new DatePickerSubView();
-      this.datepickers.render();
+      this.renderDatePickers();
 
       this.gauge = new JustGage({
         id: "FraudRiskScoreGauge",
@@ -196,6 +203,12 @@ function($, _, Backbone, model, justGage, FraudScoreModel, Handlebars, DatePicke
         'click .filterCheckbox': this.addFilters
       };
 
+    },
+
+    renderDatePickers: function(){
+      this.datepickers = new DatePickerSubView();
+      $(this.el).append(this.datepickers.render());
+      return this.datepickers;
     }
 
   });
