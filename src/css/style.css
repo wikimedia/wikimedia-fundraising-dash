@@ -1,0 +1,257 @@
+@import: "../public/javascripts/vendor/lato/css/lato.css";
+html {
+    margin:0;
+    padding:0;
+}
+
+body {
+    background-color: #f5f5f5;
+    font-family: "Lato";
+    margin:0;
+    padding:0;
+}
+
+#dashApp {
+    padding-left: 175px;
+    transition: all 0.4s ease 0s;
+}
+
+#dashApp .container {
+    padding-top: 50px;
+}
+
+.navWrapper {
+    margin-left: -100px;
+    left: 100px;
+    width: 100px;
+    position: fixed;
+    height: 100%;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: all 0.4s ease 0s;
+    background-color: #5e668a;
+    color: #f5f5f5;
+}
+
+.sidebar-nav ul {
+    list-style-type: none;
+    width: 100%;
+    padding: 0;
+    background-color: rgba(255,255,255,0.2);
+    margin-bottom: 0;
+}
+
+.sidebar-nav li {
+    font-size: 24px;
+    display: inline-block;
+    width: 48%;
+    text-align: center;
+    padding: .5em;
+}
+
+.sidebar-nav li:hover {
+    background-color: #f5f5f5;
+    color: #5e668a;
+    cursor: pointer;
+}
+
+#collapseNavMenu {
+    background-color: rgba(255,255,255,0.4);
+}
+
+#collapseNavMenu:hover {
+    background-color: rgba(255,255,255,0.7);
+    color: #5e668a;
+    cursor: pointer;
+}
+
+.collapsedNavMenu {
+    width: 15px;
+    transition-duration: 1s;
+}
+
+#mainNav ul{
+    list-style-type: none;
+    cursor: pointer;
+}
+
+.libraryTitle {
+    margin-bottom: .5em;
+}
+
+#showNavMenu {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 10px;
+    cursor: pointer;
+}
+
+#welcomeTitle {
+    margin-bottom: 50px;
+    border-bottom: 1px #555 solid;
+}
+
+.titlebrand, .titlebrandToggle {
+    background-color: #d9534f;
+    overflow: hidden;
+    padding: 8px;
+    margin: 0;
+}
+
+.titlebrand:hover {
+    background-color: #c12e2a;
+    cursor: pointer;
+}
+
+.titlebrandToggle {
+    padding: 5px;
+    margin-left: 5px;
+}
+
+.titlebrandToggle:hover {
+    background-color: #fff;
+    color: #F15854;
+}
+
+/* MAIN BASE QUALITY STYLEINGS */
+
+.boxedIcon {
+    color: #333;
+    font-size: 18px;
+    color: rgba(0,0,0,0.2);
+    background-color: rgba(0,0,0,0.05);
+    padding: .5em;
+}
+
+.smallIcon {
+    color: #333;
+    font-size: 13px;
+    color: #fff;
+}
+
+/* WIDGET BASE STYLINGS */
+
+.widgetbox {
+    box-shadow: 1px 1px 2px 1px #ccc;
+    background-color: #fff;
+    margin: 15px 5px 5px 5px;
+    padding-top: 5px;
+}
+
+.widget-header {
+    color: #777;
+    margin: 0 -1em ;
+}
+
+.widgetbox-content {
+    padding: .5em 1em;
+    overflow: hidden;
+    color: #555;
+}
+
+.widgetbox-half {
+
+}
+
+.widgetbox-third {
+
+}
+
+.widgetbox-twothird {
+
+}
+
+.widget-alert {
+    padding: 5px 10px;
+    margin: 7px 0;
+}
+
+.collapse-caret {
+
+}
+
+/* Gauges */
+
+#fraudGaugeWidget {
+    max-width: 330px;
+}
+
+#fraudGaugeWidget .panel-body {
+    padding: 0;
+}
+
+#fraudGaugeMeta {
+    margin: 10px;
+}
+
+#FraudRiskScoreGauge {
+    height: 100%;
+    width: 100%;
+    margin-top: -25px;
+}
+
+#fraudGaugeValue{
+    margin-top: -50px;
+}
+
+#queryButton {
+    cursor: pointer;
+}
+
+/*#fraudTimePeriodDropdown {
+    width: 100%;
+}*/
+
+/* BOOTSTRAP OVERRIDES */
+
+.btn {
+    border-radius: 0;
+    padding: .7em;
+}
+
+.btn-purple {
+    background-color: rgba(94,102,138,0.8);
+    color: #f5f5f5;
+}
+
+.btn-purple:hover {
+    background-color: rgba(94,102,138,0.5);
+}
+
+.btn .caret {
+    margin-top: 7px;
+}
+
+.navbar-fixed-top {
+    height: 70px;
+}
+
+.padded {
+    padding: 1em;
+}
+
+.panel-purple {
+  border-color: #ccc;
+}
+
+.panel-purple > .panel-heading {
+  color: #f5f5f5;
+  background-color: rgb(94,102,138);
+  border-color: #5e668a;
+}
+
+.panel-purple > .panel-heading + .panel-collapse .panel-body {
+  border-top-color: #5e668a;
+}
+
+.panel-purple > .panel-footer + .panel-collapse .panel-body {
+  border-bottom-color: #5e668a;
+}
+
+.label {
+    font-weight: normal;
+}
+
+
+

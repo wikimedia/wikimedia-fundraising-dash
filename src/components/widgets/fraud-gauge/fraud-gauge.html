@@ -1,0 +1,353 @@
+<div class="panel panel-purple" id="fraudGaugeWidget">
+    <div class="panel-heading">
+        Fraud Rejections
+        <div class="btn-group btn-group-xs pull-right">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#sqlModal" data-bind="click: getSQL"><i class="fa fa-database"></i></button>
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modifyModal"><i class="fa fa-edit"></i></button>
+        </div>
+    </div>
+    <div class="panel-body">
+
+        <div class="row">
+            <div class="col-md-12 gauge">
+
+                <div class="row">
+                    <h3 class="text-center" data-bind="text: chosenTimePeriod"></h3>
+                </div>
+
+                <div class="row">
+                    <canvas id="FraudRiskScoreGauge"></canvas>
+                    <h2 class="text-center" id="fraudGaugeValue" data-bind="text: value"></h2>
+                </div>
+
+                <div class="row" id="fraudGaugeMeta">
+                    <p class="text-center">By: <span data-bind="foreach: chosenFilters"><span class="label label-info" data-bind="text: filterName"></span> </span></p>
+                </div>
+
+                <div class="modal fade" id="modifyModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title">Modify Gauge Settings</h4>
+                            </div>
+                            <div class="modal-body">
+
+                                    <form role="form">
+                                        <div class="form-group">
+                                            <label for="fraudPercentSlider">Fraud Percent Ranges</label>
+                                            <div id="fraudPercentSlider"></div>
+                                            <p>
+                                                <label for="fraudPercent">Percentage:</label>
+                                                <div id="fraudPercent"></div>
+                                            </p>
+                                        </div>
+
+                                        <!--Call Date Pickers Component to handle date range-->
+                                        <div data-bind="component: 'date-pickers'">></div>
+
+                                        <div class="form-group">
+                                            <label>Filter By:</label>
+                                            <!--Currency-->
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="filterCheckbox" id="currencyFilter" id="currencyFilter">Currency
+                                                </label>
+                                            </div>
+
+                                                <!--Currency Choices-->
+                                                <div class="well well-sm hide" id="currencyFilterSubfilters">
+                                                    <div class="moreCurrencyCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">USD
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreCurrencyCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">CAN
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreCurrencyCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">ETC
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            <!--Method-->
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="filterCheckbox" id="methodFilter">Method
+                                                </label>
+                                            </div>
+
+                                                <!--Method Choices-->
+                                                <div class="well well-sm hide" id="methodFilterSubfilters">
+                                                    <div class="moreMethodCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Credit Card
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreMethodCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Paypal
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreMethodCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">ETC
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            <!--Source-->
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="filterCheckbox" id="sourceFilter">Source
+                                                </label>
+                                            </div>
+
+                                                <!--Source Choices-->
+                                                <div class="well well-sm hide" id="sourceFilterSubfilters">
+                                                    <div class="moreSourceCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Source 1
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreSourceCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Source 2
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreSourceCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">ETC
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            <!--Campaign-->
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="filterCheckbox" id="campaignFilter">Campaign
+                                                </label>
+                                            </div>
+
+                                                <!--Campaign Choices-->
+                                                <div class="well well-sm hide" id="campaignFilterSubfilters">
+                                                    <div class="moreCampaignCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Cool Campaign 1
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreCampaignCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Cool Campaign 2
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreCampaignCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">ETC
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            <!--Medium-->
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="filterCheckbox" id="mediumFilter">Medium
+                                                </label>
+                                            </div>
+
+                                                <!--Medium Choices-->
+                                                <div class="well well-sm hide" id="mediumFilterSubfilters">
+                                                    <div class="moreMediumCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Medium 1
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreMediumCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Medium 2
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreMediumCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">ETC
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            <!--Referrer-->
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="filterCheckbox" id="referrerFilter">Referrer
+                                                </label>
+                                            </div>
+
+                                                <!--Referrer Choices-->
+                                                <div class="well well-sm hide" id="referrerFilterSubfilters">
+                                                    <div class="moreReferrerCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Dogs
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreReferrerCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Cats
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreReferrerCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">ETC
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            <!--Gateway-->
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="filterCheckbox" id="gatewayFilter">Gateway
+                                                </label>
+                                            </div>
+
+                                                <!--Gateway Choices-->
+                                                <div class="well well-sm hide" id="gatewayFilterSubfilters">
+                                                    <div class="moreGatewayCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Global Collect
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreGatewayCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">WorldPay
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreGatewayCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">ETC
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            <!--Fraud Score-->
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="filterCheckbox" id="fraudscoreFilter">Fraud Score
+                                                </label>
+                                            </div>
+
+                                                <!--Fraud Score Choices-->
+                                                <div class="well well-sm hide" id="fraudScoreFilterSubfilters">
+                                                    <div class="moreFraudScoreCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Higher than X
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreFraudScoreCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">Between A and B
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="moreFraudScoreCheckboxes">
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" class="subfilterCheckbox">ETC
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </form>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="alert alert-danger widget-alert pull-left" data-bind="visible: hasMadeSelection">
+                                    <p id="timePeriodSelections">You have chosen: <span data-bind="text: chosenTimePeriod"></span></p>
+                                </div>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-success" data-dismiss="modal" data-bind="submit: submitGaugeModifications">Submit</button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+
+                <div class="modal fade" id="sqlModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title">Fraud Gauge SQL:</h4>
+                            </div>
+                            <div class="modal-body"></div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
