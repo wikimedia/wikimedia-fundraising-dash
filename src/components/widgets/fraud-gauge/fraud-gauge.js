@@ -58,6 +58,12 @@ function( ko, template, datePickersTemplate ){
       return value;
     };
 
+    self.setSubfilter = function(subfilter){
+      self.filterChecked = ko.observable(subfilter);
+    };
+
+    self.filterChecked = ko.observable();
+
     //#FraudRiskScoreGauge
     //TODO: cleanup
     self.context = document.getElementById('FraudRiskScoreGauge');
