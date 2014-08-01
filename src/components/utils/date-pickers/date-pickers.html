@@ -1,39 +1,46 @@
 <div class="form-group">
-        <div class="row well well-small">
-            <div class="col-md-4 col-lg-4 col-sm-12">
-                <label>Choose Preset Time Period:</label>
-                <div>
-                    <label>
-                        <select class="form-control" id="timePeriodDropdown" data-bind="options: availableTimePresets"></select>
-                    </label>
-                </div>
-            </div>
+        <div class="well well-small">
 
-            <div class="col-md-3 col-lg-3 col-sm-12">
-                <div>
-                    <label>Or Choose Other Time Increment:</label>
-                    <label>
-                        <select class="form-control" id="incrementDropdown" data-bind="options: availableIncrementTypes"></select>
-                    </label>
-                </div>
-            </div>
+            <div class="modalOptionTable">
 
-            <div class="col-md-5 col-lg-5 col-sm-12">
-                <div data-bind="visible: shouldShowIncrements"></div>
-                <div data-bind="visible: shouldShowCustom">
-                    <label>Or Select Between...
-                        <div class="input-group margin-bottom-sm">
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type="text" data-provide='datepicker'>
-                        </div> and
-                        <div class="input-group margin-bottom-sm">
-                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                            <input type-"text" data-provide='datepicker'>
+                    <div class="modalOptionCell">
+                        <label>Choose Preset Time Period:</label>
+                        <div>
+                            <label>
+                                <select class="form-control" id="timePeriodDropdown" data-bind="options: availableTimePresets"></select>
+                            </label>
                         </div>
-                    </label>
-                </div>
+                    </div>
+
+                    <div class="modalOptionCell">
+                        <div>
+                            <label>Or Choose Other Time Increment:</label>
+                            <label>
+                                <select class="form-control" id="incrementDropdown" data-bind="options: availableIncrementTypes, value: selectedIncrement"></select>
+                            </label>
+                        </div>
+                    </div>
             </div>
 
+
+            <div class="modalOptionTable">
+
+                    <div class="modalOptionCell">
+                        <div>
+                            <label>Or Custom Range:</label>
+                            <div class="input-daterange input-group" id="customDatepicker">
+                                <input type="text" class="input-sm form-control" data-provide="datepicker" name="start" />
+                                <span class="input-group-addon">to</span>
+                                <input type="text" class="input-sm form-control" data-provide="datepicker" name="end" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modalOptionCell">
+                        <!--here will go the menu that goes with other time increment selection. WIP-->
+                    </div>
+
+            </div>
 
         </div>
     </div>

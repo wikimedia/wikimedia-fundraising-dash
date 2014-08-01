@@ -199,6 +199,27 @@ body {
     cursor: pointer;
 }
 
+.modalOptionTable {
+    width: 100%;
+    margin-left: 0;
+}
+
+.modalOptionCell{
+    display: inline-block;
+    width:49%;
+    border-right: 1px #ccc solid;
+    padding: 15px;
+}
+
+.modalOptionCell:last-child {
+    border: none;
+}
+
+
+/*#fraudTimePeriodDropdown {
+    width: 100%;
+}*/
+
 /* BOOTSTRAP OVERRIDES */
 
 .btn {
@@ -214,6 +235,10 @@ body {
 .btn-mint:hover {
     background-color: rgba(220,245,242,0.9);
     color: #000;
+}
+
+input {
+    height: 28px;
 }
 
 .navbar-fixed-top {

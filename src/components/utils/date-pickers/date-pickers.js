@@ -24,6 +24,7 @@ define( [
         });
 
         self.availableTimePresets = ko.observableArray([
+                    'Select:',
                     'Last 15 Minutes',
                     'Last Hour',
                     'Last 24 Hours',
@@ -31,15 +32,19 @@ define( [
         ]);
 
         self.availableIncrementTypes = ko.observableArray([
+                    'Select:',
                     'Hour...',
                     'Day...',
                     'Week...',
                     'Month...',
-                    'Year...',
-                    'Custom...'
+                    'Year...'
         ]);
 
-        //TODO: when
+        self.selectedIncrement = ko.observable();
+
+        self.getIncrementSubmenu = ko.computed( function(){
+
+        });
 
     }
 

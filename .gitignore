@@ -1,2 +1,4 @@
 npm-debug.log
 src/old/*
+src/bower_modules/*
+node_modules/*
