@@ -5,29 +5,41 @@ define( [
 
 
     function DatePickerViewModel( params ){
+        var self= this;
 
-        this.chosen_time_period = ko.computed( function(){
+        self.chosenTimePeriod = ko.computed( function(){
             return "Every 15 Minutes";
         });
 
-        this.submitTimePeriod = function(){
+        self.submitTimePeriod = function(){
             console.log('the time period was submitted');
         };
 
-        this.show_increment_selection = function(){
-            console.log('this will show increment selectors');
-        };
-
-        this.show_custom_selection = function(){
-            console.log('this will show custom selectors');
-        };
-
-        this.shouldShowIncrements = ko.computed( function(){
-            return false;
+        self.shouldShowIncrements = ko.computed( function(){
+            return true;
         });
-        this.shouldShowCustom = ko.computed( function(){
-            return false;
+
+        self.shouldShowCustom = ko.computed( function(){
+            return true;
         });
+
+        self.availableTimePresets = ko.observableArray([
+                    'Last 15 Minutes',
+                    'Last Hour',
+                    'Last 24 Hours',
+                    'Last 5 Minutes'
+        ]);
+
+        self.availableIncrementTypes = ko.observableArray([
+                    'Hour...',
+                    'Day...',
+                    'Week...',
+                    'Month...',
+                    'Year...',
+                    'Custom...'
+        ]);
+
+        //TODO: when
 
     }
 

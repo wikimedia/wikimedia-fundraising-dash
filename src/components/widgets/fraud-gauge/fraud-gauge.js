@@ -6,8 +6,8 @@ define([
 function( ko, template, datePickersTemplate ){
 
   function FraudGaugeViewModel( params ){
-    var self = this;
 
+    var self = this;
     self.title = 'Fraud Rejections';
     self.chosenTimePeriod = ko.observable('Last 15 Minutes');
 
@@ -44,7 +44,7 @@ function( ko, template, datePickersTemplate ){
       var value = (numberOfFails/numberOfTransactions) * 100;
       self.value = ko.observable(parseInt(value) + "%");
       //get color thresholds
-      //todo: these vals to come from user's choices via slider.
+      //TODO: these vals to come from user's choices via slider.
       if(value < 33){
         self.opts.colorStop = '#89CC23';
       } else if(value >= 33 && value < 66){
@@ -59,7 +59,7 @@ function( ko, template, datePickersTemplate ){
     };
 
     //#FraudRiskScoreGauge
-    //todo: cleanup
+    //TODO: cleanup
     self.context = document.getElementById('FraudRiskScoreGauge');
     self.gauge = new Gauge(self.context).setOptions(self.opts);
     self.gauge.maxValue = 100;
@@ -77,13 +77,11 @@ function( ko, template, datePickersTemplate ){
     };
 
     self.submitGaugeModifications = function(){
+      //TODO: get all values from the form into the SQL query
+      //run that query and generate the new widget
       console.log('submit');
     };
 
-    // self.hasFilters = ko.computed( function(){
-    //   console.log(self.chosenFilters);
-    //   //if(self.chosenFilters){ return true; } else { return false; }
-    // });
   }
 
   return { viewModel: FraudGaugeViewModel, template: template };

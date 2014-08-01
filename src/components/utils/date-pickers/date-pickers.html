@@ -1,47 +1,40 @@
 <div class="form-group">
-    <div class="well well-small">
-        <label>Choose Time Period:</label>
-        <div>
-            <label>
-                <select class="form-control" id="timePeriodDropdown">
-                    <option disabled>By Preset:</option>
-                    <option>Last 15 Minutes (Default)</option>
-                    <option>Last Hour</option>
-                    <option>Last 24 Hours</option>
-                    <option>Last 5 Minutes</option>
-                    <option disabled>By Specific:</option>
-                    <option class="timeIncrement" data-bind="click: show_increment_selection">Hour...</option>
-                    <option class="timeIncrement" data-bind="click: show_increment_selection">Day...</option>
-                    <option class="timeIncrement" data-bind="click: show_increment_selection">Week...</option>
-                    <option class="timeIncrement" data-bind="click: show_increment_selection">Month...</option>
-                    <option class="timeIncrement" data-bind="click: show_increment_selection">Year...</option>
-                    <option class="customIncrement" data-bind="click: show_custom_selection">Custom...</option>
-                </select>
-            </label>
-        </div>
-        <div data-bind="visible: shouldShowIncrements">
-            <label>
-                <select class="form-control" id="incrementDropdown">
-                    <option disabled>By Preset:</option>
-                    <option>Last 15 Minutes (Default)</option>
-                    <option>Last Hour</option>
-                    <option>Last 24 Hours</option>
-                    <option>Last 5 Minutes</option>
-                    <option disabled>By Specific:</option>
-                    <option class="timeIncrement">Hour...</option>
-                    <option class="timeIncrement">Day...</option>
-                    <option class="timeIncrement">Week...</option>
-                    <option class="timeIncrement">Month...</option>
-                    <option class="timeIncrement">Year...</option>
-                    <option class="customIncrement">Custom...</option>
-                </select>
-            </label>
-        </div>
-        <div data-bind="visible: shouldShowCustom">
-            <label>Between...
-                <input type="text" data-provide='datepicker'> and
-                <input type-"text" data-provide='datepicker'>
-            </label>
+        <div class="row well well-small">
+            <div class="col-md-4 col-lg-4 col-sm-12">
+                <label>Choose Preset Time Period:</label>
+                <div>
+                    <label>
+                        <select class="form-control" id="timePeriodDropdown" data-bind="options: availableTimePresets"></select>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-lg-3 col-sm-12">
+                <div>
+                    <label>Or Choose Other Time Increment:</label>
+                    <label>
+                        <select class="form-control" id="incrementDropdown" data-bind="options: availableIncrementTypes"></select>
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-5 col-lg-5 col-sm-12">
+                <div data-bind="visible: shouldShowIncrements"></div>
+                <div data-bind="visible: shouldShowCustom">
+                    <label>Or Select Between...
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" data-provide='datepicker'>
+                        </div> and
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type-"text" data-provide='datepicker'>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+
         </div>
     </div>
 </div>
