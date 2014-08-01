@@ -199,6 +199,23 @@ body {
     cursor: pointer;
 }
 
+.modalOptionTable {
+    width: 100%;
+    margin-left: 0;
+}
+
+.modalOptionCell{
+    display: inline-block;
+    width:49%;
+    border-right: 1px #ccc solid;
+    padding: 15px;
+}
+
+.modalOptionCell:last-child {
+    border: none;
+}
+
+
 /*#fraudTimePeriodDropdown {
     width: 100%;
 }*/
@@ -221,6 +238,10 @@ body {
 
 .btn .caret {
     margin-top: 7px;
+}
+
+input {
+    height: 28px;
 }
 
 .navbar-fixed-top {
