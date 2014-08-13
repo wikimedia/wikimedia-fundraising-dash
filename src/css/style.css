@@ -271,7 +271,13 @@ input {
     font-weight: normal;
 }
 
-.datepicker {z-index: 1151 !important;}
+.datepicker {
+    z-index: 1151 !important;
+}
+
+.datePickerForm input[type="radio"], input[type="checkbox"] {
+    margin: -4px 0 0 0;
+}
 
 
 
