@@ -1,46 +1,44 @@
 <div class="form-group">
         <div class="well well-small">
 
-            <div class="modalOptionTable">
-
-                    <div class="modalOptionCell">
-                        <label>Choose Preset Time Period:</label>
-                        <div>
-                            <label>
-                                <select class="form-control" id="timePeriodDropdown" data-bind="options: availableTimePresets"></select>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="modalOptionCell">
-                        <div>
-                            <label>Or Choose Other Time Increment:</label>
-                            <label>
-                                <select class="form-control" id="incrementDropdown" data-bind="options: availableIncrementTypes, value: selectedIncrement"></select>
-                            </label>
-                        </div>
-                    </div>
+            <label>Choose Preset Time Period:</label>
+            <div>
+                <label>
+                    <select class="form-control" id="timePeriodDropdown" data-bind="options: availableTimePresets, selectedOptions: chosenTimePeriodPresetDate"></select>
+                </label>
             </div>
 
+            <label>Or Custom Date & Time:</label>
+            <div class="input-group" id="customTimepicker">
+                <input type="text" class="input-sm form-control" id="customDate" placeholder="Date" data-bind="value: chosenTimePeriodDate" data-provide="datepicker" name="start" />
 
-            <div class="modalOptionTable">
-
-                    <div class="modalOptionCell">
-                        <div>
-                            <label>Or Custom Range:</label>
-                            <div class="input-daterange input-group" id="customDatepicker">
-                                <input type="text" class="input-sm form-control" data-provide="datepicker" name="start" />
-                                <span class="input-group-addon">to</span>
-                                <input type="text" class="input-sm form-control" data-provide="datepicker" name="end" />
-                            </div>
-                        </div>
+                <div class="input-group" id="customTimepickerRange">
+                    <div class="bootstrap-timepicker">
+                        <input id="queryTimepickerFrom" type="text" class="input-sm form-control" placeholder="From Time" data-bind="value: chosenTimePeriodFromTime" data-bind="click: setupTimepicker(event)">
                     </div>
-
-                    <div class="modalOptionCell">
-                        <!--here will go the menu that goes with other time increment selection. WIP-->
+                    <span class="input-group-addon">to</span>
+                    <div class="bootstrap-timepicker">
+                        <input id="queryTimepickerTo" type="text" class="input-sm form-control" placeholder="Time" data-bind="value: chosenTimePeriodToTime" data-bind="click: setupTimepicker(event)">
                     </div>
-
+                </div>
             </div>
+
+            <div>
+                <label>Or Custom Range:</label>
+                <div class="input-group" id="customDatepicker">
+                    <input type="text" class="input-sm form-control" placeholder="Date" data-bind="value: dateBeginRange" id="customDateFrom" data-provide="datepicker" name="start" />
+                    <span class="input-group-addon">to</span>
+                    <input type="text" class="input-sm form-control" placeholder="Date" data-bind="value: dateEndRange" data-provide="datepicker" name="end" />
+                </div>
+            </div>
+
+            <div id="chosenTimePeriod" data-bind="visible: chosenTimePeriod">
+                <div class="alert alert-danger">
+                <strong>You have chosen:</strong>
+                    <span data-bind="text: chosenTimePeriod"></span>
+                </div>
+            </div>
+        </div>
 
         </div>
     </div>

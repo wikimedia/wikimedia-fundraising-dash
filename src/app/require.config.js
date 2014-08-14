@@ -23,7 +23,8 @@ var require = {
         'flot.time':            'bower_modules/flot/jquery.flot.time',
         'raphael':              'bower_modules/raphael/raphael',
         'gauge':                'bower_modules/gauge.js/dist/gauge',
-        'bootstrap-datepicker': 'bower_modules/bootstrap-datepicker/js/bootstrap-datepicker'
+        'bootstrap-datepicker': 'bower_modules/bootstrap-datepicker/js/bootstrap-datepicker',
+        'bootstrap-timepicker': 'bower_modules/bootstrap-timepicker/js/bootstrap-timepicker'
     },
     shim: {
         'bootstrap': {
