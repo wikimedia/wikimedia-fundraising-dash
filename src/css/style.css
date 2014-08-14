@@ -199,26 +199,26 @@ body {
     cursor: pointer;
 }
 
-.modalOptionTable {
-    width: 100%;
-    margin-left: 0;
+#customTimePicker {
+    width: 100px;
 }
 
-.modalOptionCell{
-    display: inline-block;
-    width:49%;
-    border-right: 1px #ccc solid;
-    padding: 15px;
+#customDate {
+    width: 100px;
 }
 
-.modalOptionCell:last-child {
-    border: none;
+.input-sm.form-control{
+    height: 34px;
+    font-size: 14px;
 }
 
+#chosenTimePeriod {
+    margin: 15px 0 -15px 0;
+}
 
-/*#fraudTimePeriodDropdown {
-    width: 100%;
-}*/
+#customTimepickerRange {
+    margin-left: 7px;
+}
 
 /* BOOTSTRAP OVERRIDES */
 
@@ -280,6 +280,15 @@ input {
 
 .datePickerForm input[type="radio"], input[type="checkbox"] {
     margin: -4px 0 0 0;
+}
+
+.input-daterange .add-on{
+    margin-top: -4px;
+    height: 27px;
+}
+
+#queryTimepickerFrom.input-small, #queryTimepickerTo.input-small {
+    width: 100px;
 }
 
 

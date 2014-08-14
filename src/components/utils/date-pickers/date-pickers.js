@@ -1,14 +1,40 @@
 define( [
     'knockout',
-    'text!components/utils/date-pickers/date-pickers.html'
+    'text!components/utils/date-pickers/date-pickers.html',
+    'bootstrap-timepicker'
 ], function( ko, template ){
 
 
     function DatePickerViewModel( params ){
-        var self= this;
+        var self = this;
 
-        self.chosenTimePeriod = ko.computed( function(){
-            return "Every 15 Minutes";
+        self.setupTimepicker = function(event){
+            $('#' + event.target.id).timepicker({
+                template: false,
+                showMeridian: false
+            });
+        };
+
+        self.dateBeginRange = ko.observable('');
+        self.dateEndRange = ko.observable('');
+        self.chosenTimePeriodPresetDate = ko.observable('');
+        self.chosenTimePeriodDate = ko.observable('');
+        self.chosenTimePeriodFromTime = ko.observable('');
+        self.chosenTimePeriodToTime = ko.observable('');
+
+        self.chosenTimePeriod = ko.computed( function (){
+            var timePeriod;
+
+            if (self.dateBeginRange() && self.dateEndRange()){
+                timePeriod = "from " + self.dateBeginRange() + " to " + self.dateEndRange();
+            } else if(self.chosenTimePeriodPresetDate()){
+                timePeriod = self.chosenTimePeriodPresetDate();
+            } else if(self.chosenTimePeriodDate() && self.chosenTimePeriodFromTime() && self.chosenTimePeriodToTime()) {
+                timePeriod = self.chosenTimePeriodDate() + " from " + self.chosenTimePeriodFromTime() + " to " + self.chosenTimePeriodToTime();
+            }
+
+            return timePeriod;
+
         });
 
         self.submitTimePeriod = function(){
@@ -45,6 +71,7 @@ define( [
         self.getIncrementSubmenu = ko.computed( function(){
 
         });
+
 
     }
 
