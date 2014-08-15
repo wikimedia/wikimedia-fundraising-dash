@@ -11,12 +11,41 @@ function( ko, template, datePickersTemplate ){
     self.title = 'Fraud Rejections';
     self.chosenTimePeriod = ko.observable('Last 15 Minutes');
 
-    self.chosenFilters = [
-      { filterName: 'currency: USD'},
-      { filterName: 'country: USA'},
-      { filterName: 'campaign: big english'},
-      { filterName: 'gateway: Global Collect'}
-      ];
+
+    self.chosenFilters = ko.observableArray([]);
+
+    self.getFilters = ko.computed( function(){
+      //TODO: make this happen via database (hardcode for now)
+      //TODO: check to see if db has changed then fetch
+
+      var filterNamesFromDB = ['Currency','Method','Source','Campaign','Medium','Referrer','Gateway','Fraud Score'],
+      subfilterNamesFromDB  = [
+                              [ 'USD', 'AUD', 'ESB', 'ABC', 'DEF' ],
+                              [ 'Credit Card', 'Bank Transfer', 'Check' ],
+                              [ 'Source 1', 'Source 2' ],
+                              [ 'Big English', 'Another Campaign' ],
+                              [ 'Medium 1', 'Medium 2', 'Medium 3' ],
+                              [ 'Banner', 'Donate', 'Adam' ],
+                              [ 'Global Collect', 'WorldPay', 'Another Gateway' ],
+                              [ '0-100', '100-150', '150-200', '200+', 'or whatever' ] ];
+
+      filters = [];
+
+      for(var i=0; i<filterNamesFromDB.length; i++){
+        var filterObj = {filterName: filterNamesFromDB[i]};
+        filters.push(filterObj);
+      }
+
+      for(var j=0; j<subfilterNamesFromDB.length; j++){
+        for(var filter in filters){
+          filters[j].subfilter = subfilterNamesFromDB[j];
+        }
+      }
+
+      self.filters = ko.observableArray(filters);
+
+    });
+    self.getFilters();
 
     //Gauge options
     self.opts = {
@@ -58,9 +87,9 @@ function( ko, template, datePickersTemplate ){
       return value;
     };
 
-    self.setSubfilter = function(subfilter){
-      self.filterChecked = ko.observable(subfilter);
-    };
+    // self.setSubfilter = function(subfilter){
+    //   self.filterChecked = ko.observable(subfilter);
+    // };
 
     self.filterChecked = ko.observable();
 
