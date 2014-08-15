@@ -15,6 +15,7 @@ define( [
             });
         };
 
+        //initialize inputs
         self.dateBeginRange = ko.observable('');
         self.dateEndRange = ko.observable('');
         self.chosenTimePeriodPresetDate = ko.observable('');
@@ -22,6 +23,7 @@ define( [
         self.chosenTimePeriodFromTime = ko.observable('');
         self.chosenTimePeriodToTime = ko.observable('');
 
+        //TODO: handle resetting fields
         self.chosenTimePeriod = ko.computed( function (){
             var timePeriod;
 
