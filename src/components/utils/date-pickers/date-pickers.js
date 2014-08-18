@@ -24,7 +24,7 @@ define( [
         self.chosenTimePeriodToTime = ko.observable('');
 
         //TODO: handle resetting fields
-        self.chosenTimePeriod = ko.computed( function (){
+        self.chosenTimePeriod = ko.pureComputed( function (){
             var timePeriod;
 
             if (self.dateBeginRange() && self.dateEndRange()){
@@ -37,6 +37,10 @@ define( [
 
             return timePeriod;
 
+        });
+
+        self.chosenTimePeriod.subscribe( function(newVal){
+            params.selectedTimePeriod(newVal);
         });
 
         self.submitTimePeriod = function(){
