@@ -9,9 +9,7 @@ function( ko, template, datePickersTemplate ){
 
     var self = this;
     self.title = 'Fraud Rejections';
-    self.chosenTimePeriod = ko.observable('Last 15 Minutes');
-
-
+    self.selectedTimePeriod = ko.observable();
     self.chosenFilters = ko.observableArray([]);
 
     self.getFilters = ko.computed( function(){
@@ -45,7 +43,6 @@ function( ko, template, datePickersTemplate ){
       self.filters = ko.observableArray(filters);
 
     });
-    self.getFilters();
 
     //Gauge options
     self.opts = {
@@ -114,7 +111,8 @@ function( ko, template, datePickersTemplate ){
     self.submitGaugeModifications = function(){
       //TODO: get all values from the form into the SQL query
       //run that query and generate the new widget
-      console.log('submit');
+
+      console.log('selected date: ', self.selectedTimePeriod());
     };
 
   }
