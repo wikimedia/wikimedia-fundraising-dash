@@ -27,13 +27,11 @@ if (!serverConfig) {
     process.exit(1);
 }
 
-app.configure(function(){
-  app.set( 'views', __dirname + '/src/components' );
-  app.set( 'view options', { pretty: true } );
-  app.use( express.bodyParser() );
-  app.use( express.methodOverride() );
-  app.use( express.static(__dirname + '/src') );
-});
+app.set( 'views', __dirname + '/src/components' );
+app.set( 'view options', { pretty: true } );
+app.use( express.bodyParser() );
+app.use( express.methodOverride() );
+app.use( express.static(__dirname + '/src') );
 
 var port = config.port;
 
