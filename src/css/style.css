@@ -174,7 +174,7 @@ body {
 /* Gauges */
 
 #fraudGaugeWidget {
-    max-width: 330px;
+    width: 330px;
 }
 
 #fraudGaugeWidget .panel-body {
