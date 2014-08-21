@@ -1,11 +1,29 @@
 require('rconsole');
 
-var express     = require( 'express' ),
-    app         = express(),
-    commander   = require( 'commander' ),
-    config      = require( './defaults.js' ),
+var express           = require( 'express' ),
+    app               = express(),
+    commander         = require( 'commander' ),
+    config            = require( './defaults.js' ),
+    passport          = require( 'passport' ),
+    OAuthStrategy     = require( 'passport-oauth' ).OAuthStrategy,
     server,
     serverConfig;
+
+passport.use('provider', new OAuthStrategy({
+    requestTokenURL: config.requestTokenURL,
+    accessTokenURL: config.accessTokenURL,
+    userAuthorizationURL: config.userAuthorizationURL,
+    consumerKey: config.consumerKey,
+    consumerSecret: config.consumerSecret
+  },
+  function(token, tokenSecret, profile, done) {
+    // TODO: this
+    // User.findOrCreate(..., function(err, user) {
+    //   done(err, user);
+    //});
+    console.log('profile: ', profile);
+  }
+));
 
 commander
     .version('0.0.1')
@@ -32,6 +50,11 @@ app.set( 'view options', { pretty: true } );
 app.use( express.bodyParser() );
 app.use( express.methodOverride() );
 app.use( express.static(__dirname + '/src') );
+
+app.get('/auth/provider', passport.authenticate('provider'));
+app.get('/auth/provider/callback',
+  passport.authenticate('provider', { successRedirect: '/',
+                                      failureRedirect: '/login' }));
 
 var port = config.port;
 
