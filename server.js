@@ -6,9 +6,12 @@ var express           = require( 'express' ),
     config            = require( './defaults.js' ),
     passport          = require( 'passport' ),
     OAuthStrategy     = require( 'passport-oauth' ).OAuthStrategy,
+    Sequelize         = require( 'sequelize' ),
+    sequelize,
     server,
     serverConfig;
 
+// Authentication
 passport.use('provider', new OAuthStrategy({
     requestTokenURL: 'http://oauth-sandbox.sevengoslings.net/request_token',
     accessTokenURL: 'http://oauth-sandbox.sevengoslings.net/access_token',
@@ -24,6 +27,22 @@ passport.use('provider', new OAuthStrategy({
     console.log('profile: ', profile);
   }
 ));
+
+// Database connection
+sequelize = new Sequelize( config.db, config.dblogin, config.dbpwd, {
+    dialect: 'mysql',
+    port: 3306
+});
+
+sequelize
+    .authenticate()
+    .complete( function(err){
+        if(!!err) {
+            console.log('Unable to connect to the database: ', err);
+        } else {
+            console.log('Connection has been established successfully.');
+        }
+    });
 
 commander
     .version('0.0.1')
