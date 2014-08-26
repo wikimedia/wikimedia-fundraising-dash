@@ -4,8 +4,11 @@ var express           = require( 'express' ),
     app               = express(),
     commander         = require( 'commander' ),
     config            = require( './defaults.js' ),
+    port              = config.port,
+    routes            = require( './routes'),
     passport          = require( 'passport' ),
     OAuthStrategy     = require( 'passport-oauth' ).OAuthStrategy,
+    db                = require( './models' ),
     server,
     serverConfig;
 
@@ -25,10 +28,6 @@ passport.use('provider', new OAuthStrategy({
     console.log('profile: ', profile);
   }
 ));
-
-//Database & ORM Setup
-require('./src/models/user.js');
-require('./src/app/model.js').setup( __dirname + '/src/models', config.db, config.dblogin, config.dbpwd);
 
 commander
     .version('0.0.1')
@@ -55,14 +54,23 @@ app.set( 'view options', { pretty: true } );
 app.use( express.bodyParser() );
 app.use( express.methodOverride() );
 app.use( express.static(__dirname + '/src') );
+app.get('/', routes.index);
 
 app.get('/auth/provider', passport.authenticate('provider'));
 app.get('/auth/provider/callback',
   passport.authenticate('provider', { successRedirect: '/',
                                       failureRedirect: '/login' }));
 
-var port = config.port;
-
-server = app.listen( serverConfig[3], serverConfig[2], function() {
-    console.log( 'listening on port %d', server.address().port );
-});
+//Database & ORM Setup
+db
+  .sequelize
+  .sync({ force: true })
+  .complete(function(err) {
+    if (err) {
+      throw err;
+    } else {
+      server = app.listen( serverConfig[3], serverConfig[2], function() {
+                    console.log( 'listening on port %d', server.address().port );
+                });
+    }
+  });
