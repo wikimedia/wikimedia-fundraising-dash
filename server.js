@@ -6,8 +6,6 @@ var express           = require( 'express' ),
     config            = require( './defaults.js' ),
     passport          = require( 'passport' ),
     OAuthStrategy     = require( 'passport-oauth' ).OAuthStrategy,
-    Sequelize         = require( 'sequelize' ),
-    sequelize,
     server,
     serverConfig;
 
@@ -28,21 +26,9 @@ passport.use('provider', new OAuthStrategy({
   }
 ));
 
-// Database connection
-sequelize = new Sequelize( config.db, config.dblogin, config.dbpwd, {
-    dialect: 'mysql',
-    port: 3306
-});
-
-sequelize
-    .authenticate()
-    .complete( function(err){
-        if(!!err) {
-            console.log('Unable to connect to the database: ', err);
-        } else {
-            console.log('Connection has been established successfully.');
-        }
-    });
+//Database & ORM Setup
+require('./src/models/user.js');
+require('./src/app/model.js').setup( __dirname + '/src/models', config.db, config.dblogin, config.dbpwd);
 
 commander
     .version('0.0.1')
