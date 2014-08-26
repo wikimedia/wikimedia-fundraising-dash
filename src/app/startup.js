@@ -4,6 +4,7 @@ define(
        './router',
        'bootstrap',
        'knockout-projections',
+
        //'./bindings'
     ], function( $, ko, router ){
 
@@ -20,5 +21,7 @@ define(
 
         //fire up router
         ko.applyBindings({ route: router.currentRoute });
+
+
 
 });

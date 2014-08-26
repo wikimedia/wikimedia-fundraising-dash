@@ -3,3 +3,4 @@ src/old/*
 src/bower_modules/*
 node_modules/*
 defaults.js
+src/app/models.txt
