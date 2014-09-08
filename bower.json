@@ -7,6 +7,8 @@
   "description": "A Data Visualization Dashboard for Wikimedia Foundation Fundraising",
   "main": "server.js",
   "moduleType": [
+    "amd",
+    "globals",
     "node"
   ],
   "license": "MIT",
@@ -15,14 +17,29 @@
     "node_modules",
     "public/javascripts/vendor",
     "test",
-    "tests"
+    "tests",
+    "bower_components",
+    "src/bower_modules"
   ],
   "dependencies": {
-    "backbone": "~1.1.2",
-    "jquery": "~2.1.1",
-    "qunit": "~1.14.0",
-    "requirejs-text": "~2.0.12",
-    "requirejs": "~2.1.11",
-    "lato": "~0.2.0"
-  }
+    "bootstrap-datepicker": "~1.3.0",
+    "bootstrap-timepicker": "~0.2.6",
+    "d3": "~3.4.11",
+    "chartjs": "~0.2.0",
+    "crossroads": "~0.12.0",
+    "gauge.js": "~1.2.1",
+    "fontawesome": "~4.1.0",
+    "flot": "~0.8.3",
+    "hasher": "~1.2.0",
+    "jquery.ui": "~1.11.0",
+    "knockout-projections": "~1.1.0-pre",
+    "knockout": "~3.1.0",
+    "moment": "~2.7.0",
+    "raphael": "~2.1.2"
+  },
+  "keywords": [
+    "dash"
+  ],
+  "homepage": "http://sherah.github.io/dash",
+  "private": true
 }
