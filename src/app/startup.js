@@ -18,6 +18,7 @@ define(
 
         //register individual widgets
         ko.components.register( 'fraud-gauge',        { require: 'components/widgets/fraud-gauge/fraud-gauge' });
+        ko.components.register( 'ab-table',           { require: 'components/widgets/ab-table/ab-table' });
 
         //fire up router
         ko.applyBindings({ route: router.currentRoute });

@@ -1,0 +1,59 @@
+<div class="panel panel-purple" id="abTableWidget">
+    <div class="panel-heading">
+        A/B Test Reports
+        <div class="btn-group btn-group-xs pull-right">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#abModal"><i class="fa fa-cog"></i></button>
+        </div>
+    </div>
+    <div class="panel-body">
+    	<table class="table">
+    		<tr>
+				<td><i class="fa fa-line-chart"></td>
+				<td><span data-bind="text: A.testName"></span></td>
+				<td><span data-bind="text: B.testName"></span></td>
+			</tr>
+			<tr class="active">
+				<td># of Donations</td>
+				<td><span data-bind="text: A.donations"></span></td>
+				<td><span data-bind="text: B.donations"></span></td>
+			</tr>
+			<tr class="success">
+				<td>Impressions</td>
+				<td><span data-bind="text: A.impressions"></span></td>
+				<td><span data-bind="text: B.impressions"></span></td>
+			</tr>
+			<tr class="warning">
+				<td>Clicks</td>
+				<td><span data-bind="text: A.clicks"></span></td>
+				<td><span data-bind="text: B.clicks"></span></td>
+			</tr>
+			<tr class="danger">
+				<td>Total Donation Amount</td>
+				<td><span data-bind="text: A.amount"></span></td>
+				<td><span data-bind="text: B.amount"></span></td>
+			</tr>
+			<tr class="info">
+				<td>Average Donation</td>
+				<td><span data-bind="text: A.avg"></span></td>
+				<td><span data-bind="text: B.avg"></span></td>
+			</tr>
+			<tr>
+				<td>Conversion Rate</td>
+				<td><span data-bind="text: A.conversion"></span></td>
+				<td><span data-bind="text: B.conversion"></span></td>
+			</tr>
+    	</table>
+    </div>
+
+    <div class="modal fade" id="abModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">A/B Testing Stuff</h4>
+                </div>
+                <div class="modal-body">stuff stuff stuff</div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
