@@ -3,8 +3,7 @@ define(
        'knockout',
        './router',
        'bootstrap',
-       'knockout-projections',
-
+       'knockout-projections'
        //'./bindings'
     ], function( $, ko, router ){
 

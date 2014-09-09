@@ -1,4 +1,7 @@
-@import: "../public/javascripts/vendor/lato/css/lato.css";
+@import "../bower_modules/lato/css/lato.css";
+@import "../bower_modules/jquery-ui/themes/base/all.css";
+
+
 html {
     margin:0;
     padding:0;
@@ -193,6 +196,10 @@ body {
 
 #fraudGaugeValue{
     margin-top: -50px;
+}
+
+#fraudPercentSlider {
+    margin: 10px 0;
 }
 
 #queryButton {

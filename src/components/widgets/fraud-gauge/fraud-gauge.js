@@ -2,7 +2,8 @@ define([
     'knockout',
     'text!components/widgets/fraud-gauge/fraud-gauge.html',
     'gauge',
-    'bootstrap-datepicker'],
+    'bootstrap-datepicker',
+    'jquery-ui'],
 function( ko, template, datePickersTemplate ){
 
   function FraudGaugeViewModel( params ){
@@ -11,6 +12,22 @@ function( ko, template, datePickersTemplate ){
     self.title = 'Fraud Rejections';
     self.selectedTimePeriod = ko.observable();
     self.chosenFilters = ko.observableArray([]);
+
+    self.lowRange = ko.observable(33);
+    self.highRange = ko.observable(66);
+    $('#fraudPercentSlider').slider({
+      range: true,
+      min: 0,
+      max: 100,
+      //default is to split into thirds evenly
+      values: [ 33, 66 ],
+      slide: function( event, ui ){
+        var l = $('#fraudPercentSlider').slider( "values", 0),
+            h = $('#fraudPercentSlider').slider( "values", 1);
+        self.lowRange  = ko.observable(l);
+        self.highRange = ko.observable(h);
+      },
+    });
 
     self.getFilters = ko.computed( function(){
       //TODO: make this happen via database (hardcode for now)

@@ -31,11 +31,11 @@
     "fontawesome": "~4.1.0",
     "flot": "~0.8.3",
     "hasher": "~1.2.0",
-    "jquery.ui": "~1.11.0",
     "knockout-projections": "~1.1.0-pre",
     "knockout": "~3.1.0",
     "moment": "~2.7.0",
-    "raphael": "~2.1.2"
+    "raphael": "~2.1.2",
+    "jquery-ui": "~1.11.1"
   },
   "keywords": [
     "dash"

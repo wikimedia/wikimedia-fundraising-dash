@@ -12,10 +12,7 @@ var require = {
         'text':                 'bower_modules/requirejs-text/text',
         'chartjs':              'bower_modules/chartjs/Chart',
         'momentjs':             'bower_modules/moment/moment',
-        'jquery.ui.widget':     'bower_modules/jquery.ui/ui/jquery.ui.widget',
-        'jquery.ui.mouse':      'bower_modules/jquery.ui/ui/jquery.ui.mouse',
-        'jquery.ui.core':       'bower_modules/jquery.ui/ui/jquery.ui.core',
-        'jquery.ui.slider':     'bower_modules/jquery.ui/ui/jquery.ui.slider',
+        'jquery-ui':            'bower_modules/jquery-ui/jquery-ui',
         'flot':                 'bower_modules/flot/jquery.flot',
         'flot.pie':             'bower_modules/flot/jquery.flot.pie',
         'flot.stack':           'bower_modules/flot/jquery.flot.stack',
@@ -34,18 +31,6 @@ var require = {
         },
         'momentjs': {
             exports: 'moment'
-        },
-        'jquery.ui.mouse': {
-            deps: [
-                'jquery.ui.widget'
-            ]
-        },
-        'jquery.ui.slider': {
-            deps: [
-                'jquery',
-                'jquery.ui.core',
-                'jquery.ui.mouse'
-            ]
         },
         'flot': {
             deps: [
