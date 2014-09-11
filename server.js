@@ -50,8 +50,8 @@ app.set( 'views', __dirname + '/src/components' );
 app.set( 'view options', { pretty: true } );
 app.use( express.bodyParser() );
 app.use( express.methodOverride() );
-app.get( '/data', routes.data );
-app.get( '/metadata', routes.metadata );
+app.get( '/data/:widget', routes.data );
+app.get( '/metadata/:widget', routes.metadata );
 app.use( express.static(__dirname + '/src') );
 
 app.get('/auth/provider', passport.authenticate('provider'));
