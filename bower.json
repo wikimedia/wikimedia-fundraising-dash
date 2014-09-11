@@ -42,5 +42,9 @@
     "dash"
   ],
   "homepage": "http://sherah.github.io/dash",
-  "private": true
+  "private": true,
+  "resolutions": {
+    "bootstrap": ">=3.0 <4.0",
+    "jquery": "2.1.1"
+  }
 }
