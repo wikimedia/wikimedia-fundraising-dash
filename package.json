@@ -16,8 +16,6 @@
     "lodash": "^2.4.1",
     "mysql": "^2.4.3",
     "passport": "^0.2.1",
-    "passport-oauth": "^1.0.0",
-    "rconsole": "~0.2.0",
-    "sequelize": "^1.7.10"
+    "passport-oauth": "^1.0.0"
   }
 }

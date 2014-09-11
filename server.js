@@ -1,5 +1,3 @@
-require('rconsole');
-
 var express           = require( 'express' ),
     app               = express(),
     commander         = require( 'commander' ),
@@ -8,7 +6,6 @@ var express           = require( 'express' ),
     routes            = require( './routes'),
     passport          = require( 'passport' ),
     OAuthStrategy     = require( 'passport-oauth' ).OAuthStrategy,
-    db                = require( './models' ),
     server,
     serverConfig;
 
@@ -53,24 +50,18 @@ app.set( 'views', __dirname + '/src/components' );
 app.set( 'view options', { pretty: true } );
 app.use( express.bodyParser() );
 app.use( express.methodOverride() );
+app.get( '/data', routes.data );
+app.get( '/metadata', routes.metadata );
 app.use( express.static(__dirname + '/src') );
-app.get('/', routes.index);
 
 app.get('/auth/provider', passport.authenticate('provider'));
 app.get('/auth/provider/callback',
   passport.authenticate('provider', { successRedirect: '/',
                                       failureRedirect: '/login' }));
-
-//Database & ORM Setup
-db
-  .sequelize
-  .sync({ force: true })
-  .complete(function(err) {
-    if (err) {
-      throw err;
-    } else {
-      server = app.listen( serverConfig[3], serverConfig[2], function() {
-                    console.log( 'listening on port %d', server.address().port );
-                });
-    }
-  });
+server = app.listen(
+		serverConfig[3],
+		serverConfig[2],
+		function() {
+			console.log( 'listening on port %d', server.address().port );
+		}
+);
