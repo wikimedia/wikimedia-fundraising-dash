@@ -39,7 +39,8 @@
     "jquery": "~2.1.1",
     "requirejs": "~2.1.15",
     "lato": "~0.2.1",
-    "requirejs-text": "~2.0.12"
+    "requirejs-text": "~2.0.12",
+    "jquery": "~2.1.1"
   },
   "keywords": [
     "dash"

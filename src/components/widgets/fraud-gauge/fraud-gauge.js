@@ -20,7 +20,7 @@ function( ko, template, datePickersTemplate ){
       min: 0,
       max: 100,
       //default is to split into thirds evenly
-      values: [ 33, 66 ],
+      values: [ self.lowRange(), self.highRange() ],
       slide: function( event, ui ){
         var l = $('#fraudPercentSlider').slider( "values", 0),
             h = $('#fraudPercentSlider').slider( "values", 1);
@@ -129,7 +129,17 @@ function( ko, template, datePickersTemplate ){
       //TODO: get all values from the form into the SQL query
       //run that query and generate the new widget
 
-      console.log('selected date: ', self.selectedTimePeriod());
+      //gauge boundaries
+      var l = $('#fraudPercentSlider').slider( "values", 0),
+          h = $('#fraudPercentSlider').slider( "values", 1);
+
+      //gauge time period
+
+
+      //gauge filters
+
+
+
     };
 
   }

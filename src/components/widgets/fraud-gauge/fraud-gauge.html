@@ -37,10 +37,13 @@
                                         <div class="form-group">
                                             <label for="fraudPercentSlider">Fraud Percent Ranges</label>
                                             <div id="fraudPercentSlider"></div>
-                                            <p>
-                                              <span data-bind="text: lowRange"></span>
-                                              <span data-bind="text: highRange"></span>
-                                            </p>
+                                            <table class="table text-center">
+                                              <tr>
+                                                  <td class="success" data-bind="attr: { width: lowRange() + '%' }">0 - <span data-bind="text: lowRange"></span>%</td>
+                                                  <td class="warning" data-bind="attr: { width: ( highRange() - lowRange() ) + '%' }"><span data-bind="text: lowRange"></span> - <span data-bind="text: highRange"></span>%</td>
+                                                  <td class="danger" data-bind="attr: { width: ( 100 - highRange()) + '%' }"><span data-bind="text: highRange"></span> - 100%</td>
+                                              </tr>
+                                            </table>
                                         </div>
 
                                         <!--Call Date Pickers Component to handle date range-->
