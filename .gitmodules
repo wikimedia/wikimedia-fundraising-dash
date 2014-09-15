@@ -1,6 +1,6 @@
-[submodule "dash_bower_modules"]
-	path = dash_bower_modules
+[submodule "bower_modules"]
+	path = src/bower_modules
 	url = https://github.com/sherah/dash_bower_modules.git
-[submodule "dash_node_modules"]
-	path = dash_node_modules
+[submodule "node_modules"]
+	path = node_modules
 	url = https://github.com/sherah/dash_node_modules.git
