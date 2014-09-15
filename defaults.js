@@ -1,5 +1,6 @@
 module.exports = {
     listen: "8080",
+    dbserver: 'localhost',
     db: 'fredge',
     dblogin: 'testuser',
     dbpwd: 'testpassword',
