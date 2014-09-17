@@ -24,8 +24,8 @@ function( ko, template, datePickersTemplate ){
       slide: function( event, ui ){
         var l = $('#fraudPercentSlider').slider( "values", 0),
             h = $('#fraudPercentSlider').slider( "values", 1);
-        self.lowRange  = ko.observable(l);
-        self.highRange = ko.observable(h);
+        self.lowRange(l);
+        self.highRange(h);
       },
     });
 
