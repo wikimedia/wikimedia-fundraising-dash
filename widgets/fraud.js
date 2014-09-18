@@ -14,13 +14,52 @@ FROM payments_fraud pf [[JOINS]] [[WHERE]]",
 			display : 'Currency',
 			type : 'dropdown',
 			//TODO: get values dynamically
-			values : [ 'USD', 'EUR', 'JPY' ]
+			values : [ 'AED', 'ARS', 'AUD', 'BBD', 'BDT', 'BGN', 'BHD', 'BMD', 'BOB', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CRC', 'CZK', 'DKK', 'DOP', 'DZD', 'EGP', 'EUR', 'GBP', 'GTQ', 'HKD', 'HNL', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'JMD', 'JOD', 'JPY', 'KES', 'KRW', 'KZT', 'LKR', 'LTL', 'MAD', 'MKD', 'MXN', 'MYR', 'NIO', 'NOK', 'NZD', 'OMR', 'PAB', 'PEN', 'PHP', 'PKR', 'PLN', 'QAR', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TTD', 'TWD', 'UAH', 'USD', 'UYU', 'VEF', 'XCD', 'ZAR' ]
+		},
+		met: {
+			table: 'pf',
+			coulmn: 'payment_method',
+			display: 'Method',
+			type: 'dropdown',
+			values: [ 'cc', 'paypal', 'rtbt', 'amazon', 'dd', 'ew', 'obt', 'bt']
+		},
+		src: {
+			table: 'ct',
+			column: 'utm_source',
+			display: 'Source',
+			type: 'text'
+		},
+		cmp: {
+			table: 'ct',
+			column: 'utm_campaign',
+			display: 'Campaign',
+			type: 'text'
+		},
+		med: {
+			table: 'ct',
+			column: 'utm_medium',
+			display: 'Medium',
+			type: 'dropdown',
+			values: [ 'sitenotice', 'sidebar', 'email', 'spontaneous', 'wmfWikiRedirect', 'SocialMedia', 'WaysToGive', 'event', 'externalbanner', 'outage' ]
 		},
 		ref: {
 			table: 'ct',
 			column : 'referrer',
 			display : 'Referrer',
 			type : 'text'
+		},
+		gw: {
+			table: 'pf',
+			column: 'gateway',
+			display: 'Gateway',
+			type: 'dropdown',
+			values: [ 'globalcollect', 'worldpay' ]
+		},
+		fs: {
+			table: 'pf',
+			column: 'risk_score',
+			display: 'Fraud Score',
+			type: 'number'
 		},
 		dt: {
 			table: 'pf',

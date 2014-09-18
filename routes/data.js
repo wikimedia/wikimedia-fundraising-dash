@@ -3,7 +3,7 @@ var widgets = require( '../widgets' ),
 	mysql = require ( 'mysql'),
 	config = require( '../defaults.js' );
 
-function validateValue( value, column ) {
+function validateValue( value, column, undefined ) {
 	var valid = false,
 		i;
 	switch( column.type ) {
@@ -21,25 +21,36 @@ function validateValue( value, column ) {
 			break;
 		case 'datetime':
 			valid = value.match( /^\d\d\d\d-(\d)?\d-(\d)?\d \d\d:\d\d:\d\d$/ );
-			break;	
-		//TODO: text filters
+			break;
+		case 'text':
+			//Trusting the value substitution to escape it all
+			valid = true;
 		default:
 			valid = false;
+	}
+	if (
+			( column.max !== undefined && value > column.max ) ||
+			( column.min !== undefined && value < column.min )
+	) {
+		valid = false;
 	}
 	return valid;
 }
 
 function buildWhere( filterNode, widget, values, joins ) {
-	var col, op, rightClause, leftClause, ops = {
+	var col, op, rightClause, leftClause, val, ops = {
 		'and': 'AND',
 		'or': 'OR',
 		'eq': '=',
 		'lt': '<',
-		'gt': '>'
+		'le': '<=',
+		'gt': '>',
+		'ge': '>=',
+		'ne': '!='
 	};
 	var op = ops[filterNode.type];
 	if ( !op ) {
-		throw new Exception( 'Illegal filter type ' + filterNode.type );
+		throw ( 'Illegal filter type ' + filterNode.type );
 	}
 	switch (op) {
 		case 'AND':
@@ -49,7 +60,10 @@ function buildWhere( filterNode, widget, values, joins ) {
 			return '(' + leftClause + ' ' + op + ' ' + rightClause + ')';
 		case '=':
 		case '<':
+		case '<=':
 		case '>':
+		case '>=':
+		case '!=':
 			if ( filterNode.left.type !== 'property' ) {
 				throw ( 'Only property comparisons are currently allowed' );
 			}
@@ -57,15 +71,18 @@ function buildWhere( filterNode, widget, values, joins ) {
 			if ( !col ) {
 				throw ( 'Illegal filter property ' + filterNode.left.name );
 			}
-			if ( !validateValue( filterNode.right.value, col ) ) {
-				throw ( 'Invalid value ' + filterNode.right.value + ' for filter type ' + col.type );
+			val = filterNode.right.value;
+			if ( typeof val === 'string' && col.type === 'number' ) {
+				val = parseFloat( val );
+			}
+			if ( !validateValue( val, col ) ) {
+				throw ( 'Invalid value ' + val + ' for filter type ' + col.type );
 			}
 			if ( col.table !== widget.mainTableAlias && joins.indexOf( col.table ) === -1 ) {
 				joins.push( col.table );
 			}
-			values.push( filterNode.right.value ); //this may get more complex with nesting...
+			values.push( val ); //this may get more complex with nesting...
 			return col.table + '.' + col.column + ' ' + op + ' ?';
-			break;
 	}
 	return '';
 }
