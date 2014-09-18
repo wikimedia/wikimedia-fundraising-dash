@@ -3,6 +3,13 @@ var widgets = require( '../widgets' ),
 	mysql = require ( 'mysql'),
 	config = require( '../defaults.js' );
 
+/**
+ * Throws an error if an value is invalid for the given column
+ *
+ * @param {mixed} value
+ * @param {Object} column
+ * @param {undefined} undefined
+ */
 function validateValue( value, column, undefined ) {
 	var valid = false,
 		i;
@@ -15,7 +22,6 @@ function validateValue( value, column, undefined ) {
 				}
 			}
 			break;
-		//TODO: min/max
 		case 'number':
 			valid = !isNaN( parseFloat( value ) ) && isFinite( value );
 			break;
@@ -25,6 +31,7 @@ function validateValue( value, column, undefined ) {
 		case 'text':
 			//Trusting the value substitution to escape it all
 			valid = true;
+			break;
 		default:
 			valid = false;
 	}
@@ -34,11 +41,44 @@ function validateValue( value, column, undefined ) {
 	) {
 		valid = false;
 	}
-	return valid;
+	if ( !valid )	{
+		throw ( 'Invalid value ' + value + ' for filter ' + col.display );
+	}
 }
 
+/**
+ * Gets a filter and adds it to joins if not yet present
+ * Throws an error if the column does not exist
+ *
+ * @param {String} name - qs param for the filter
+ * @param {Object} widget
+ * @param {Array} joins - list of table aliases to join
+ * @returns {Object} describing column
+ */
+function getColumn( name, widget, joins ) {
+	col = widget.filters[name];
+	if ( !col ) {
+		throw ( 'Illegal filter property ' + name );
+	}
+	if ( col.table !== widget.mainTableAlias && joins.indexOf( col.table ) === -1 ) {
+		joins.push( col.table );
+	}
+	return col;
+}
+
+/**
+ * Create a SQL WHERE clause given a parsed filter node.
+ * Uses '?' placeholders in clause, and appends literal values to values array
+ * and required join table aliases to the joins array.
+ *
+ * @param {Object} filterNode - parsed from odata-parser
+ * @param {Object} widget
+ * @param {Array} values - list of values to use for placeholders
+ * @param {Array} joins - list of table aliases to join
+ * @returns {String} WHERE clause with '?' placeholders for values
+ */
 function buildWhere( filterNode, widget, values, joins ) {
-	var col, op, rightClause, leftClause, val, ops = {
+	var col, op, rightClause, leftClause, val, pattern, ops = {
 		'and': 'AND',
 		'or': 'OR',
 		'eq': '=',
@@ -46,12 +86,19 @@ function buildWhere( filterNode, widget, values, joins ) {
 		'le': '<=',
 		'gt': '>',
 		'ge': '>=',
-		'ne': '!='
+		'ne': '!=',
+		'functioncall': 'fn'
+	}, patterns = {
+		substringof: '%{1}%',
+		startswith: '{1}%',
+		endswith: '%{1}'
 	};
-	var op = ops[filterNode.type];
+
+	op = ops[filterNode.type];
 	if ( !op ) {
 		throw ( 'Illegal filter type ' + filterNode.type );
 	}
+
 	switch (op) {
 		case 'AND':
 		case 'OR':
@@ -67,22 +114,39 @@ function buildWhere( filterNode, widget, values, joins ) {
 			if ( filterNode.left.type !== 'property' ) {
 				throw ( 'Only property comparisons are currently allowed' );
 			}
-			col = widget.filters[filterNode.left.name];
-			if ( !col ) {
-				throw ( 'Illegal filter property ' + filterNode.left.name );
-			}
+			col = getColumn( filterNode.left.name, widget, joins );
+
 			val = filterNode.right.value;
 			if ( typeof val === 'string' && col.type === 'number' ) {
 				val = parseFloat( val );
 			}
-			if ( !validateValue( val, col ) ) {
-				throw ( 'Invalid value ' + val + ' for filter type ' + col.type );
-			}
-			if ( col.table !== widget.mainTableAlias && joins.indexOf( col.table ) === -1 ) {
-				joins.push( col.table );
-			}
+			validateValue( val, col );
 			values.push( val ); //this may get more complex with nesting...
+
 			return col.table + '.' + col.column + ' ' + op + ' ?';
+		case 'fn':
+			pattern = patterns[filterNode.func];
+			if ( !pattern ) {
+				throw ( 'Unsupported function ' + filterNode.func );
+			}
+			if ( filterNode.args.length < 2 ) {
+				throw ( 'Not enough arguments' );
+			}
+			if ( filterNode.args[0].type !== 'literal' || filterNode.args[1].type !== 'property' ) {
+				throw ( 'First argument to ' + filterNode.func + ' must be a literal ' + 
+						'and second must be a property.' );
+			}
+
+			col = getColumn( filterNode.args[1].name, widget, joins );
+			if ( col.type !== 'text' ) {
+				throw ( 'Can only call function ' + filterNode.func + ' on text properties' );
+			}
+
+			val = pattern.replace( '{1}', filterNode.args[0].value );
+			validateValue( val, col );
+			values.push( val );
+
+			return col.table + '.' + col.column + ' LIKE ?';
 	}
 	return '';
 }
