@@ -8,9 +8,8 @@ var widgets = require( '../widgets' ),
  *
  * @param {mixed} value
  * @param {Object} column
- * @param {undefined} undefined
  */
-function validateValue( value, column, undefined ) {
+function validateValue( value, column ) {
 	var valid = false,
 		i;
 	switch( column.type ) {
