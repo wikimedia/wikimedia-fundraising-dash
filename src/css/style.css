@@ -133,8 +133,16 @@ body {
     color: #fff;
 }
 
-#topRange {
-    margin-top:-28px;
+.noUi-base {
+    background-color: #dff0d8;
+}
+
+.noUi-background {
+    background-color: #f2dede;
+}
+
+.noUi-connect {
+    background-color: #fcf8e3;
 }
 
 /* WIDGET BASE STYLINGS */
@@ -297,6 +305,10 @@ input {
 
 #queryTimepickerFrom.input-small, #queryTimepickerTo.input-small {
     width: 100px;
+}
+
+.sliderTable > tbody > tr > td {
+    border-top: none;
 }
 
 

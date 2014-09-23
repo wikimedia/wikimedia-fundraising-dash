@@ -23,6 +23,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
         'max': [100]
       },
       step: 1,
+      connect: true
     });
     $('#fraudPercentSlider').on({
       slide: function(){

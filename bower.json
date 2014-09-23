@@ -29,7 +29,6 @@
     "crossroads": "~0.12.0",
     "gauge.js": "~1.2.1",
     "fontawesome": "~4.1.0",
-    "flot": "~0.8.3",
     "hasher": "~1.2.0",
     "knockout-projections": "~1.1.0-pre",
     "knockout": "~3.2.0",
