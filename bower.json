@@ -35,12 +35,11 @@
     "knockout": "~3.2.0",
     "moment": "~2.7.0",
     "raphael": "~2.1.2",
-    "jquery-ui": "~1.11.1",
-    "jquery": "~2.1.1",
     "requirejs": "~2.1.15",
     "lato": "~0.2.1",
     "requirejs-text": "~2.0.12",
-    "jquery": "~2.1.1"
+    "jquery": "~2.1.1",
+    "nouislider": "~7.0.7"
   },
   "keywords": [
     "dash"

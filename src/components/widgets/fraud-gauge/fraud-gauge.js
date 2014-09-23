@@ -2,9 +2,10 @@ define([
     'knockout',
     'text!components/widgets/fraud-gauge/fraud-gauge.html',
     'gauge',
-    'bootstrap-datepicker',
-    'jquery-ui'],
-function( ko, template, datePickersTemplate ){
+    'noUISlider',
+    'bootstrap-datepicker'
+    ],
+function( ko, template, datePickersTemplate, noUISlider ){
 
   function FraudGaugeViewModel( params ){
 
@@ -15,17 +16,19 @@ function( ko, template, datePickersTemplate ){
 
     self.lowRange = ko.observable(33);
     self.highRange = ko.observable(66);
-    $('#fraudPercentSlider').slider({
-      range: true,
-      min: 0,
-      max: 100,
-      //default is to split into thirds evenly
-      values: [ self.lowRange(), self.highRange() ],
-      slide: function( event, ui ){
-        var l = $('#fraudPercentSlider').slider( "values", 0),
-            h = $('#fraudPercentSlider').slider( "values", 1);
-        self.lowRange(l);
-        self.highRange(h);
+    $('#fraudPercentSlider').noUiSlider({
+      start: [ self.lowRange(), self.highRange() ],
+      range: {
+        'min': [0],
+        'max': [100]
+      },
+      step: 1,
+    });
+    $('#fraudPercentSlider').on({
+      slide: function(){
+        var sliderValArray = $('#fraudPercentSlider').val();
+        self.lowRange(parseInt(sliderValArray[0]));
+        self.highRange(parseInt(sliderValArray[1]));
       },
     });
 

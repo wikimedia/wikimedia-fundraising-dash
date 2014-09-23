@@ -1,5 +1,5 @@
 @import "../bower_modules/lato/css/lato.css";
-@import "../bower_modules/jquery-ui/themes/base/all.css";
+@import "../bower_modules/nouislider/src/jquery.nouislider.css";
 
 
 html {
@@ -131,6 +131,10 @@ body {
     color: #333;
     font-size: 13px;
     color: #fff;
+}
+
+#topRange {
+    margin-top:-28px;
 }
 
 /* WIDGET BASE STYLINGS */
