@@ -52,7 +52,7 @@ app.use( express.bodyParser() );
 app.use( express.methodOverride() );
 app.get( '/data/:widget', routes.data );
 app.get( '/metadata/:widget', routes.metadata );
-app.use( express.static(__dirname + '/src') );
+app.use( express.static(__dirname + '/dist') );
 
 app.get('/auth/provider', passport.authenticate('provider'));
 app.get('/auth/provider/callback',
