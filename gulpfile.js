@@ -40,7 +40,7 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
         bundles: {
             // If you want parts of the site to load on demand, remove them from the 'include' list
             // above, and group them into bundles here.
-            // 'project-selector': ['components/project-selector/project-selector'],
+            'date-pickers': ['components/utils/date-pickers/date-pickers'],
             // 'vega-timeseries': ['components/visualizers/vega-timeseries/vega-timeseries']
 
         }
@@ -76,8 +76,6 @@ gulp.task('css', function () {
         .pipe(rename('css.manifest.json'))
         .pipe(gulp.dest('./dist/'));
 });
-
-
 
 /** Copies semantic fonts where the css expects them to be**/
 gulp.task('fonts', function () {
