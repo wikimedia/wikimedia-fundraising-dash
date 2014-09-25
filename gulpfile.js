@@ -69,7 +69,10 @@ gulp.task('js', function () {
 });
 
 gulp.task('css', function () {
-    return gulp.src(['src/css/*.css'])
+    return gulp.src(['src/css/*.css',
+                    'src/bower_modules/bootstrap/dist/css/bootstrap.css',
+                    'src/bower_modules/nouislider/src/jquery.nouislider.css',
+                    'src/bower_modules/fontawesome/css/font-awesome.css'])
         .pipe(concat('style.css')).pipe(rev()).pipe(gulp.dest('./dist/'))
         // Add rev-manifest.json as a new src to prevent rev'ing rev-manifest.json
         .pipe(rev.manifest())
@@ -79,8 +82,8 @@ gulp.task('css', function () {
 
 /** Copies semantic fonts where the css expects them to be**/
 gulp.task('fonts', function () {
-    var semantic_fonts = 'src/fonts';
-    return gulp.src([semantic_fonts + '/icons.svg', semantic_fonts + '/icons.ttf', semantic_fonts + '/icons.woff'])
+    return gulp.src(['src/bower_modules/fontawesome/fonts/*{ttf,woff,eot,svg,otf}',
+                     'src/bower_modules/lato/font/*{ttf,woff,eot,svg}'])
         .pipe(gulp.dest('./fonts/'));
 });
 

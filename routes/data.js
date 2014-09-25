@@ -132,7 +132,7 @@ function buildWhere( filterNode, widget, values, joins ) {
 				throw ( 'Not enough arguments' );
 			}
 			if ( filterNode.args[0].type !== 'literal' || filterNode.args[1].type !== 'property' ) {
-				throw ( 'First argument to ' + filterNode.func + ' must be a literal ' + 
+				throw ( 'First argument to ' + filterNode.func + ' must be a literal ' +
 						'and second must be a property.' );
 			}
 
@@ -176,7 +176,7 @@ module.exports = function(req, res) {
 	}
 	sqlQuery = sqlQuery.replace( '[[WHERE]]', whereClause );
 	for ( i = 0; i < joins.length; i++ ) {
-		joinClause += widget.optionalJoins[joins[i]] + ' '; 
+		joinClause += widget.optionalJoins[joins[i]] + ' ';
 	}
 	sqlQuery = sqlQuery.replace( '[[JOINS]]', joinClause );
 
