@@ -69,10 +69,10 @@ gulp.task('js', function () {
 });
 
 gulp.task('css', function () {
-    return gulp.src(['src/css/*.css',
-                    'src/bower_modules/bootstrap/dist/css/bootstrap.css',
+    return gulp.src(['src/bower_modules/bootstrap/dist/css/bootstrap.css',
                     'src/bower_modules/nouislider/src/jquery.nouislider.css',
-                    'src/bower_modules/fontawesome/css/font-awesome.css'])
+                    'src/bower_modules/fontawesome/css/font-awesome.css',
+                    'src/css/*.css'])
         .pipe(concat('style.css')).pipe(rev()).pipe(gulp.dest('./dist/'))
         // Add rev-manifest.json as a new src to prevent rev'ing rev-manifest.json
         .pipe(rev.manifest())
