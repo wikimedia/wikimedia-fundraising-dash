@@ -21,7 +21,8 @@
     "mysql": "^2.4.3",
     "odata-parser": "~1.0.0",
     "passport": "^0.2.1",
-    "passport-oauth": "^1.0.0"
+    "passport-oauth": "^1.0.0",
+    "passport-drupal": "~0.3.2"
   },
   "devDependencies": {
     "chalk": "^0.5.1",
