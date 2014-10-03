@@ -24,7 +24,10 @@
 						<span id="navCollapseArrows"><i class="fa fa-angle-double-left"></i></span>
 					</ul>
 				</div>
-				<div><a href="/auth/drupal">Log In with OAuth Provider</a></div>
+				<div>
+					<a href="/auth/drupal" data-bind="visible: showLogIn">Log in via Drupal</a>
+					<span data-bind="text: welcome"></span>
+				</div>
 			</div>
 		</div>
 	</div>

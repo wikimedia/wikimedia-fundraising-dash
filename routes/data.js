@@ -172,6 +172,11 @@ module.exports = function(req, res) {
 		joinClause = '',
 		i;
 
+	if ( !req.session || !req.session.passport || !req.session.passport.user ) {
+		res.json( 'Error: Not logged in' );
+		return;
+	}
+
 	if ( !widget ) {
 		res.json( { error: 'Error: ' + req.params.widget + ' is not a valid widget' } );
 		return;

@@ -22,6 +22,16 @@ define( [
                 $('#dashApp').css('padding-left', '175px');
             }, 200);
         };
+
+        self.showLogIn = ko.observable(false);
+        self.welcome = ko.observable('');
+        $.get('/user/info', function(userInfo) {
+            if (userInfo) {
+                self.welcome('Welcome, ' + userInfo.name);
+            } else {
+                self.showLogIn(true);
+            }
+        });
     }
 
     return { viewModel: NavBarViewModel, template: template };

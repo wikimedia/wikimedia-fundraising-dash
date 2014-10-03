@@ -59,6 +59,7 @@ app.set( 'view options', { pretty: true } );
 
 app.get( '/data/:widget', routes.data );
 app.get( '/metadata/:widget', routes.metadata );
+app.get( '/user/info', routes.user );
 
 app.use( express.static(__dirname + '/dist' ) );
 
