@@ -4,9 +4,8 @@ module.exports = {
     db: 'fredge',
     dblogin: 'testuser',
     dbpwd: 'testpassword',
-    requestTokenURL: 'http://oauth-sandbox.sevengoslings.net/request_token',
-    accessTokenURL: 'http://oauth-sandbox.sevengoslings.net/access_token',
-    userAuthorizationURL: 'http://oauth-sandbox.sevengoslings.net/authorize',
-    consumerKey: '27312d60e9a5eb11',
-    consumerSecret: '2f75ad1bd4abe5c98195cc48bd35'
+    providerURL: 'http://localhost/civi/',
+    consumerKey:  'kKq6LbU4ctDUzubSUdHJ7Pn9NvVWwQ2f',
+    consumerSecret: 'JfGs4nnfyoRQ9i9JQeTYP7geCEKQrenX',
+    sessionSecret: 'ds87naowiy3icaywri73tcin7eyyeI8634I71NYFIEA764'
 };
