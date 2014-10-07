@@ -3,17 +3,198 @@ define([
     'text!components/widgets/fraud-gauge/fraud-gauge.html',
     'gauge',
     'noUISlider',
+    'momentjs',
     'bootstrap-datepicker'
     ],
 function( ko, template, datePickersTemplate, noUISlider ){
 
   function FraudGaugeViewModel( params ){
 
+    //temporary data in the correct format
+    data = {
+      "name": "fraud",
+      "filters": {
+        "cur": {
+          "table": "pi",
+          "column": "currency_code",
+          "display": "Currency",
+          "type": "dropdown",
+          "values": [
+            "AED",
+            "ARS",
+            "AUD",
+            "BBD",
+            "BDT",
+            "BGN",
+            "BHD",
+            "BMD",
+            "BOB",
+            "BRL",
+            "CAD",
+            "CHF",
+            "CLP",
+            "CNY",
+            "COP",
+            "CRC",
+            "CZK",
+            "DKK",
+            "DOP",
+            "DZD",
+            "EGP",
+            "EUR",
+            "GBP",
+            "GTQ",
+            "HKD",
+            "HNL",
+            "HRK",
+            "HUF",
+            "IDR",
+            "ILS",
+            "INR",
+            "JMD",
+            "JOD",
+            "JPY",
+            "KES",
+            "KRW",
+            "KZT",
+            "LKR",
+            "LTL",
+            "MAD",
+            "MKD",
+            "MXN",
+            "MYR",
+            "NIO",
+            "NOK",
+            "NZD",
+            "OMR",
+            "PAB",
+            "PEN",
+            "PHP",
+            "PKR",
+            "PLN",
+            "QAR",
+            "RON",
+            "RUB",
+            "SAR",
+            "SEK",
+            "SGD",
+            "THB",
+            "TRY",
+            "TTD",
+            "TWD",
+            "UAH",
+            "USD",
+            "UYU",
+            "VEF",
+            "XCD",
+            "ZAR"
+          ]
+        },
+        "met": {
+          "table": "pf",
+          "coulmn": "payment_method",
+          "display": "Method",
+          "type": "dropdown",
+          "values": [
+            "cc",
+            "paypal",
+            "rtbt",
+            "amazon",
+            "dd",
+            "ew",
+            "obt",
+            "bt"
+          ]
+        },
+        "src": {
+          "table": "ct",
+          "column": "utm_source",
+          "display": "Source",
+          "type": "text"
+        },
+        "cmp": {
+          "table": "ct",
+          "column": "utm_campaign",
+          "display": "Campaign",
+          "type": "text"
+        },
+        "med": {
+          "table": "ct",
+          "column": "utm_medium",
+          "display": "Medium",
+          "type": "dropdown",
+          "values": [
+            "sitenotice",
+            "sidebar",
+            "email",
+            "spontaneous",
+            "wmfWikiRedirect",
+            "SocialMedia",
+            "WaysToGive",
+            "event",
+            "externalbanner",
+            "outage"
+          ]
+        },
+        "ref": {
+          "table": "ct",
+          "column": "referrer",
+          "display": "Referrer",
+          "type": "text"
+        },
+        "gw": {
+          "table": "pf",
+          "column": "gateway",
+          "display": "Gateway",
+          "type": "dropdown",
+          "values": [
+            "globalcollect",
+            "worldpay"
+          ]
+        },
+        "fs": {
+          "table": "pf",
+          "column": "risk_score",
+          "display": "Fraud Score",
+          "type": "number"
+        },
+        "dt": {
+          "table": "pf",
+          "column": "date",
+          "display": "Date",
+          "type": "datetime",
+          "min": "2005-01-01",
+          "max": "2099-12-31"
+        },
+        "amt": {
+          "table": "pi",
+          "column": "amount",
+          "display": "Amount",
+          "type": "number",
+          "min": 0,
+          "max": 10000
+        }
+      }
+    }
+
     var self = this;
     self.title = 'Fraud Rejections';
     self.selectedTimePeriod = ko.observable();
-    self.chosenFilters = ko.observableArray([]);
+    self.selectedFilters = ko.observableArray([]);
+    self.queryRequest = [];
 
+    //broken down data from above
+    self.currency = ko.observableArray(data.filters.cur.values);
+    self.filters = ko.observableArray($.map(data.filters, function(val, i){return[val]}));
+
+    // Fetch options
+    self.fetchOptions = function(queryString){
+      $.get('data/fraud/'+queryString, function( req, res ){
+
+      });
+    };
+
+    //default range slider settings
     self.lowRange = ko.observable(33);
     self.highRange = ko.observable(66);
     $('#fraudPercentSlider').noUiSlider({
@@ -33,38 +214,6 @@ function( ko, template, datePickersTemplate, noUISlider ){
       },
     });
 
-    self.getFilters = ko.computed( function(){
-      //TODO: make this happen via database (hardcode for now)
-      //TODO: check to see if db has changed then fetch
-
-      var filterNamesFromDB = ['Currency','Method','Source','Campaign','Medium','Referrer','Gateway','Fraud Score'],
-      subfilterNamesFromDB  = [
-                              [ 'USD', 'AUD', 'ESB', 'ABC', 'DEF' ],
-                              [ 'Credit Card', 'Bank Transfer', 'Check' ],
-                              [ 'Source 1', 'Source 2' ],
-                              [ 'Big English', 'Another Campaign' ],
-                              [ 'Medium 1', 'Medium 2', 'Medium 3' ],
-                              [ 'Banner', 'Donate', 'Adam' ],
-                              [ 'Global Collect', 'WorldPay', 'Another Gateway' ],
-                              [ '0-100', '100-150', '150-200', '200+', 'or whatever' ] ];
-
-      filters = [];
-
-      for(var i=0; i<filterNamesFromDB.length; i++){
-        var filterObj = {filterName: filterNamesFromDB[i]};
-        filters.push(filterObj);
-      }
-
-      for(var j=0; j<subfilterNamesFromDB.length; j++){
-        for(var filter in filters){
-          filters[j].subfilter = subfilterNamesFromDB[j];
-        }
-      }
-
-      self.filters = ko.observableArray(filters);
-
-    });
-
     //Gauge options
     self.opts = {
       lines: 12,
@@ -79,7 +228,6 @@ function( ko, template, datePickersTemplate, noUISlider ){
       generateGradient: true
     };
 
-    self.hasMadeSelection = ko.observable(false);
 
     //TODO: connect with database
     self.getFraudFailurePercent = function(){
@@ -105,12 +253,6 @@ function( ko, template, datePickersTemplate, noUISlider ){
       return value;
     };
 
-    // self.setSubfilter = function(subfilter){
-    //   self.filterChecked = ko.observable(subfilter);
-    // };
-
-    self.filterChecked = ko.observable();
-
     //#FraudRiskScoreGauge
     //TODO: cleanup
     self.context = document.getElementById('FraudRiskScoreGauge');
@@ -134,14 +276,16 @@ function( ko, template, datePickersTemplate, noUISlider ){
       //run that query and generate the new widget
 
       //gauge boundaries
-      var l = $('#fraudPercentSlider').slider( "values", 0),
-          h = $('#fraudPercentSlider').slider( "values", 1);
+      var rangePoints = [parseInt($('#fraudPercentSlider').val()[0]), parseInt($('#fraudPercentSlider').val()[1])],
+          lowRange    = [0, rangePoints[0]],
+          midRange    = [rangePoints[0], rangePoints[1]],
+          highRange   = [rangePoints[1], 100];
 
       //gauge time period
-
+      self.queryRequest['timespan'] = moment(self.selectedTimePeriod());
 
       //gauge filters
-
+      self.queryRequest['selectedFilters'] = self.selectedFilters();
 
 
     };

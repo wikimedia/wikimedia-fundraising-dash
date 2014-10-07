@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="row" id="fraudGaugeMeta">
-                    <p class="text-center">By: <span data-bind="foreach: chosenFilters"><span class="label label-info" data-bind="text: filterName"></span> </span></p>
+                    <p class="text-center">By: <span class="label label-info" data-bind="text: selectedFilters"></span></p>
                 </div>
 
                 <div class="modal fade" id="modifyModal">
@@ -52,16 +52,12 @@
                                         <div class="form-group filterPickerForm">
                                             <label>Filter By:</label>
 
-                                                <span data-bind="foreach: filters">
+                                                <select data-bind="foreach: filters, selectedOptions: selectedFilters" multiple="true">
 
                                                     <!--For Each Filter-->
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" class="filterCheckbox"><span data-bind="text: filterName"></span>
-                                                        </label>
-                                                    </div>
+                                                    <option data-bind="text: display"></option>
 
-                                                </span>
+                                                </select>
 
                                         </div>
                                     </form>

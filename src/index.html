@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-	 <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Dash</title>
-        <!-- build:css -->
-            <link href="src/css/styles.css" rel="stylesheet">
-        <!-- endbuild -->
-        <!-- build:js -->
-            <script src="src/app/require.config.js"></script>
-            <script data-main="src/app/startup" src="src/bower_modules/requirejs/require.js"></script>
-        <!-- endbuild -->
+<head>
+        <!--CSS-->
+        <link rel="stylesheet" type="text/css" href="bower_modules/bootstrap/dist/css/bootstrap.css"/>
+        <link rel="stylesheet" type="text/css" href="bower_modules/fontawesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="bower_modules/nouislider/src/jquery.nouislider.css"/>
+        <link rel="stylesheet" type="text/css" href="css/style.css"/>
+
+        <!--JS-->
+        <script src="bower_modules/raphael/raphael.js"></script>
+        <script src="app/require.config.js"></script>
+        <script data-main="app/startup" src="bower_modules/requirejs/require.js"></script>
     </head>
 
-	<body>
-		<section id="navbar">
-			<nav-bar params="route: route"></nav-bar>
-		</section>
+<body>
+<section id="navbar">
+<nav-bar params="route: route"></nav-bar>
+</section>
 
-		<section id="dashApp">
-			<app-content></app-content>
-		</section>
-	</body>
+<section id="dashApp">
+<app-content></app-content>
+</section>
+</body>
 
 </html>
