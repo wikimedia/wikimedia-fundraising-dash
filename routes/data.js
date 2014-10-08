@@ -116,10 +116,10 @@ function buildWhere( filterNode, widget, values, joins ) {
 			col = getColumn( filterNode.left.name, widget, joins );
 
 			val = filterNode.right.value;
+			validateValue( val, col );
 			if ( typeof val === 'string' && col.type === 'number' ) {
 				val = parseFloat( val );
 			}
-			validateValue( val, col );
 			values.push( val ); //this may get more complex with nesting...
 
 			return col.table + '.' + col.column + ' ' + op + ' ?';
@@ -163,15 +163,21 @@ module.exports = function(req, res) {
 		i;
 
 	if ( !widget ) {
-		res.json( 'Error: ' + req.params.widget + ' is not a valid widget' );
+		res.json( { error: 'Error: ' + req.params.widget + ' is not a valid widget' } );
 		return;
 	}
 
 	sqlQuery = widget.query;
 	if ( qs && qs !== '' ) {
-		parsedFilters = odataParser.parse( unescape(qs) );
-		if ( parsedFilters.$filter ) {
-			whereClause = 'WHERE ' + buildWhere( parsedFilters.$filter, widget, values, joins );
+		try {
+			parsedFilters = odataParser.parse( unescape(qs) );
+			if ( parsedFilters.$filter ) {
+				whereClause = 'WHERE ' + buildWhere( parsedFilters.$filter, widget, values, joins );
+			}
+		}
+		catch ( err ) {
+			res.json( { error: err.message } );
+			return;
 		}
 	}
 	sqlQuery = sqlQuery.replace( '[[WHERE]]', whereClause );
@@ -188,12 +194,14 @@ module.exports = function(req, res) {
 	});
 	connection.connect( function( error ) {
 		if ( error ) {
-			throw new Error( 'Connection Error: ' + error );
+			res.json( { error: 'Connection Error: ' + error } );
+			return;
 		}
 	});
 	connection.query( sqlQuery, values, function( error, results ) {
 		if ( error ) {
-			res.json( 'Query error: ' + error);
+			res.json( { error: 'Query error: ' + error } );
+			return;
 		}
 		res.json( results );
 	});
