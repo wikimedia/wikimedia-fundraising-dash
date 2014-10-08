@@ -145,7 +145,7 @@ function buildWhere( filterNode, widget, values, joins ) {
 			validateValue( val, col );
 			values.push( val );
 
-			return col.table + '.' + col.column + ' LIKE ?';
+			return col.table + '.' + col.column + ' RLIKE ?';
 	}
 	return '';
 }
