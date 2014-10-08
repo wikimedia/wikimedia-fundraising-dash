@@ -41,7 +41,7 @@ function validateValue( value, column ) {
 		valid = false;
 	}
 	if ( !valid )	{
-		throw ( 'Invalid value ' + value + ' for filter ' + col.display );
+		throw new Error( 'Invalid value ' + value + ' for filter ' + col.display );
 	}
 }
 
@@ -57,7 +57,7 @@ function validateValue( value, column ) {
 function getColumn( name, widget, joins ) {
 	col = widget.filters[name];
 	if ( !col ) {
-		throw ( 'Illegal filter property ' + name );
+		throw new Error( 'Illegal filter property ' + name );
 	}
 	if ( col.table !== widget.mainTableAlias && joins.indexOf( col.table ) === -1 ) {
 		joins.push( col.table );
@@ -95,7 +95,7 @@ function buildWhere( filterNode, widget, values, joins ) {
 
 	op = ops[filterNode.type];
 	if ( !op ) {
-		throw ( 'Illegal filter type ' + filterNode.type );
+		throw new Error( 'Illegal filter type ' + filterNode.type );
 	}
 
 	switch (op) {
@@ -111,7 +111,7 @@ function buildWhere( filterNode, widget, values, joins ) {
 		case '>=':
 		case '!=':
 			if ( filterNode.left.type !== 'property' ) {
-				throw ( 'Only property comparisons are currently allowed' );
+				throw new Error( 'Only property comparisons are currently allowed' );
 			}
 			col = getColumn( filterNode.left.name, widget, joins );
 
@@ -126,19 +126,19 @@ function buildWhere( filterNode, widget, values, joins ) {
 		case 'fn':
 			pattern = patterns[filterNode.func];
 			if ( !pattern ) {
-				throw ( 'Unsupported function ' + filterNode.func );
+				throw new Error( 'Unsupported function ' + filterNode.func );
 			}
 			if ( filterNode.args.length < 2 ) {
-				throw ( 'Not enough arguments' );
+				throw new Error( 'Not enough arguments' );
 			}
 			if ( filterNode.args[0].type !== 'literal' || filterNode.args[1].type !== 'property' ) {
-				throw ( 'First argument to ' + filterNode.func + ' must be a literal ' +
+				throw new Error( 'First argument to ' + filterNode.func + ' must be a literal ' +
 						'and second must be a property.' );
 			}
 
 			col = getColumn( filterNode.args[1].name, widget, joins );
 			if ( col.type !== 'text' ) {
-				throw ( 'Can only call function ' + filterNode.func + ' on text properties' );
+				throw new Error( 'Can only call function ' + filterNode.func + ' on text properties' );
 			}
 
 			val = pattern.replace( '{1}', filterNode.args[0].value );
@@ -188,7 +188,7 @@ module.exports = function(req, res) {
 	});
 	connection.connect( function( error ) {
 		if ( error ) {
-			throw( 'Connection Error: ' + error );
+			throw new Error( 'Connection Error: ' + error );
 		}
 	});
 	connection.query( sqlQuery, values, function( error, results ) {
