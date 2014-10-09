@@ -182,6 +182,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
     self.selectedTimePeriod = ko.observable();
     self.selectedFilters = ko.observableArray([]);
     self.queryRequest = [];
+    self.gaugeValue = ko.observable(3);
 
     //broken down data from above
     self.currency = ko.observableArray(data.filters.cur.values);
@@ -231,18 +232,12 @@ function( ko, template, datePickersTemplate, noUISlider ){
 
     //TODO: connect with database
     self.getFraudFailurePercent = function(){
-      //TODO: run query and get the real percentage ;p
-      //for now make it easy to visualize for testing
-      var randomishVals = [2222, 5555, 8888];
-      var numberOfFails = randomishVals[parseInt(Math.random() * 3)],
-          numberOfTransactions = 10000;
-      var value = (numberOfFails/numberOfTransactions) * 100;
-      self.value = ko.observable(parseInt(value) + "%");
       //get color thresholds
       //TODO: these vals to come from user's choices via slider.
-      if(value < 33){
+      if(self.gaugeValue() < 33){
+        console.log('wtf');
         self.opts.colorStop = '#89CC23';
-      } else if(value >= 33 && value < 66){
+      } else if(self.gaugeValue() >= 33 && self.gaugeValue() < 66){
         self.opts.colorStop = '#FFA722';
       } else {
         self.opts.colorStop = '#c12e2a';
@@ -250,7 +245,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
 
       self.gauge.setOptions(self.opts);
 
-      return value;
+      return self.gaugeValue();
     };
 
     //#FraudRiskScoreGauge
@@ -287,6 +282,34 @@ function( ko, template, datePickersTemplate, noUISlider ){
       return validation;
     };
 
+    self.convertToQuery = function( userChoices ){
+
+      var qs            = "cur eq 'USD'";
+          timePresets   = [ "Last 15 Minutes",
+                            "Last Hour",
+                            "Last 24 Hours",
+                            "Last 5 Minutes"];
+
+      //convert time constraints
+      switch( userChoices.timespan[0] ){
+        case timePresets[0]:
+          console.log("you chose Last 15 mins.");
+          break;
+        case timePresets[1]:
+          qs = 'you chose last hour';
+          break;
+        case timePresets[2]:
+          console.log("last 24.");
+          break;
+        case timePresets[3]:
+          qs = 'last 5';
+          break;
+      }
+
+      //convert other filters
+      return qs;
+    };
+
     self.submitGaugeModifications = function(){
       //validate values first.
       var validation = self.validateSubmission( self.selectedTimePeriod(), self.selectedFilters() );
@@ -311,10 +334,11 @@ function( ko, template, datePickersTemplate, noUISlider ){
 
         //put it all into a real query
         //this will be a function call - TODO: make parsing function
-        var queryString = 'cur%20eq%20%27USD%27';
+        var queryString = self.convertToQuery(self.queryRequest);
 
         $.get( '/data/fraud', { '$filter': queryString }, function ( data ) {
-          console.log('fraud percent:', data[0].fraud_percent);
+          console.log('raw: ', data[0].fraud_percent);
+          self.gaugeValue( parseFloat(data[0].fraud_percent).toFixed(2) );
         } );
       };
 
