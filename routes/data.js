@@ -25,7 +25,7 @@ function validateValue( value, column ) {
 			valid = !isNaN( parseFloat( value ) ) && isFinite( value );
 			break;
 		case 'datetime':
-			valid = value.match( /^\d\d\d\d-(\d)?\d-(\d)?\d \d\d:\d\d:\d\d$/ );
+			valid = value.match( /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?Z$/ );
 			break;
 		case 'text':
 			//Trusting the value substitution to escape it all
