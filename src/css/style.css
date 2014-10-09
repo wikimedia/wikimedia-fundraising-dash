@@ -235,6 +235,10 @@ body {
     margin-left: 7px;
 }
 
+#fraudSubmissionErrors {
+    text-align: left;
+}
+
 /* BOOTSTRAP OVERRIDES */
 
 .btn {

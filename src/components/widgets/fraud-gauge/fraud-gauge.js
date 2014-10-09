@@ -271,28 +271,53 @@ function( ko, template, datePickersTemplate, noUISlider ){
 
     };
 
+    self.validateSubmission = function( times, filters ){
+
+      var validation = {
+        validated: '',
+        errors: []
+      };
+
+      if(!times){
+        validation.errors.push('You must submit a valid time.')
+      } else {
+        validation.validated = true;
+      }
+
+      return validation;
+    };
+
     self.submitGaugeModifications = function(){
-      //TODO: get all values from the form into the SQL query
-      //run that query and generate the new widget
+      //validate values first.
+      var validation = self.validateSubmission( self.selectedTimePeriod(), self.selectedFilters() );
+      if( !validation.validated ){
+        event.stopImmediatePropagation();
+        $('#fraudSubmissionErrors').html('<p class="text-danger">you have errors in your submission: ' + validation.errors + '</p>' ).addClass('show');
+      } else{
+        //TODO: get all values from the form into the SQL query
+        //run that query and generate the new widget
 
-      //gauge boundaries
-      var rangePoints = [parseInt($('#fraudPercentSlider').val()[0]), parseInt($('#fraudPercentSlider').val()[1])],
-          lowRange    = [0, rangePoints[0]],
-          midRange    = [rangePoints[0], rangePoints[1]],
-          highRange   = [rangePoints[1], 100];
+        //gauge boundaries
+        var rangePoints = [parseInt($('#fraudPercentSlider').val()[0]), parseInt($('#fraudPercentSlider').val()[1])],
+            lowRange    = [0, rangePoints[0]],
+            midRange    = [rangePoints[0], rangePoints[1]],
+            highRange   = [rangePoints[1], 100];
 
-      //gauge time period
-      self.queryRequest['timespan'] = self.selectedTimePeriod();
+        //gauge time period
+        self.queryRequest['timespan'] = self.selectedTimePeriod();
 
-      //gauge filters
-      self.queryRequest['selectedFilters'] = self.selectedFilters();
+        //gauge filters
+        self.queryRequest['selectedFilters'] = self.selectedFilters();
 
-      //put it all into a real query
-      //this will be a function call - TODO: make parsing function
-      var queryString = 'cur%20eq%20%27USD%27';
-      $.get( '/data/fraud', { '$filter': queryString }, function ( data ) {
-        console.log('fraud percent:', data[0].fraud_percent);
-      } );
+        //put it all into a real query
+        //this will be a function call - TODO: make parsing function
+        var queryString = 'cur%20eq%20%27USD%27';
+
+        $.get( '/data/fraud', { '$filter': queryString }, function ( data ) {
+          console.log('fraud percent:', data[0].fraud_percent);
+        } );
+      };
+
 
     };
 
