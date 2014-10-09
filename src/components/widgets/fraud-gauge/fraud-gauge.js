@@ -282,11 +282,17 @@ function( ko, template, datePickersTemplate, noUISlider ){
           highRange   = [rangePoints[1], 100];
 
       //gauge time period
-      self.queryRequest['timespan'] = moment(self.selectedTimePeriod());
+      self.queryRequest['timespan'] = self.selectedTimePeriod();
 
       //gauge filters
       self.queryRequest['selectedFilters'] = self.selectedFilters();
 
+      //put it all into a real query
+      //this will be a function call - TODO: make parsing function
+      var queryString = 'cur%20eq%20%27USD%27';
+      $.get( '/data/fraud', { '$filter': queryString }, function ( data ) {
+        console.log('fraud percent:', data[0].fraud_percent);
+      } );
 
     };
 
