@@ -10,174 +10,15 @@ function( ko, template, datePickersTemplate, noUISlider ){
 
   function FraudGaugeViewModel( params ){
 
-    //temporary data in the correct format
-    data = {
-      "name": "fraud",
-      "filters": {
-        "cur": {
-          "table": "pi",
-          "column": "currency_code",
-          "display": "Currency",
-          "type": "dropdown",
-          "values": [
-            "AED",
-            "ARS",
-            "AUD",
-            "BBD",
-            "BDT",
-            "BGN",
-            "BHD",
-            "BMD",
-            "BOB",
-            "BRL",
-            "CAD",
-            "CHF",
-            "CLP",
-            "CNY",
-            "COP",
-            "CRC",
-            "CZK",
-            "DKK",
-            "DOP",
-            "DZD",
-            "EGP",
-            "EUR",
-            "GBP",
-            "GTQ",
-            "HKD",
-            "HNL",
-            "HRK",
-            "HUF",
-            "IDR",
-            "ILS",
-            "INR",
-            "JMD",
-            "JOD",
-            "JPY",
-            "KES",
-            "KRW",
-            "KZT",
-            "LKR",
-            "LTL",
-            "MAD",
-            "MKD",
-            "MXN",
-            "MYR",
-            "NIO",
-            "NOK",
-            "NZD",
-            "OMR",
-            "PAB",
-            "PEN",
-            "PHP",
-            "PKR",
-            "PLN",
-            "QAR",
-            "RON",
-            "RUB",
-            "SAR",
-            "SEK",
-            "SGD",
-            "THB",
-            "TRY",
-            "TTD",
-            "TWD",
-            "UAH",
-            "USD",
-            "UYU",
-            "VEF",
-            "XCD",
-            "ZAR"
-          ]
-        },
-        "met": {
-          "table": "pf",
-          "coulmn": "payment_method",
-          "display": "Method",
-          "type": "dropdown",
-          "values": [
-            "cc",
-            "paypal",
-            "rtbt",
-            "amazon",
-            "dd",
-            "ew",
-            "obt",
-            "bt"
-          ]
-        },
-        "src": {
-          "table": "ct",
-          "column": "utm_source",
-          "display": "Source",
-          "type": "text"
-        },
-        "cmp": {
-          "table": "ct",
-          "column": "utm_campaign",
-          "display": "Campaign",
-          "type": "text"
-        },
-        "med": {
-          "table": "ct",
-          "column": "utm_medium",
-          "display": "Medium",
-          "type": "dropdown",
-          "values": [
-            "sitenotice",
-            "sidebar",
-            "email",
-            "spontaneous",
-            "wmfWikiRedirect",
-            "SocialMedia",
-            "WaysToGive",
-            "event",
-            "externalbanner",
-            "outage"
-          ]
-        },
-        "ref": {
-          "table": "ct",
-          "column": "referrer",
-          "display": "Referrer",
-          "type": "text"
-        },
-        "gw": {
-          "table": "pf",
-          "column": "gateway",
-          "display": "Gateway",
-          "type": "dropdown",
-          "values": [
-            "globalcollect",
-            "worldpay"
-          ]
-        },
-        "fs": {
-          "table": "pf",
-          "column": "risk_score",
-          "display": "Fraud Score",
-          "type": "number"
-        },
-        "dt": {
-          "table": "pf",
-          "column": "date",
-          "display": "Date",
-          "type": "datetime",
-          "min": "2005-01-01",
-          "max": "2099-12-31"
-        },
-        "amt": {
-          "table": "pi",
-          "column": "amount",
-          "display": "Amount",
-          "type": "number",
-          "min": 0,
-          "max": 10000
-        }
-      }
-    }
-
     var self = this;
+
+    $.ajaxSetup({async:false});
+
+    var widgetData = $.get( 'metadata/fraud', function(reqData){
+      console.log('this is the data: ', reqData);
+      self.data = reqData;
+    });
+
     self.title = 'Fraud Rejections';
     self.selectedTimePeriod = ko.observable();
     self.selectedFilters = ko.observableArray([]);
@@ -188,8 +29,8 @@ function( ko, template, datePickersTemplate, noUISlider ){
     self.queryString = ko.observable('This widget hasn\'t been set up yet!');
 
     //broken down data from above
-    self.currency = ko.observableArray(data.filters.cur.values);
-    self.filters = ko.observableArray($.map(data.filters, function(val, i){return[val]}));
+    self.currency = ko.observableArray(self.data.filters.cur.values);
+    self.filters = ko.observableArray($.map(self.data.filters, function(val, i){return[val]}));
     self.filterNames = ko.computed( function(){
       var names = [];
       $.each(self.filters(), function(el, i){
@@ -356,6 +197,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
 
 
     };
+
 
   }
 
