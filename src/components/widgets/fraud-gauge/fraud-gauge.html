@@ -2,7 +2,7 @@
     <div class="panel-heading">
         Fraud Rejections
         <div class="btn-group btn-group-xs pull-right">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#sqlModal" data-bind="click: getSQL"><i class="fa fa-database"></i></button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#sqlModal"><i class="fa fa-database"></i></button>
             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modifyModal"><i class="fa fa-edit"></i></button>
         </div>
     </div>
@@ -12,16 +12,23 @@
             <div class="col-md-12 gauge">
 
                 <div class="row">
-                    <h3 class="text-center" data-bind="text: selectedTimePeriod"></h3>
+                    <h3 class="text-center" data-bind="visible: gaugeIsSetUp(), text: selectedTimePeriod"></h3>
                 </div>
 
-                <div class="row">
+                <div class="row" id="specifiedFraudGauge" data-bind="visible: gaugeIsSetUp">
                     <canvas id="FraudRiskScoreGauge"></canvas>
                     <h2 class="text-center" id="fraudGaugeValue"><span data-bind="text: gaugeValue"></span>%</h2>
                 </div>
 
-                <div class="row" id="fraudGaugeMeta">
-                    <p class="text-center">By: <span class="label label-info" data-bind="text: selectedFilters"></span></p>
+                <div class="row" id="unspecifiedFraudGauge" data-bind="visible: !gaugeIsSetUp()">
+                    <div class="col-md-12">
+                        <h3>This widget hasn't been set up yet.</h3>
+                        <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modifyModal">Set it up</button>
+                    </div>
+                </div>
+
+                <div class="row" id="fraudGaugeMeta" data-bind="visible: gaugeIsSetUp()">
+                    <p class="text-center"><span data-bind="visible: filtersSelected">By: </span><span class="label label-info" data-bind="text: selectedFilters"></span></p>
                 </div>
 
                 <div class="modal fade" id="modifyModal">
@@ -52,12 +59,7 @@
                                         <div class="form-group filterPickerForm">
                                             <label>Filter By:</label>
 
-                                                <select data-bind="foreach: filters, selectedOptions: selectedFilters" multiple="true">
-
-                                                    <!--For Each Filter-->
-                                                    <option data-bind="text: display"></option>
-
-                                                </select>
+                                                <select data-bind="options: filterNames, selectedOptions: selectedFilters" multiple="true"></select>
 
                                         </div>
                                     </form>
@@ -80,7 +82,7 @@
                                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                 <h4 class="modal-title">Fraud Gauge SQL:</h4>
                             </div>
-                            <div class="modal-body"></div>
+                            <div class="modal-body" data-bind="text: queryString"></div>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->

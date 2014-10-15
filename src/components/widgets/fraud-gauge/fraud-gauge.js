@@ -183,10 +183,20 @@ function( ko, template, datePickersTemplate, noUISlider ){
     self.selectedFilters = ko.observableArray([]);
     self.queryRequest = [];
     self.gaugeValue = ko.observable(3);
+    self.filtersSelected = ko.observable(false);
+    self.gaugeIsSetUp = ko.observable(false);
+    self.queryString = ko.observable('This widget hasn\'t been set up yet!');
 
     //broken down data from above
     self.currency = ko.observableArray(data.filters.cur.values);
     self.filters = ko.observableArray($.map(data.filters, function(val, i){return[val]}));
+    self.filterNames = ko.computed( function(){
+      var names = [];
+      $.each(self.filters(), function(el, i){
+        names.push(i.display);
+      });
+      return names;
+    });
 
     // Fetch options
     self.fetchOptions = function(queryString){
@@ -235,7 +245,6 @@ function( ko, template, datePickersTemplate, noUISlider ){
       //get color thresholds
       //TODO: these vals to come from user's choices via slider.
       if(self.gaugeValue() < 33){
-        console.log('wtf');
         self.opts.colorStop = '#89CC23';
       } else if(self.gaugeValue() >= 33 && self.gaugeValue() < 66){
         self.opts.colorStop = '#FFA722';
@@ -257,15 +266,6 @@ function( ko, template, datePickersTemplate, noUISlider ){
     self.gauge.set(self.getFraudFailurePercent());
     ///////////////////
 
-    self.getSQL = function(){
-      //get SQL query into popover (fake SQL for now)
-
-      self.selfQuery = "SELECT SUM(total_amount) FROM civicrm_contribution WHERE receive_date BETWEEN '20130701' AND '20140701';";
-
-      $('#sqlModal .modal-body').html(self.selfQuery);
-
-    };
-
     self.validateSubmission = function( times, filters ){
 
       var validation = {
@@ -284,33 +284,42 @@ function( ko, template, datePickersTemplate, noUISlider ){
 
     self.convertToQuery = function( userChoices ){
 
-      var qs            = "cur eq 'USD'";
+      var qs            = '',
           timePresets   = [ "Last 15 Minutes",
                             "Last Hour",
                             "Last 24 Hours",
                             "Last 5 Minutes"];
 
       //convert time constraints
+      var currentDate = new Date();
       switch( userChoices.timespan[0] ){
         case timePresets[0]:
-          console.log("you chose Last 15 mins.");
+          var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
+          self.queryString = lfm;
           break;
         case timePresets[1]:
-          qs = 'you chose last hour';
+          var lh = new Date(currentDate.getTime() - (60 * 60 * 1000));
+          self.queryString = lh;
           break;
         case timePresets[2]:
-          console.log("last 24.");
+          var ltfh = new Date(currentDate.getTime() - (24 * 60 * 60 * 1000));
+          self.queryString = ltfh;
           break;
         case timePresets[3]:
-          qs = 'last 5';
+          var lfvm = new Date(currentDate.getTime() - (5 * 60 * 1000));
+          self.queryString = lfvm;
           break;
       }
 
+      console.log('query string: ', self.queryString);
+
       //convert other filters
+
       return qs;
     };
 
     self.submitGaugeModifications = function(){
+      console.log('selected filters: ', self.selectedFilters());
       //validate values first.
       var validation = self.validateSubmission( self.selectedTimePeriod(), self.selectedFilters() );
       if( !validation.validated ){
@@ -331,14 +340,17 @@ function( ko, template, datePickersTemplate, noUISlider ){
 
         //gauge filters
         self.queryRequest['selectedFilters'] = self.selectedFilters();
+        self.filtersSelected(true);
 
         //put it all into a real query
         //this will be a function call - TODO: make parsing function
-        var queryString = self.convertToQuery(self.queryRequest);
+        self.queryString( self.convertToQuery(self.queryRequest));
 
-        $.get( '/data/fraud', { '$filter': queryString }, function ( data ) {
-          console.log('raw: ', data[0].fraud_percent);
-          self.gaugeValue( parseFloat(data[0].fraud_percent).toFixed(2) );
+        $.get( '/data/fraud?' + $.param({ '$filter': "cur eq 'USD'" }).replace(
+          /\+/g, '%20' ), function ( dataget ) {
+          self.gaugeIsSetUp(true);
+          self.gaugeValue( parseFloat(dataget[0].fraud_percent).toFixed(2) );
+          self.gauge.set(self.getFraudFailurePercent());
         } );
       };
 

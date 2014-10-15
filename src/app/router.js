@@ -1,8 +1,9 @@
 define(
-    [   'knockout',
+    [   'jquery',
+        'knockout',
         'crossroads',
         'hasher'
-    ], function( ko, crossroads, hasher ) {
+    ], function( $, ko, crossroads, hasher ) {
 
     var routerConfig = {
         defaultParams: { page: 'home', action: 'view' }
