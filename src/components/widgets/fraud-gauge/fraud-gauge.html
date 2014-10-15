@@ -56,12 +56,14 @@
 
                                         <!--Call Date Pickers Component to handle date range-->
                                         <date-pickers params="selectedTimePeriod: selectedTimePeriod"></date-pickers>
+
                                         <div class="form-group filterPickerForm">
                                             <label>Filter By:</label>
+                                               <div>
+                                                   <select id="selectFilterBox" data-bind="options: filterNames, selectedOptions: selectedFilters" multiple="true"></select>
+                                               </div>
+                                       </div>
 
-                                                <select data-bind="options: filterNames, selectedOptions: selectedFilters" multiple="true"></select>
-
-                                        </div>
                                     </form>
                             </div>
                             <div class="modal-footer">

@@ -16,7 +16,10 @@ var require = {
         'raphael':              'bower_modules/raphael/raphael',
         'gauge':                'bower_modules/gauge.js/dist/gauge',
         'bootstrap-datepicker': 'bower_modules/bootstrap-datepicker/js/bootstrap-datepicker',
-        'bootstrap-timepicker': 'bower_modules/bootstrap-timepicker/js/bootstrap-timepicker'
+        'bootstrap-timepicker': 'bower_modules/bootstrap-timepicker/js/bootstrap-timepicker',
+        'sifter':               'bower_modules/sifter/sifter',
+        'microplugin':          'bower_modules/microplugin/src/microplugin',
+        'selectize':            'bower_modules/selectize/dist/js/selectize'
     },
     shim: {
         'bootstrap': {
@@ -30,6 +33,13 @@ var require = {
         'noUISlider': {
             deps: [
                 'jquery'
+            ]
+        },
+        'selectize': {
+            deps: [
+                'bootstrap',
+                'sifter',
+                'microplugin'
             ]
         }
     }

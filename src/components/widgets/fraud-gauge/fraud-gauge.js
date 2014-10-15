@@ -3,6 +3,7 @@ define([
     'text!components/widgets/fraud-gauge/fraud-gauge.html',
     'gauge',
     'noUISlider',
+    'selectize',
     'momentjs',
     'bootstrap-datepicker'
     ],
@@ -80,6 +81,14 @@ function( ko, template, datePickersTemplate, noUISlider ){
       generateGradient: true
     };
 
+    //make tag-like selection box
+    $('#selectFilterBox').selectize({
+      create: false,
+      maxOptions: 10,
+      dropdownParent: 'body',
+      selectOnTab: true,
+      options: self.filterNames(),
+    });
 
     //TODO: connect with database
     self.getFraudFailurePercent = function(){
