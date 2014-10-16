@@ -22,7 +22,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
 
     self.title = 'Fraud Rejections';
     self.selectedTimePeriod = ko.observable();
-    self.selectedFilters = ko.observableArray([]);
+    self.selectedFilters = ko.observableArray(['yo']);
     self.queryRequest = [];
     self.gaugeValue = ko.observable(3);
     self.filtersSelected = ko.observable(false);
@@ -30,7 +30,6 @@ function( ko, template, datePickersTemplate, noUISlider ){
     self.queryString = ko.observable('This widget hasn\'t been set up yet!');
 
     //broken down data from above
-    self.currency = ko.observableArray(self.data.filters.cur.values);
     self.filters = ko.observableArray($.map(self.data.filters, function(val, i){return[val]}));
     self.filterNames = ko.computed( function(){
       var names = [];
@@ -140,30 +139,37 @@ function( ko, template, datePickersTemplate, noUISlider ){
                             "Last 24 Hours",
                             "Last 5 Minutes"];
 
+      $.each( self.selectedFilters(), function(i, el){
+        if(i===0){
+          qs += el + " eq ";
+        } else {
+          qs += 'AND ' + el + " eq ";
+        }
+      });
+
       //convert time constraints
       var currentDate = new Date();
       switch( userChoices.timespan[0] ){
         case timePresets[0]:
           var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
-          self.queryString = lfm;
+          qs += 'AND dt gt ' + moment(lfm).format();
           break;
         case timePresets[1]:
           var lh = new Date(currentDate.getTime() - (60 * 60 * 1000));
-          self.queryString = lh;
+          qs += 'AND dt gt ' + moment(lh).format();
           break;
         case timePresets[2]:
           var ltfh = new Date(currentDate.getTime() - (24 * 60 * 60 * 1000));
-          self.queryString = ltfh;
+          qs += 'AND dt gt ' + moment(ltfh).format();
           break;
         case timePresets[3]:
           var lfvm = new Date(currentDate.getTime() - (5 * 60 * 1000));
-          self.queryString = lfvm;
+          qs += 'AND dt gt ' + moment(lfvm).format();
           break;
       }
 
-      console.log('query string: ', self.queryString);
-
-      //convert other filters
+      self.queryString(qs);
+      console.log('query string: ', self.queryString());
 
       return qs;
     };
@@ -196,7 +202,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
         //this will be a function call - TODO: make parsing function
         self.queryString( self.convertToQuery(self.queryRequest));
 
-        $.get( '/data/fraud?' + $.param({ '$filter': "cur eq 'USD'" }).replace(
+        $.get( '/data/fraud?' + $.param({ '$filter': "Currency eq 'USD'" }).replace(
           /\+/g, '%20' ), function ( dataget ) {
           self.gaugeIsSetUp(true);
           self.gaugeValue( parseFloat(dataget[0].fraud_percent).toFixed(2) );

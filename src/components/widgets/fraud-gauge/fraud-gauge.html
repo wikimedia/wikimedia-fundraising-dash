@@ -59,9 +59,14 @@
 
                                         <div class="form-group filterPickerForm">
                                             <label>Filter By:</label>
-                                               <div>
-                                                   <select id="selectFilterBox" data-bind="options: filterNames, selectedOptions: selectedFilters" multiple="true"></select>
-                                               </div>
+                                               <ul data-bind="foreach: filters">
+                                                    <li data-bind="visible: $data.values">
+                                                        <label data-bind="text: display"></label>
+                                                        <div>
+                                                            <select class="filterChoices" multiple style="width:50%" data-bind=" options: $data.values, selectedOptions: parent.selectedFilters" multiple="true"></select>
+                                                        </div>
+                                                    </li>
+                                               </ul>
                                        </div>
 
                                     </form>

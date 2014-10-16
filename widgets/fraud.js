@@ -8,7 +8,7 @@ FROM payments_fraud pf [[JOINS]] [[WHERE]]",
 		ct: 'LEFT JOIN drupal.contribution_tracking ct ON ct.id = pf.contribution_tracking_id'
 	},
 	filters: {
-		cur: {
+		Currency: {
 			table: 'pi',
 			column : 'currency_code',
 			display : 'Currency',
@@ -16,52 +16,52 @@ FROM payments_fraud pf [[JOINS]] [[WHERE]]",
 			//TODO: get values dynamically
 			values : [ 'AED', 'ARS', 'AUD', 'BBD', 'BDT', 'BGN', 'BHD', 'BMD', 'BOB', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CRC', 'CZK', 'DKK', 'DOP', 'DZD', 'EGP', 'EUR', 'GBP', 'GTQ', 'HKD', 'HNL', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'JMD', 'JOD', 'JPY', 'KES', 'KRW', 'KZT', 'LKR', 'LTL', 'MAD', 'MKD', 'MXN', 'MYR', 'NIO', 'NOK', 'NZD', 'OMR', 'PAB', 'PEN', 'PHP', 'PKR', 'PLN', 'QAR', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TTD', 'TWD', 'UAH', 'USD', 'UYU', 'VEF', 'XCD', 'ZAR' ]
 		},
-		met: {
+		Method: {
 			table: 'pf',
-			coulmn: 'payment_method',
+			column: 'payment_method',
 			display: 'Method',
 			type: 'dropdown',
 			values: [ 'cc', 'paypal', 'rtbt', 'amazon', 'dd', 'ew', 'obt', 'bt']
 		},
-		src: {
+		Source: {
 			table: 'ct',
 			column: 'utm_source',
 			display: 'Source',
 			type: 'text'
 		},
-		cmp: {
+		Campaign: {
 			table: 'ct',
 			column: 'utm_campaign',
 			display: 'Campaign',
 			type: 'text'
 		},
-		med: {
+		Medium: {
 			table: 'ct',
 			column: 'utm_medium',
 			display: 'Medium',
 			type: 'dropdown',
 			values: [ 'sitenotice', 'sidebar', 'email', 'spontaneous', 'wmfWikiRedirect', 'SocialMedia', 'WaysToGive', 'event', 'externalbanner', 'outage' ]
 		},
-		ref: {
+		Referrer: {
 			table: 'ct',
 			column : 'referrer',
 			display : 'Referrer',
 			type : 'text'
 		},
-		gw: {
+		Gateway: {
 			table: 'pf',
 			column: 'gateway',
 			display: 'Gateway',
 			type: 'dropdown',
 			values: [ 'globalcollect', 'worldpay' ]
 		},
-		fs: {
+		Score: {
 			table: 'pf',
 			column: 'risk_score',
-			display: 'Fraud Score',
+			display: 'Score',
 			type: 'number'
 		},
-		dt: {
+		Date: {
 			table: 'pf',
 			column : 'date',
 			display: 'Date',
@@ -70,7 +70,7 @@ FROM payments_fraud pf [[JOINS]] [[WHERE]]",
 			min: '2005-01-01',
 			max: '2099-12-31'
 		},
-		amt: {
+		Amount: {
 			table: 'pi',
 			column : 'amount',
 			display : 'Amount',
