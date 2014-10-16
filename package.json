@@ -22,7 +22,7 @@
     "odata-parser": "~1.0.0",
     "passport": "^0.2.1",
     "passport-oauth": "^1.0.0",
-    "passport-drupal": "~0.3.2"
+    "passport-drupal": "https://github.com/ejegg/passport-drupal/tarball/master"
   },
   "devDependencies": {
     "chalk": "^0.5.1",

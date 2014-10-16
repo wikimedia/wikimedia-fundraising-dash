@@ -35,7 +35,8 @@ app.use( express.session( { secret: config.sessionSecret } ) );
 passport.use( new DrupalStrategy( {
 		consumerKey: config.consumerKey,
 		consumerSecret: config.consumerSecret,
-		providerURL: config.providerURL
+		providerURL: config.providerURL,
+		providerBackendURL: config.providerBackendURL
 	},
 	function(token, tokenSecret, profile, done) {
 		profile.oauth = { token: token, token_secret: tokenSecret };
