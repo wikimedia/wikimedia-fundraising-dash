@@ -184,9 +184,9 @@ body {
 
 /* Gauges */
 
-#fraudGaugeWidget {
+/*#fraudGaugeWidget {
     width: 330px;
-}
+}*/
 
 #fraudGaugeWidget .panel-body {
     padding: 0;

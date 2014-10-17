@@ -39,13 +39,6 @@ function( ko, template, datePickersTemplate, noUISlider ){
       return names;
     });
 
-    // Fetch options
-    self.fetchOptions = function(queryString){
-      $.get('data/fraud/'+queryString, function( req, res ){
-
-      });
-    };
-
     //default range slider settings
     self.lowRange = ko.observable(33);
     self.highRange = ko.observable(66);
@@ -80,22 +73,12 @@ function( ko, template, datePickersTemplate, noUISlider ){
       generateGradient: true
     };
 
-    //make tag-like selection box
-    $('#selectFilterBox').selectize({
-      create: false,
-      maxOptions: 10,
-      dropdownParent: 'body',
-      selectOnTab: true,
-      options: self.filterNames(),
-    });
-
-    //TODO: connect with database
-    self.getFraudFailurePercent = function(){
+    self.getFraudFailurePercent = function(lowHi, midHi){
       //get color thresholds
       //TODO: these vals to come from user's choices via slider.
-      if(self.gaugeValue() < 33){
+      if(self.gaugeValue() < lowHi){
         self.opts.colorStop = '#89CC23';
-      } else if(self.gaugeValue() >= 33 && self.gaugeValue() < 66){
+      } else if(self.gaugeValue() >= lowHi && self.gaugeValue() < midHi){
         self.opts.colorStop = '#FFA722';
       } else {
         self.opts.colorStop = '#c12e2a';
@@ -118,14 +101,16 @@ function( ko, template, datePickersTemplate, noUISlider ){
     self.validateSubmission = function( times, filters ){
 
       var validation = {
-        validated: '',
-        errors: []
-      };
+         validated: '',
+         errors: []
+       };
 
-      if(!times){
-        validation.errors.push('You must submit a valid time.')
-      } else {
-        validation.validated = true;
+      //there must be a chosen timeframe
+       if(!times){
+         validation.errors.push('You must submit a valid time.')
+        validation.validated = false;
+       } else {
+         validation.validated = true;
       }
 
       return validation;
@@ -180,16 +165,18 @@ function( ko, template, datePickersTemplate, noUISlider ){
     };
 
     self.submitGaugeModifications = function(){
-      console.log('selected filters: ', self.selectedFilters());
-      console.log('selected subfilters: ', self.selectedSubFilters());
+
       //validate values first.
       var validation = self.validateSubmission( self.selectedTimePeriod(), self.selectedFilters() );
       if( !validation.validated ){
+        console.log(validation);
         event.stopImmediatePropagation();
-        $('#fraudSubmissionErrors').html('<p class="text-danger">you have errors in your submission: ' + validation.errors + '</p>' ).addClass('show');
+        $('#fraudSubmissionErrors').html('<p class="text-danger">you have errors in your submission:</p><ul></ul>' ).addClass('show');
+        $.each( validation.errors, function(el, i){
+          $('#fraudSubmissionErrors ul').append('<li>' + i + '</li>');
+        });
+
       } else{
-        //TODO: get all values from the form into the SQL query
-        //run that query and generate the new widget
 
         //gauge boundaries
         var rangePoints = [parseInt($('#fraudPercentSlider').val()[0]), parseInt($('#fraudPercentSlider').val()[1])],
@@ -215,7 +202,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
           /\+/g, '%20' ), function ( dataget ) {
           self.gaugeIsSetUp(true);
           self.gaugeValue( parseFloat(dataget[0].fraud_percent).toFixed(2) );
-          self.gauge.set(self.getFraudFailurePercent());
+          self.gauge.set(self.getFraudFailurePercent(parseInt($('#fraudPercentSlider').val()[0]), parseInt($('#fraudPercentSlider').val()[1])));
         } );
       };
 
