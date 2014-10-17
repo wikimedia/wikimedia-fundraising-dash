@@ -90,7 +90,6 @@ function( ko, template, datePickersTemplate, noUISlider ){
     };
 
     //#FraudRiskScoreGauge
-    //TODO: cleanup
     self.context = document.getElementById('FraudRiskScoreGauge');
     self.gauge = new Gauge(self.context).setOptions(self.opts);
     self.gauge.maxValue = 100;
@@ -119,6 +118,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
     self.convertToQuery = function( userChoices ){
 
       var qs            = '',
+          ds            = '',
           timePresets   = [ "Last 15 Minutes",
                             "Last Hour",
                             "Last 24 Hours",
@@ -138,26 +138,34 @@ function( ko, template, datePickersTemplate, noUISlider ){
       switch( userChoices.timespan[0] ){
         case timePresets[0]:
           var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
-          qs += ' and dt gt ' + moment(lfm).format();
+          ds += 'dt gt ' + moment(lfm).format();
           break;
         case timePresets[1]:
           var lh = new Date(currentDate.getTime() - (60 * 60 * 1000));
-          qs += ' and dt gt ' + moment(lh).format();
+          ds += 'dt gt ' + moment(lh).format();
           break;
         case timePresets[2]:
           var ltfh = new Date(currentDate.getTime() - (24 * 60 * 60 * 1000));
-          qs += ' and dt gt ' + moment(ltfh).format();
+          ds += 'dt gt ' + moment(ltfh).format();
           break;
         case timePresets[3]:
           var lfvm = new Date(currentDate.getTime() - (5 * 60 * 1000));
-          qs += ' and dt gt ' + moment(lfvm).format();
+          ds += 'dt gt ' + moment(lfvm).format();
           break;
       }
 
-      self.queryString(qs);
+      //if there's already something in the qs, precede new string with 'and'
+      var postQS = '';
+      if(qs.length > 0){
+        postQS = qs + ' and ' + ds;
+      } else {
+        postQS = ds;
+      }
+
+      self.queryString(postQS);
       console.log('query string: ', self.queryString());
 
-      return qs;
+      return postQS;
     };
 
     self.showSubfilters = function(stuff){
