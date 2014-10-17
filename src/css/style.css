@@ -214,7 +214,7 @@ body {
     cursor: pointer;
 }
 
-.filterPickerList {
+ul.filterPickerList {
     list-style-type: none;
 }
 

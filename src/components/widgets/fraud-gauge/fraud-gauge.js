@@ -176,7 +176,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
     };
 
     self.showSubfilters = function(stuff){
-      $('#'+stuff).removeClass('hide').addClass('show');
+      $('#'+stuff).toggleClass('hide');
     };
 
     self.submitGaugeModifications = function(){
