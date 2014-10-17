@@ -58,18 +58,18 @@
                                         <date-pickers params="selectedTimePeriod: selectedTimePeriod"></date-pickers>
 
                                         <div class="form-group filterPickerForm">
-                                            <label>Filter By:</label>
-                                               <ul class="filterPickerList" data-bind="foreach: filters">
+                                            <label>Filter By:</label><br>
+                                            <p class="small text-warning" style="display: inline"><i class="fa fa-lightbulb-o"></i> by default, the result will be "all of the above."</p>
+                                               <ul class="filterPickerList nav nav-tabs" id="filterNav" role="tablist" data-bind="foreach: filters">
                                                     <li data-bind="visible: $data.values">
                                                         <input type="checkbox" data-bind="checkedValue: display, checked: $parent.selectedFilters, click: $parent.showSubfilters(display)"><span data-bind="text: display"></span>
-                                                        <ul class="hide filterPickerList" data-bind="attr: {'id': display}, foreach: $data.values">
+                                                        <ul class="hide filterPickerList subfilterSubnav" data-bind="attr: {'id': display}, foreach: $data.values">
                                                             <li>
                                                                 <input type="checkbox" class="filterChoices" data-bind="value: ($parentContext.$data.display + ' eq \'' + $data + '\''), checked: $parents[1].selectedSubFilters"><span data-bind="text: $data"></span>
                                                             </li>
                                                         </ul>
                                                     </li>
                                                </ul>
-                                               <p>by default, the result will be "all of the above."</p>
                                         </div>
 
                                     </form>

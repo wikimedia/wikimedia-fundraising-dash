@@ -218,6 +218,24 @@ ul.filterPickerList {
     list-style-type: none;
 }
 
+#filterNav > li > input, .subfilterSubnav > li > input{
+    vertical-align: middle;
+    margin-right:3px;
+}
+
+#filterNav > li {
+    width: 23%;
+    padding:10px 0 0 5px;
+}
+
+#filterNav.nav-tabs {
+    border: none;
+}
+
+.subfilterSubnav {
+    margin-left: -20px;
+}
+
 #customTimePicker {
     width: 100px;
 }
