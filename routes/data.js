@@ -77,7 +77,7 @@ function getColumn( name, widget, joins ) {
  * @returns {String} WHERE clause with '?' placeholders for values
  */
 function buildWhere( filterNode, widget, values, joins ) {
-	var col, op, rightClause, leftClause, val, pattern, ops = {
+	var col, op, rightClause, leftClause, val, i, pattern, ops = {
 		'and': 'AND',
 		'or': 'OR',
 		'eq': '=',
@@ -92,6 +92,16 @@ function buildWhere( filterNode, widget, values, joins ) {
 		startswith: '{1}%',
 		endswith: '%{1}'
 	};
+
+	// Work around busted odata-parser nested condtion parsing
+	if ( filterNode instanceof Array ) {
+		for ( i = 0; i < filterNode.length; i++ ) {
+			if ( filterNode[i].type ) {
+				filterNode = filterNode[i];
+				break;
+			}
+		}
+	}
 
 	op = ops[filterNode.type];
 	if ( !op ) {
