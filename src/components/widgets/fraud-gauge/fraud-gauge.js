@@ -16,13 +16,13 @@ function( ko, template, datePickersTemplate, noUISlider ){
     $.ajaxSetup({async:false});
 
     var widgetData = $.get( 'metadata/fraud', function(reqData){
-      console.log('this is the data: ', reqData);
       self.data = reqData;
     });
 
     self.title = 'Fraud Rejections';
     self.selectedTimePeriod = ko.observable();
-    self.selectedFilters = ko.observableArray(['yo']);
+    self.selectedFilters = ko.observableArray([]);
+    self.selectedSubFilters = ko.observableArray([]);
     self.queryRequest = [];
     self.gaugeValue = ko.observable(3);
     self.filtersSelected = ko.observable(false);
@@ -139,11 +139,12 @@ function( ko, template, datePickersTemplate, noUISlider ){
                             "Last 24 Hours",
                             "Last 5 Minutes"];
 
-      $.each( self.selectedFilters(), function(i, el){
+      $.each( self.selectedSubFilters(), function(i, el){
+        //add the filters' parent filter
         if(i===0){
-          qs += el + " eq ";
+          qs += el;
         } else {
-          qs += 'AND ' + el + " eq ";
+          qs += ' and ' + el;
         }
       });
 
@@ -152,19 +153,19 @@ function( ko, template, datePickersTemplate, noUISlider ){
       switch( userChoices.timespan[0] ){
         case timePresets[0]:
           var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
-          qs += 'AND dt gt ' + moment(lfm).format();
+          qs += ' and dt gt ' + moment(lfm).format();
           break;
         case timePresets[1]:
           var lh = new Date(currentDate.getTime() - (60 * 60 * 1000));
-          qs += 'AND dt gt ' + moment(lh).format();
+          qs += ' and dt gt ' + moment(lh).format();
           break;
         case timePresets[2]:
           var ltfh = new Date(currentDate.getTime() - (24 * 60 * 60 * 1000));
-          qs += 'AND dt gt ' + moment(ltfh).format();
+          qs += ' and dt gt ' + moment(ltfh).format();
           break;
         case timePresets[3]:
           var lfvm = new Date(currentDate.getTime() - (5 * 60 * 1000));
-          qs += 'AND dt gt ' + moment(lfvm).format();
+          qs += ' and dt gt ' + moment(lfvm).format();
           break;
       }
 
@@ -174,8 +175,13 @@ function( ko, template, datePickersTemplate, noUISlider ){
       return qs;
     };
 
+    self.showSubfilters = function(stuff){
+      $('#'+stuff).removeClass('hide').addClass('show');
+    };
+
     self.submitGaugeModifications = function(){
       console.log('selected filters: ', self.selectedFilters());
+      console.log('selected subfilters: ', self.selectedSubFilters());
       //validate values first.
       var validation = self.validateSubmission( self.selectedTimePeriod(), self.selectedFilters() );
       if( !validation.validated ){
@@ -197,6 +203,9 @@ function( ko, template, datePickersTemplate, noUISlider ){
         //gauge filters
         self.queryRequest['selectedFilters'] = self.selectedFilters();
         self.filtersSelected(true);
+
+        //gauge subfilters
+        self.selectedSubFilters();
 
         //put it all into a real query
         //this will be a function call - TODO: make parsing function

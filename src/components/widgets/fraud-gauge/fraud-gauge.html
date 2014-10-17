@@ -59,15 +59,17 @@
 
                                         <div class="form-group filterPickerForm">
                                             <label>Filter By:</label>
-                                               <ul data-bind="foreach: filters">
+                                               <ul class="filterPickerList" data-bind="foreach: filters">
                                                     <li data-bind="visible: $data.values">
-                                                        <label data-bind="text: display"></label>
-                                                        <div>
-                                                            <select class="filterChoices" multiple style="width:50%" data-bind=" options: $data.values, selectedOptions: parent.selectedFilters" multiple="true"></select>
-                                                        </div>
+                                                        <input type="checkbox" data-bind="checkedValue: display, checked: $parent.selectedFilters, click: $parent.showSubfilters(display)"><span data-bind="text: display"></span>
+                                                        <ul class="hide" data-bind="attr: {'id': display}, foreach: $data.values">
+                                                            <li>
+                                                                <input type="checkbox" class="filterChoices" data-bind="value: ($parentContext.$data.display + ' eq \'' + $data + '\''), checked: $parents[1].selectedSubFilters"><span data-bind="text: $data"></span>
+                                                            </li>
+                                                        </ul>
                                                     </li>
                                                </ul>
-                                       </div>
+                                        </div>
 
                                     </form>
                             </div>

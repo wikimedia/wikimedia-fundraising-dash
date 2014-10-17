@@ -214,6 +214,10 @@ body {
     cursor: pointer;
 }
 
+.filterPickerList {
+    list-style-type: none;
+}
+
 #customTimePicker {
     width: 100px;
 }
