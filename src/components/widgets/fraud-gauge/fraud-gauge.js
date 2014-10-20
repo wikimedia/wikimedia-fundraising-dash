@@ -204,7 +204,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
         //this will be a function call - TODO: make parsing function
         self.queryString( self.convertToQuery(self.queryRequest));
 
-        $.get( '/data/fraud?' + $.param({ '$filter': "Currency eq 'USD'" }).replace(
+        $.get( '/data/fraud?' + $.param({ '$filter': self.queryString() }).replace(
           /\+/g, '%20' ), function ( dataget ) {
           self.gaugeIsSetUp(true);
           self.gaugeValue( parseFloat(dataget[0].fraud_percent).toFixed(2) );
