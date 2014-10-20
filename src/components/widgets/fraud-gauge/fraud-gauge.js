@@ -4,7 +4,6 @@ define([
     'gauge',
     'noUISlider',
     'selectize',
-    'momentjs',
     'bootstrap-datepicker'
     ],
 function( ko, template, datePickersTemplate, noUISlider ){
@@ -138,19 +137,19 @@ function( ko, template, datePickersTemplate, noUISlider ){
       switch( userChoices.timespan[0] ){
         case timePresets[0]:
           var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
-          ds += 'dt gt ' + moment(lfm).format();
+          ds += 'DT gt \'' + lfm.toISOString() + '\'';
           break;
         case timePresets[1]:
           var lh = new Date(currentDate.getTime() - (60 * 60 * 1000));
-          ds += 'dt gt ' + moment(lh).format();
+          ds += 'DT gt \'' + lh.toISOString() + '\'';
           break;
         case timePresets[2]:
           var ltfh = new Date(currentDate.getTime() - (24 * 60 * 60 * 1000));
-          ds += 'dt gt ' + moment(ltfh).format();
+          ds += 'DT gt \'' + ltfh.toISOString() + '\'';
           break;
         case timePresets[3]:
           var lfvm = new Date(currentDate.getTime() - (5 * 60 * 1000));
-          ds += 'dt gt ' + moment(lfvm).format();
+          ds += 'DT gt \'' + lfvm.toISOString() + '\'';
           break;
       }
 
@@ -185,12 +184,6 @@ function( ko, template, datePickersTemplate, noUISlider ){
         });
 
       } else{
-
-        //gauge boundaries
-        var rangePoints = [parseInt($('#fraudPercentSlider').val()[0]), parseInt($('#fraudPercentSlider').val()[1])],
-            lowRange    = [0, rangePoints[0]],
-            midRange    = [rangePoints[0], rangePoints[1]],
-            highRange   = [rangePoints[1], 100];
 
         //gauge time period
         self.queryRequest['timespan'] = self.selectedTimePeriod();

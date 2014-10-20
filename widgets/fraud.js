@@ -61,7 +61,7 @@ FROM payments_fraud pf [[JOINS]] [[WHERE]]",
 			display: 'Score',
 			type: 'number'
 		},
-		Date: {
+		DT: {
 			table: 'pf',
 			column : 'date',
 			display: 'Date',
