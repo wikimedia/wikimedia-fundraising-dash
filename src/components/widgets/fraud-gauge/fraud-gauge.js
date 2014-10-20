@@ -151,6 +151,11 @@ function( ko, template, datePickersTemplate, noUISlider ){
           var lfvm = new Date(currentDate.getTime() - (5 * 60 * 1000));
           ds += 'DT gt \'' + lfvm.toISOString() + '\'';
           break;
+        default:
+          var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
+          ds += 'DT gt \'' + lfm.toISOString() + '\'';
+          break;
+
       }
 
       //if there's already something in the qs, precede new string with 'and'
@@ -177,7 +182,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
       var validation = self.validateSubmission( self.selectedTimePeriod(), self.selectedFilters() );
       if( !validation.validated ){
         console.log(validation);
-        event.stopImmediatePropagation();
+
         $('#fraudSubmissionErrors').html('<p class="text-danger">you have errors in your submission:</p><ul></ul>' ).addClass('show');
         $.each( validation.errors, function(el, i){
           $('#fraudSubmissionErrors ul').append('<li>' + i + '</li>');
