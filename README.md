@@ -18,6 +18,7 @@ To play with Dash, you will need:
 + Node v. 0.8 (I recommend using [nvm](https://github.com/creationix/nvm) to manage node versions if you already have another version on your machine.)
 + [npm](https://www.npmjs.org/) to manage backend packages and because you need Bower.
 + [Bower](http://bower.io/), a package manager specifically optimized for front-end packages.
++ A local database that reflects fredge (not provided here since there is sensitive data involved)
 
 To use the live version with actual Fundraising data, you will need special permissions. Please contact ssmith@wikimedia.org.
 
@@ -25,62 +26,58 @@ Framework / Libraries
 =====================
 
 Dash is a [NodeJS](http://nodejs.org/)/[Express](http://expressjs.com/) app.
-The front end uses [RequireJS](http://requirejs.org/) for optimal module loading, with [BackboneJS](http://backbonejs.org/) for MVC. The front-end templating is handled by Handlebars.
+The front end uses [RequireJS](http://requirejs.org/) for optimal module loading, with [Knockout](http://knockoutjs.com/) for MVC.
+
 For now, Boostrap provides the main grid structure and basic styling. This is so that collaboration is easier, but may be replaced with something better and/or custom in the future.
 
-Various charting and mapping libraries, such as d3, ChartJS, and flot, are being used with Dash. More will be added as needs grow. Dash is happy to include all the cool kids on the block.
+Various charting and mapping libraries, such as d3, ChartJS, and flot, are being used with Dash. *Update:* This is being replaced by components provided by the Wikimedia Foundation's Analytics project [Dashiki](https://github.com/wikimedia/analytics-dashiki), which can be viewed on [metrics.wmflabs.org](https://metrics.wmflabs.org/static/public/dash/).
 
-All front-end Javascript is managed and maintained with [Bower](http://bower.io/). In this project, Bower installs all such packages into the public/javascripts/vendor directory. To upgrade any front-end library (listed below), simply run `bower update`.
+All front-end Javascript is managed and maintained with [Bower](http://bower.io/). To upgrade any front-end library (listed below), simply run `bower update`. Separate repos containing these libraries are submoduled in [dash-node-modules](https://github.com/sherah/dash_node_modules) and [dash-bower-modules](https://github.com/sherah/dash_bower_modules).
 
 ###All libraries Dash relies upon:
 
 ####Backend
 
-+ Express
-+ Jade
-+ Commander
-+ rConsole
++ chalk
++ commander
++ deeply
++ event-stream
++ express
++ gulp
++ lodash
++ mysql
++ odata-parser
++ passport
++ rconsole
 
 ####Front end
 
-+ Backbone
-+ Bootstrap
-+ ChartJS
-+ D3
-+ Flot
-+ Handlebars
-+ jQuery
-+ jQueryUI
-+ MomentJS
-+ qUnit
-+ RequireJS
-+ Underscore
++ autotype
++ bootstrap
++ bootstrap-datepicker
++ bootstrap-timepicker
++ chartjs
++ crossroads
++ d3
++ fontawesome
++ gauge.js
++ hasher
++ jquery
++ js-signals
++ knockout
++ lato
++ moment
++ nouislider
++ requirejs
 
 App Structure
 =============
 
 Dash is organized as follows:
 
-+ collections: this is where database tables will be reflected/held
-+ css: main css folder
-+ javascripts:
-  + tests: main test javascripts for qUnit
-  + vendor: all vendor javascripts, managed with Bower
-  + test files (right now to test testing; these will go away once real tests start happening)
-+ models: boilerplate models folder
-+ routers: boilerplate routers folder
-+ utils: app-wide utility functions that can be used by multiple views
-+ views: there are two types of viewing-type files; "templates" and "views".
-  + templates: the actual html that views are rendered as.
-    + widgets: widget-specific html file bucket.
-    + everything else here is either a jade template (used by express/node from the backend), or an html file/partial.
-  + widgetViews: each individual widget in the Dash is represented here as a widget View object file.
-  + everything else here is a Javascript file containing non-widget-related View objects.
-+ admin.js: configuration and instantiation of admin area (under development).
-+ main.js: configuration and instantiation of app container.
-+ defaults.js: server defaults.
-+ package.json: specifies which server packages npm needs to manage for the project.
-+ server.js: boot file.
++ src/app/ directory contains knockout bindings.js file for common functions (coming soon), require config file, front end router, and startup file
++ src/components/ directory contains all views organized into their own directory, with corresponding html templates
++ routes/ directory provides querying/data for front end consumption
 
 ## Phase 1 (the current state of things!):
 There is one main view: the widget Library view. (This is because there are < a lot of widgets in existence at the moment.)
@@ -96,13 +93,4 @@ Next Steps
 + My Boards, general sharing with Tags and Favorites introduced.
 + Eternal bliss and happiness
 
-Testing
-=======
-
-Dash is set up to use qUnit for testing. More info when tests are actually written and running.
-
-Prototypes
-==========
-
-You can see the app prototypes as well as individual widget prototypes in `public/collections/prototypes`.
 

@@ -1,3 +1,6 @@
+[submodule "bower_modules"]
+	path = src/bower_modules
+	url = https://gerrit.wikimedia.org/r/wikimedia/fundraising/dash/src/bower_modules
 [submodule "node_modules"]
 	path = node_modules
 	url = https://gerrit.wikimedia.org/r/wikimedia/fundraising/dash/node_modules

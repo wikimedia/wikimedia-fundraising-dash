@@ -1,0 +1,53 @@
+<div id="ABTestingMainWidget">
+
+    <div class="row">
+
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <h1 data-bind="text: title"></h1>
+                </div>
+
+                <ul class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Test Start Time">
+                        <input type="text" class="form-control" placeholder="Test End Time">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Group By <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Banner</a></li>
+                                <li><a href="#">Payment Method</a></li>
+                                <li><a href="#">Country</a></li>
+                                <li><a href="#">Language</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-warning navbar-btn">Get Test Results</button>
+                </ul>
+            </div>
+        </nav>
+
+        <table class="table">
+
+            <tr>
+                <td></td>
+                <td data-bind="text: winner"></td>
+                <td data-bind="text: runnerUp"></td>
+            </tr>
+
+            <span data-bind="foreach: table1">
+
+            <tr>
+                <td data-bind="text: table1.donations"></td>
+            </tr>
+
+            </span>
+
+        </table>
+
+    </div>
+
+
+</div>
