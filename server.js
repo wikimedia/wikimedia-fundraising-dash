@@ -1,13 +1,15 @@
 var express           = require( 'express' ),
     app               = express(),
     commander         = require( 'commander' ),
-    config            = require( './defaults.js' ),
-    port              = config.port,
+    defaults          = require( './defaults.js' ),
     routes            = require( './routes'),
     passport          = require( 'passport' ),
     DrupalStrategy    = require( 'passport-drupal' ).DrupalStrategy,
+    evilDns			  = require( 'evil-dns' ),
     server,
-    serverConfig;
+    serverConfig,
+    config,
+    prop;
 
 commander
     .version('0.0.1')
@@ -15,18 +17,33 @@ commander
     .parse(process.argv);
 
 try {
-    if (commander.config) {
-        config = require(commander.config)(config);
-    }
+    if ( commander.config ) {
+        config = require( commander.config );
+		for ( prop in defaults ) {
+			if ( defaults.hasOwnProperty( prop ) && !config.hasOwnProperty( prop ) ) {
+				config[prop] = defaults[prop];
+			}
+		}
+    } else {
+		config = defaults;
+	}
 } catch(err) {
-    console.err("Could not open configuration file %s! %s", commander.config, err);
+    console.error("Could not open configuration file %s! %s", commander.config, err);
     process.exit(1);
 }
 
 serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec(config.listen);
 if (!serverConfig) {
-    console.err("Server cannot listen on '%s', invalid format.", config.listen);
+    console.error("Server cannot listen on '%s', invalid format.", config.listen);
     process.exit(1);
+}
+
+// Override DNS resolution if providerBackendIP is given
+if ( config.providerBackendIP ) {
+	evilDns.add(
+		URL.parse( config.providerBackendURL ).hostname,
+		config.providerBackendIP
+	);
 }
 
 app.use( express.session( { secret: config.sessionSecret } ) );
