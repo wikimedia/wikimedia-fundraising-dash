@@ -6,6 +6,7 @@ var express           = require( 'express' ),
     routes            = require( './routes'),
     passport          = require( 'passport' ),
     DrupalStrategy    = require( 'passport-drupal' ).DrupalStrategy,
+    evilDns			  = require( 'evil-dns' ),
     server,
     serverConfig;
 
@@ -27,6 +28,14 @@ serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec(config.listen);
 if (!serverConfig) {
     console.err("Server cannot listen on '%s', invalid format.", config.listen);
     process.exit(1);
+}
+
+// Override DNS resolution if providerBackendIP is given
+if ( config.providerBackendIP ) {
+	evilDns.add(
+		URL.parse( config.providerBackendURL ).hostname,
+		config.providerBackendIP
+	);
 }
 
 app.use( express.session( { secret: config.sessionSecret } ) );
