@@ -5,6 +5,4 @@ node_modules/*
 defaults.js
 src/app/models.txt
 nbproject
-dist/
 *swp
-
