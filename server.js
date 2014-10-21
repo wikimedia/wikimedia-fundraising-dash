@@ -6,6 +6,7 @@ var express           = require( 'express' ),
     passport          = require( 'passport' ),
     DrupalStrategy    = require( 'passport-drupal' ).DrupalStrategy,
     evilDns			  = require( 'evil-dns' ),
+    syslog            = require( 'node-syslog' ),
     server,
     serverConfig,
     config,
@@ -15,6 +16,17 @@ commander
     .version('0.0.1')
     .option('-c, --config <path>', 'Path to the local configuration file')
     .parse(process.argv);
+
+syslog.init( 'dash', syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0 );
+
+function log( level, message ) {
+	syslog.log( level, message );
+	if ( level === syslog.LOG_ERR ) {
+		console.error( message );
+	} else {
+		console.log( message );
+	}
+}
 
 try {
     if ( commander.config ) {
@@ -28,13 +40,13 @@ try {
 		config = defaults;
 	}
 } catch(err) {
-    console.error("Could not open configuration file %s! %s", commander.config, err);
+    log( syslog.LOG_ERR, 'Could not open configuration file ' + commander.config + '! ' + err );
     process.exit(1);
 }
 
 serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec(config.listen);
 if (!serverConfig) {
-    console.error("Server cannot listen on '%s', invalid format.", config.listen);
+    log( syslog.LOG_ERR, 'Server cannot listen on "' + config.listen + '", invalid format.' );
     process.exit(1);
 }
 
@@ -93,6 +105,6 @@ server = app.listen(
 		serverConfig[3],
 		serverConfig[2],
 		function() {
-			console.log( 'listening on port %d', server.address().port );
+			log( syslog.LOG_INFO, 'Dash listening on port ' + server.address().port );
 		}
 );
