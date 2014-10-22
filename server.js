@@ -105,6 +105,10 @@ app.get( '/auth/drupal/callback',
 		res.redirect( '/' );
 	});
 
+// Log errors
+process.on( 'uncaughtException', function( err ) {
+	log( syslog.LOG_ERR, 'Application error: ' + err );
+});
 
 server = app.listen(
 		serverConfig[3],
