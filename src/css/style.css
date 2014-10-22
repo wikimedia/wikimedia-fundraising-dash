@@ -224,8 +224,8 @@ ul.filterPickerList {
 }
 
 #filterNav > li {
-    width: 23%;
-    padding:10px 0 0 5px;
+    width: 25%;
+    padding:10px 0 0 0;
 }
 
 #filterNav.nav-tabs {
@@ -233,7 +233,7 @@ ul.filterPickerList {
 }
 
 .subfilterSubnav {
-    margin-left: -20px;
+    margin-left: -35px;
 }
 
 #customTimePicker {
