@@ -28,6 +28,8 @@ function log( level, message ) {
 	}
 }
 
+log( syslog.LOG_DEBUG, 'Dash starting up' );
+
 try {
     if ( commander.config ) {
         config = require( commander.config );
@@ -49,6 +51,9 @@ if (!serverConfig) {
     log( syslog.LOG_ERR, 'Server cannot listen on "' + config.listen + '", invalid format.' );
     process.exit(1);
 }
+
+log( syslog.LOG_DEBUG, 'Will try to listen on IP address: ' + serverConfig[2] );
+log( syslog.LOG_DEBUG, 'Will try to listen on port: ' + serverConfig[3] );
 
 // Override DNS resolution if providerBackendIP is given
 if ( config.providerBackendIP ) {
