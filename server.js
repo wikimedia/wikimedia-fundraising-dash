@@ -7,6 +7,7 @@ var express           = require( 'express' ),
     DrupalStrategy    = require( 'passport-drupal' ).DrupalStrategy,
     evilDns			  = require( 'evil-dns' ),
     syslog            = require( 'node-syslog' ),
+    url               = require( 'url' ),
     server,
     serverConfig,
     config,
@@ -29,6 +30,11 @@ function log( level, message ) {
 }
 
 log( syslog.LOG_DEBUG, 'Dash starting up' );
+
+// Log errors
+process.on( 'uncaughtException', function( err ) {
+	log( syslog.LOG_ERR, 'Application error: ' + err );
+});
 
 try {
     if ( commander.config ) {
@@ -57,8 +63,11 @@ log( syslog.LOG_DEBUG, 'Will try to listen on port: ' + serverConfig[3] );
 
 // Override DNS resolution if providerBackendIP is given
 if ( config.providerBackendIP ) {
+	log( syslog.LOG_INFO, 'providerBackendIP set, will use address '
+		+ config.providerBackendIP + ' for hostname "'
+		+ url.parse( config.providerBackendURL ).hostname + '"' );
 	evilDns.add(
-		URL.parse( config.providerBackendURL ).hostname,
+		url.parse( config.providerBackendURL ).hostname,
 		config.providerBackendIP
 	);
 }
@@ -104,11 +113,6 @@ app.get( '/auth/drupal/callback',
 	function( req, res ) {
 		res.redirect( '/' );
 	});
-
-// Log errors
-process.on( 'uncaughtException', function( err ) {
-	log( syslog.LOG_ERR, 'Application error: ' + err );
-});
 
 server = app.listen(
 		serverConfig[3],
