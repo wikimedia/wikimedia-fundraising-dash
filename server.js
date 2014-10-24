@@ -1,22 +1,15 @@
 var express           = require( 'express' ),
     app               = express(),
-    commander         = require( 'commander' ),
-    defaults          = require( './defaults.js' ),
     routes            = require( './routes'),
     passport          = require( 'passport' ),
     DrupalStrategy    = require( 'passport-drupal' ).DrupalStrategy,
     evilDns			  = require( 'evil-dns' ),
     url               = require( 'url' ),
     logger            = require( './logger.js' ),
+    config            = require( './config.js' ),
     server,
     serverConfig,
-    config,
     prop;
-
-commander
-    .version('0.0.1')
-    .option('-c, --config <path>', 'Path to the local configuration file')
-    .parse(process.argv);
 
 logger.debug( 'Dash starting up' );
 
@@ -24,22 +17,6 @@ logger.debug( 'Dash starting up' );
 process.on( 'uncaughtException', function( err ) {
 	logger.error( 'Application error: ' + err );
 });
-
-try {
-    if ( commander.config ) {
-        config = require( commander.config );
-		for ( prop in defaults ) {
-			if ( defaults.hasOwnProperty( prop ) && !config.hasOwnProperty( prop ) ) {
-				config[prop] = defaults[prop];
-			}
-		}
-    } else {
-		config = defaults;
-	}
-} catch(err) {
-    logger.error( 'Could not open configuration file ' + commander.config + '! ' + err );
-    process.exit(1);
-}
 
 serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec(config.listen);
 if (!serverConfig) {
