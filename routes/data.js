@@ -1,7 +1,7 @@
 var widgets = require( '../widgets' ),
 	odataParser = require( 'odata-parser' ),
 	mysql = require ( 'mysql'),
-	config = require( '../defaults.js' );
+	config = require( '../config.js' );
 
 /**
  * Throws an error if an value is invalid for the given column

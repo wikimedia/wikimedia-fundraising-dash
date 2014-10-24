@@ -123,13 +123,28 @@ function( ko, template, datePickersTemplate, noUISlider ){
                             "Last 24 Hours",
                             "Last 5 Minutes"];
 
-      $.each( self.selectedSubFilters(), function(i, el){
-        //add the filters' parent filter
-        if(i===0){
-          qs += el;
+      //match subfilters to filters
+      //TODO: this is terrible and needs to be refactored when this piece gets modularized.
+      var filterObj = {};
+      var haveMultipleSubfilters = [];
+      $.each( userChoices.selectedSubFilters, function(el, subfilter){
+        var filter = subfilter.substr(0, subfilter.indexOf(' '));
+
+        if(!filterObj[filter]){
+          filterObj[filter] = subfilter;
         } else {
-          qs += ' and ' + el;
+          filterObj[filter] += " or " + subfilter;
+          haveMultipleSubfilters.push(filter);
         }
+      });
+
+      $.each( filterObj, function(el, s){
+        if( haveMultipleSubfilters.indexOf(el) > -1){
+          qs += '(' + filterObj[el] + ')';
+        } else {
+          qs += filterObj[el];
+        }
+        qs += ' and ';
       });
 
       //convert time constraints
@@ -161,13 +176,10 @@ function( ko, template, datePickersTemplate, noUISlider ){
       //if there's already something in the qs, precede new string with 'and'
       var postQS = '';
       if(qs.length > 0){
-        postQS = qs + ' and ' + ds;
+        postQS = qs + ds;
       } else {
         postQS = ds;
       }
-
-      self.queryString(postQS);
-      console.log('query string: ', self.queryString());
 
       return postQS;
     };
@@ -181,7 +193,6 @@ function( ko, template, datePickersTemplate, noUISlider ){
       //validate values first.
       var validation = self.validateSubmission( self.selectedTimePeriod(), self.selectedFilters() );
       if( !validation.validated ){
-        console.log(validation);
 
         $('#fraudSubmissionErrors').html('<p class="text-danger">you have errors in your submission:</p><ul></ul>' ).addClass('show');
         $.each( validation.errors, function(el, i){
@@ -198,7 +209,7 @@ function( ko, template, datePickersTemplate, noUISlider ){
         self.filtersSelected(true);
 
         //gauge subfilters
-        self.selectedSubFilters();
+        self.queryRequest['selectedSubFilters'] = self.selectedSubFilters().sort();
 
         //put it all into a real query
         //this will be a function call - TODO: make parsing function
