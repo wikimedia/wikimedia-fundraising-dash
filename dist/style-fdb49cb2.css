@@ -7946,6 +7946,10 @@ body {
     padding:0;
 }
 
+.container-fluid {
+    padding: 15px 25px 0 0;
+}
+
 #dashApp {
     padding-left: 175px;
     transition: all 0.4s ease 0s;

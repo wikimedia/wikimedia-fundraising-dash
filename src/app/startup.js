@@ -16,6 +16,8 @@ define(
         ko.components.register( 'date-pickers',       { require: 'components/utils/date-pickers/date-pickers' });
 
         //register individual widgets
+
+        ko.components.register( 'big-english',        { require: 'components/widgets/big-english/big-english' });
         ko.components.register( 'fraud-gauge',        { require: 'components/widgets/fraud-gauge/fraud-gauge' });
 
         //fire up router
