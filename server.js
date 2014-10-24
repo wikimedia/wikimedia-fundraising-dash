@@ -6,8 +6,8 @@ var express           = require( 'express' ),
     passport          = require( 'passport' ),
     DrupalStrategy    = require( 'passport-drupal' ).DrupalStrategy,
     evilDns			  = require( 'evil-dns' ),
-    syslog            = require( 'node-syslog' ),
     url               = require( 'url' ),
+    logger            = require( './logger.js' ),
     server,
     serverConfig,
     config,
@@ -18,22 +18,11 @@ commander
     .option('-c, --config <path>', 'Path to the local configuration file')
     .parse(process.argv);
 
-syslog.init( 'dash', syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0 );
-
-function log( level, message ) {
-	syslog.log( level, message );
-	if ( level === syslog.LOG_ERR ) {
-		console.error( message );
-	} else {
-		console.log( message );
-	}
-}
-
-log( syslog.LOG_DEBUG, 'Dash starting up' );
+logger.debug( 'Dash starting up' );
 
 // Log errors
 process.on( 'uncaughtException', function( err ) {
-	log( syslog.LOG_ERR, 'Application error: ' + err );
+	logger.error( 'Application error: ' + err );
 });
 
 try {
@@ -48,22 +37,24 @@ try {
 		config = defaults;
 	}
 } catch(err) {
-    log( syslog.LOG_ERR, 'Could not open configuration file ' + commander.config + '! ' + err );
+    logger.error( 'Could not open configuration file ' + commander.config + '! ' + err );
     process.exit(1);
 }
 
 serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec(config.listen);
 if (!serverConfig) {
-    log( syslog.LOG_ERR, 'Server cannot listen on "' + config.listen + '", invalid format.' );
+    logger.error( 'Server cannot listen on "' + config.listen + '", invalid format.' );
     process.exit(1);
 }
 
-log( syslog.LOG_DEBUG, 'Will try to listen on IP address: ' + serverConfig[2] );
-log( syslog.LOG_DEBUG, 'Will try to listen on port: ' + serverConfig[3] );
+logger.debug( 'Will try to listen on IP address: ' + serverConfig[2] );
+logger.debug( 'Will try to listen on port: ' + serverConfig[3] );
+logger.debug( 'Using OAuth providerURL: ' + config.providerURL );
+logger.debug( 'Using OAuth providerBackendURL: ' + config.providerBackendURL );
 
 // Override DNS resolution if providerBackendIP is given
 if ( config.providerBackendIP ) {
-	log( syslog.LOG_INFO, 'providerBackendIP set, will use address '
+	logger.info( 'OAuth providerBackendIP set, will use address '
 		+ config.providerBackendIP + ' for hostname "'
 		+ url.parse( config.providerBackendURL ).hostname + '"' );
 	evilDns.add(
@@ -118,6 +109,6 @@ server = app.listen(
 		serverConfig[3],
 		serverConfig[2],
 		function() {
-			log( syslog.LOG_INFO, 'Dash listening on port ' + server.address().port );
+			logger.info( 'Dash listening on port ' + server.address().port );
 		}
 );
