@@ -84,7 +84,7 @@ gulp.task('css', function () {
 gulp.task('fonts', function () {
     return gulp.src(['src/bower_modules/fontawesome/fonts/*{ttf,woff,eot,svg,otf}',
                      'src/bower_modules/lato/font/*{ttf,woff,eot,svg}'])
-        .pipe(gulp.dest('./fonts/'));
+        .pipe(gulp.dest('./dist/fonts/'));
 });
 
 // Copies index.html, replacing <script> and <link> tags to reference production URLs
@@ -159,5 +159,5 @@ function logWatcher(event) {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
 }
 gulp.watch('./src/**/*.js', ['js']).on('change', logWatcher);
-gulp.watch('./src/**/*.html', ['html']).on('change', logWatcher);
+gulp.watch('./src/**/*.html', ['replace']).on('change', logWatcher);
 gulp.watch('./src/**/*.css', ['css']).on('change', logWatcher);
