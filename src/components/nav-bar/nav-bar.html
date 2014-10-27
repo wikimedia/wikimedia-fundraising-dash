@@ -24,9 +24,10 @@
 						<span id="navCollapseArrows"><i class="fa fa-angle-double-left"></i></span>
 					</ul>
 				</div>
-				<div>
-					<a href="/auth/drupal" data-bind="visible: showLogIn">Log in</a>
-					<span data-bind="text: welcome"></span>
+				<div class="row-fluid text-center logoutBtn">
+					<a href="/auth/drupal" data-bind="visible: showLogIn"><button class="btn btn-block btn-info">Log in</button></a>
+					<p data-bind="text: welcome"></p>
+					<a href="/logout" data-bind="visible: !showLogIn()"><button class="btn btn-block btn-info">Log out</button></a>
 				</div>
 			</div>
 		</div>

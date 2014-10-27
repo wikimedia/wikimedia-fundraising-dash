@@ -81,6 +81,10 @@ app.get( '/auth/drupal/callback',
 	function( req, res ) {
 		res.redirect( '/' );
 	});
+app.get( '/logout', function( req, res ) {
+	req.logout();
+	res.redirect( '/' );
+});
 
 server = app.listen(
 		serverConfig[3],
