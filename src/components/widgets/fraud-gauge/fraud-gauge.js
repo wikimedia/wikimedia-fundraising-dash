@@ -2,12 +2,10 @@ define([
     'knockout',
     'text!components/widgets/fraud-gauge/fraud-gauge.html',
     'gauge',
-    'noUISlider',
     'c3',
-    'selectize',
-    'bootstrap-datepicker'
+    'chartjs'
     ],
-function( ko, template, datePickersTemplate, noUISlider, c3 ){
+function( ko, template, datePickersTemplate, c3, chartjs ){
 
   function FraudGaugeViewModel( params ){
 
@@ -40,23 +38,71 @@ function( ko, template, datePickersTemplate, noUISlider, c3 ){
     });
 
     //default range slider settings
-    self.lowRange = ko.observable(33);
-    self.highRange = ko.observable(66);
-    $('#fraudPercentSlider').noUiSlider({
-      start: [ self.lowRange(), self.highRange() ],
-      range: {
-        'min': [0],
-        'max': [100]
-      },
-      step: 1,
-      connect: true
-    });
-    $('#fraudPercentSlider').on({
-      slide: function(){
-        var sliderValArray = $('#fraudPercentSlider').val();
-        self.lowRange(parseInt(sliderValArray[0]));
-        self.highRange(parseInt(sliderValArray[1]));
-      },
+    self.greenRange = ko.observable({ low: 0, high: 17 });
+    self.yellowRange = ko.observable({ low: 17, high: 68 });
+    self.redRange = ko.observable({ low: 68, high: 100 });
+
+    //color selection inside modal
+    var canvas = $('#fraudPercentSlider')[0];
+    var ctx = canvas.getContext('2d');
+
+    var placeholder = document.createElement('canvas');
+    placeholder.width = 200;
+    placeholder.height = placeholder.width;
+    var placeholderctx = placeholder.getContext('2d');
+
+    var ddata = [{
+        value: 90,
+        color: '#000000'
+    },{
+        value: 1.8 * (self.greenRange().high - self.greenRange().low),
+        color: '#4cae4c'
+    },{
+        value: 1.8 * (self.yellowRange().high - self.yellowRange().low),
+        color: '#eea236'
+    }, {
+        value: 1.8 * (self.redRange().high - self.redRange().low),
+        color: '#c9302c'
+    },{
+        value: 90,
+        color: '#000000'
+    }, ];
+
+    new Chart(placeholderctx).Doughnut(ddata, {
+        animation: false,
+        segmentShowStroke: false,
+        onAnimationComplete: function() {
+          function drawLine(color,left,top,bottom){
+            placeholderctx.strokeStyle = color;
+            placeholderctx.lineWidth = 1;
+
+            placeholderctx.beginPath();
+
+            placeholderctx.moveTo(left, top);
+            placeholderctx.lineTo(left,bottom);
+
+            placeholderctx.stroke();
+            placeholderctx.closePath();
+          }
+
+          var center = Math.round($(placeholder).width() / 2);
+          var offset1 = center / 40;
+          var offset2 = center / 80;
+
+          var cropHeight = Math.round(placeholder.height/2);
+          ctx.clearRect(0,0,canvas.width,canvas.height);
+          ctx.drawImage(
+            placeholder,
+            0,
+            0,
+            placeholder.width,
+            cropHeight,
+            0,
+            0,
+            placeholder.width,
+            cropHeight
+          );
+        }
     });
 
     self.validateSubmission = function( times, filters ){
@@ -213,7 +259,7 @@ function( ko, template, datePickersTemplate, noUISlider, c3 ){
               }
           });
         });
-      };
+      }
 
 
     };

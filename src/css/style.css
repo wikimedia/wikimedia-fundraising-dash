@@ -207,7 +207,8 @@ body {
 }
 
 #fraudPercentSlider {
-    margin: 10px 0;
+    margin: 0 auto;
+    display: inherit;
 }
 
 #queryButton {
@@ -263,6 +264,14 @@ ul.filterPickerList {
 
 #unspecifiedFraudGauge.row{
     margin: 10px;
+}
+
+.btn.percentBtn {
+    padding: .44em;
+}
+
+.btn.btn-warning.percentBtn {
+    width: 100%;
 }
 
 /* BOOTSTRAP OVERRIDES */
@@ -339,6 +348,12 @@ input {
 
 #queryTimepickerFrom.input-small, #queryTimepickerTo.input-small {
     width: 100px;
+}
+
+.sliderTable {
+    width: 50%;
+    margin-top: -30px;
+    font-weight: bold;
 }
 
 .sliderTable > tbody > tr > td {

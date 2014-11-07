@@ -1,3 +1,4 @@
+
 <div class="panel panel-purple" id="fraudGaugeWidget">
     <div class="panel-heading">
         Fraud Rejections
@@ -43,14 +44,35 @@
                                         <div class="form-group">
                                             <label for="fraudPercentSlider">Fraud Percent Ranges</label>
                                             <p>set up the colors as they'll appear in the gauge.</p>
-                                            <div id="fraudPercentSlider"></div>
-                                            <table class="table sliderTable text-center">
-                                              <tr>
-                                                  <td data-bind="attr: { width: lowRange() + '%' }">0 - <span data-bind="text: lowRange"></span>%</td>
-                                                  <td data-bind="attr: { width: ( highRange() - lowRange() ) + '%' }"><span data-bind="text: lowRange"></span> - <span data-bind="text: highRange"></span>%</td>
-                                                  <td data-bind="attr: { width: ( 100 - highRange()) + '%' }"><span data-bind="text: highRange"></span> - 100%</td>
-                                              </tr>
-                                            </table>
+                                            <canvas id="fraudPercentSlider" width="200" height="120"></canvas>
+                                            <div class="row">
+                                                <div class="col-md-4 col-sm-4 col-lg-4">
+                                                    <label>low fraud score: up to</label>
+                                                    <div class="input-group">
+                                                      <input type="text" class="form-control" data-bind="textInput: yellowRange().low">
+                                                      <span class="input-group-btn">
+                                                        <button class="btn btn-success percentBtn" type="button"><i class="fa fa-refresh"></i></button>
+                                                      </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-sm-4 col-lg-4">
+                                                    <label>mid-level score:</label>
+                                                    <div class="input-group">
+                                                      <span class="input-group-btn">
+                                                        <button class="btn btn-warning percentBtn" type="button"><span data-bind="text:yellowRange().low + '% to ' + yellowRange().high + '%'"></button>
+                                                      </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-sm-4 col-lg-4">
+                                                    <label>high fraud score: from</label>
+                                                    <div class="input-group">
+                                                    <input type="text" class="form-control" data-bind="textInput: yellowRange().high">
+                                                      <span class="input-group-btn">
+                                                        <button class="btn btn-danger percentBtn" type="button"><i class="fa fa-refresh"></i></button>
+                                                      </span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <!--Call Date Pickers Component to handle date range-->
