@@ -107,7 +107,7 @@ gulp.task('replace', ['css', 'js'], function () {
     bundles.forEach(function (element, index, array) {
         var l = element.length;
         // we are trying to match  "project-selector" (quotes-included)
-        regex = regex + '\"(' + element.substr(0, element.length - 3) + ')\"\:|';
+        regex = regex + '\"(' + element.substr(0, element.length - 3) + ')\":|';
 
     });
 

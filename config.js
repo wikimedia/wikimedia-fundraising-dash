@@ -1,6 +1,7 @@
 var commander = require( 'commander' ),
     defaults  = require( './defaults.js' ),
-	logger    = require( './logger.js' ),
+    logger    = require( './logger.js' ),
+    prop,
     config;
 
 commander

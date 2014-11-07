@@ -8,8 +8,7 @@ var express           = require( 'express' ),
     logger            = require( './logger.js' ),
     config            = require( './config.js' ),
     server,
-    serverConfig,
-    prop;
+    serverConfig;
 
 logger.debug( 'Dash starting up' );
 
@@ -31,9 +30,9 @@ logger.debug( 'Using OAuth providerBackendURL: ' + config.providerBackendURL );
 
 // Override DNS resolution if providerBackendIP is given
 if ( config.providerBackendIP ) {
-	logger.info( 'OAuth providerBackendIP set, will use address '
-		+ config.providerBackendIP + ' for hostname "'
-		+ url.parse( config.providerBackendURL ).hostname + '"' );
+	logger.info( 'OAuth providerBackendIP set, will use address ' +
+		config.providerBackendIP + ' for hostname "' +
+		url.parse( config.providerBackendURL ).hostname + '"' );
 	evilDns.add(
 		url.parse( config.providerBackendURL ).hostname,
 		config.providerBackendIP
@@ -50,7 +49,7 @@ passport.use( new DrupalStrategy( {
 		providerBackendURL: config.providerBackendURL
 	},
 	function(token, tokenSecret, profile, done) {
-		profile.oauth = { token: token, token_secret: tokenSecret };
+		profile.oauth = { token: token, tokenSecret: tokenSecret };
 		done( null, profile );
 	}
 ) );

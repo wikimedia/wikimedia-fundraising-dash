@@ -41,7 +41,7 @@ function validateValue( value, column ) {
 		valid = false;
 	}
 	if ( !valid )	{
-		throw new Error( 'Invalid value ' + value + ' for filter ' + col.display );
+		throw new Error( 'Invalid value ' + value + ' for filter ' + column.display );
 	}
 }
 
@@ -55,7 +55,7 @@ function validateValue( value, column ) {
  * @returns {Object} describing column
  */
 function getColumn( name, widget, joins ) {
-	col = widget.filters[name];
+	var col = widget.filters[name];
 	if ( !col ) {
 		throw new Error( 'Illegal filter property ' + name );
 	}
@@ -185,7 +185,7 @@ module.exports = function(req, res) {
 	sqlQuery = widget.query;
 	if ( qs && qs !== '' ) {
 		try {
-			parsedFilters = odataParser.parse( unescape(qs) );
+			parsedFilters = odataParser.parse( decodeURIComponent(qs) );
 			if ( parsedFilters.$filter ) {
 				whereClause = 'WHERE ' + buildWhere( parsedFilters.$filter, widget, values, joins );
 			}
