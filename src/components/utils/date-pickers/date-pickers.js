@@ -56,7 +56,6 @@ define( [
         });
 
         self.availableTimePresets = ko.observableArray([
-                    'Select:',
                     'Last 15 Minutes',
                     'Last Hour',
                     'Last 24 Hours',
@@ -64,7 +63,6 @@ define( [
         ]);
 
         self.availableIncrementTypes = ko.observableArray([
-                    'Select:',
                     'Hour...',
                     'Day...',
                     'Week...',

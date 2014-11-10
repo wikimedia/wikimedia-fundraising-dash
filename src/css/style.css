@@ -201,13 +201,9 @@ body {
 }
 
 #FraudRiskScoreGauge {
-    height: 100%;
-    width: 100%;
-    margin-top: -25px;
-}
-
-#fraudGaugeValue{
-    margin-top: -50px;
+    height: 180px;
+    width: 390px;
+    margin: 0 auto;
 }
 
 #fraudPercentSlider {
@@ -286,6 +282,10 @@ ul.filterPickerList {
     color: #000;
 }
 
+a:hover {
+    text-decoration: none;
+}
+
 input {
     height: 28px;
 }
@@ -296,6 +296,10 @@ input {
 
 .padded {
     padding: 1em;
+}
+
+.panel {
+    min-width: 360px;
 }
 
 .panel-purple {
