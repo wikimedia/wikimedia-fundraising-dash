@@ -50,7 +50,7 @@
                                                     <div class="col-md-4 col-sm-4 col-lg-4">
                                                         <label>low fraud score: up to</label>
                                                         <div class="input-group">
-                                                          <input type="text" class="form-control" data-bind="textInput: greenHighRange">
+                                                          <input type="text" class="form-control" data-bind="textInput: greenHighRange, event: { mouseout: renderGaugeChart }">
                                                           <span class="input-group-btn">
                                                             <button class="btn btn-success percentBtn" type="button"><i class="fa fa-refresh"></i></button>
                                                           </span>
@@ -67,7 +67,7 @@
                                                     <div class="col-md-4 col-sm-4 col-lg-4">
                                                         <label>high fraud score: from</label>
                                                         <div class="input-group">
-                                                        <input type="text" class="form-control" data-bind="textInput: redLowRange">
+                                                        <input type="text" class="form-control" data-bind="textInput: redLowRange, event: { mouseout: renderGaugeChart }">
                                                           <span class="input-group-btn">
                                                             <button class="btn btn-danger percentBtn" type="button"><i class="fa fa-refresh"></i></button>
                                                           </span>

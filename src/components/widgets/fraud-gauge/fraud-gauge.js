@@ -6,6 +6,28 @@ define([
     'chartjs'
     ],
 function( ko, template, datePickersTemplate, c3, chartjs ){
+  //extend the chart so we can flip the circle
+  Chart.types.Doughnut.extend({
+    addData: function(segment, atIndex, silent){
+    var index = atIndex || this.segments.length;
+    this.segments.splice(index, 0, new this.SegmentArc({
+      value : segment.value,
+      outerRadius : (this.options.animateScale) ? 0 : this.outerRadius,
+      innerRadius : (this.options.animateScale) ? 0 : (this.outerRadius/100) * this.options.percentageInnerCutout,
+      fillColor : segment.color,
+      highlightColor : segment.highlight || segment.color,
+      showStroke : this.options.segmentShowStroke,
+      strokeWidth : this.options.segmentStrokeWidth,
+      strokeColor : this.options.segmentStrokeColor,
+      startAngle : Math.PI * 2.5,
+      circumference : (this.options.animateRotate) ? 0 : this.calculateCircumference(segment.value),
+      label : segment.label
+    }));
+    if (!silent){
+      this.reflow();
+      this.update();
+    }
+  }});
 
   function FraudGaugeViewModel( params ){
 
@@ -41,55 +63,65 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
     self.greenHighRange = ko.observable(17);
     self.redLowRange = ko.observable(68);
 
-    //color selection inside modal
-    var canvas = $('#fraudPercentSlider')[0];
-    var ctx = canvas.getContext('2d');
+    self.renderGaugeChart = function(){
 
-    var placeholder = document.createElement('canvas');
-    placeholder.width = 200;
-    placeholder.height = placeholder.width;
-    var placeholderctx = placeholder.getContext('2d');
+      //color selection inside modal
+      var canvas = $('#fraudPercentSlider')[0];
+      var ctx = canvas.getContext('2d');
 
-    var ddata = [{
-        value: 90,
-        color: '#000000'
-    },{
-        value: 1.8 * (self.greenHighRange()),
-        color: '#4cae4c'
-    },{
-        value: 1.8 * (self.redLowRange() - self.greenHighRange()),
-        color: '#eea236'
-    }, {
-        value: 1.8 * (100 - self.redLowRange()),
-        color: '#c9302c'
-    },{
-        value: 90,
-        color: '#000000'
-    }, ];
+      var placeholder = document.createElement('canvas');
+      placeholder.width = 200;
+      placeholder.height = placeholder.width;
+      var placeholderctx = placeholder.getContext('2d');
 
-    new Chart(placeholderctx).Doughnut(ddata, {
-        animation: false,
-        segmentShowStroke: false,
+      var ddata = [{
+          value: 90,
+          color: '#000000'
+      },{
+          value: 1.8 * (self.greenHighRange()),
+          color: '#4cae4c'
+      },{
+          value: 1.8 * (self.redLowRange() - self.greenHighRange()),
+          color: '#eea236'
+      }, {
+          value: 1.8 * (100 - self.redLowRange()),
+          color: '#c9302c'
+      },{
+          value: 90,
+          color: '#000000'
+      }, ];
 
-        onAnimationComplete: function() {
-          var center = Math.round($(placeholder).width() / 2);
+      //draw chart
+      self.gaugeChart = new Chart(placeholderctx).Doughnut(ddata, {
+          animation: false,
+          segmentShowStroke: false,
 
-          var cropHeight = Math.round(placeholder.height/2);
-          ctx.clearRect(0,0,canvas.width,canvas.height);
+          onAnimationComplete: function() {
 
-          ctx.drawImage(
-            placeholder,
-            0,
-            0,
-            placeholder.width,
-            cropHeight,
-            0,
-            0,
-            placeholder.width,
-            cropHeight
-          );
-        }
-    });
+            var center = Math.round($(placeholder).width() / 2);
+
+            var cropHeight = Math.round(placeholder.height/2);
+
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+
+            ctx.drawImage(
+              placeholder,
+              0,
+              0,
+              placeholder.width,
+              cropHeight,
+              0,
+              0,
+              placeholder.width,
+              cropHeight
+            );
+
+          }
+      });
+
+    };
+
+    self.renderGaugeChart();
 
     self.validateSubmission = function( times, filters ){
 
@@ -188,6 +220,7 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
       //reset gauge settings to defaults
       self.greenHighRange(33);
       self.redLowRange(66);
+      self.renderGaugeChart();
 
       //reset datepicker
       $("#timePeriodDropdown option:eq(0)").prop("selected", true);
