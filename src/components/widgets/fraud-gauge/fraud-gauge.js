@@ -197,6 +197,22 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
       $('#'+stuff).toggleClass('hide');
     };
 
+    self.resetGaugeSettings = function(){
+
+      //reset gauge settings to defaults
+      self.greenRange({low: 0, high: 33});
+      self.yellowRange({low: 33, high: 66});
+      self.redRange({low: 66, high: 100});
+
+      //reset datepicker
+      $("#timePeriodDropdown option:eq(0)").prop("selected", true);
+
+      //reset filters
+      $('.subfilterSubnav').addClass('hide');
+      $('input:checkbox').removeAttr('checked');
+
+    };
+
     self.submitGaugeModifications = function(){
 
       //validate values first.
@@ -260,7 +276,6 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
           });
         });
       }
-
 
     };
 
