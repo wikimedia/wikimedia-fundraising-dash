@@ -73,6 +73,7 @@ gulp.task('css', function () {
     return gulp.src(['src/bower_modules/bootstrap/dist/css/bootstrap.css',
                     'src/bower_modules/nouislider/src/jquery.nouislider.css',
                     'src/bower_modules/fontawesome/css/font-awesome.css',
+                    'src/bower_modules/lato/css/lato.css',
                     'src/css/*.css'])
         .pipe(concat('style.css')).pipe(rev()).pipe(gulp.dest('./dist/'))
         // Add rev-manifest.json as a new src to prevent rev'ing rev-manifest.json
@@ -82,9 +83,12 @@ gulp.task('css', function () {
 });
 
 /** Copies semantic fonts where the css expects them to be**/
+gulp.task('font', function () {
+    return gulp.src(['src/bower_modules/lato/font/*{ttf,woff,eot,svg}'])
+        .pipe(gulp.dest('./dist/font/'));
+});
 gulp.task('fonts', function () {
-    return gulp.src(['src/bower_modules/fontawesome/fonts/*{ttf,woff,eot,svg,otf}',
-                     'src/bower_modules/lato/font/*{ttf,woff,eot,svg}'])
+    return gulp.src(['src/bower_modules/fontawesome/fonts/*{ttf,woff,eot,svg,otf}'])
         .pipe(gulp.dest('./dist/fonts/'));
 });
 
@@ -150,10 +154,10 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
-gulp.task('default', ['clean', 'replace', 'lint', 'fonts'], function (callback) {
+gulp.task('default', ['clean', 'replace', 'lint', 'font', 'fonts'], function (callback) {
     callback();
     console.log('\nPlaced optimized files in ' + chalk.magenta('dist/\n'));
-    console.log('\nPlaced font files in ' + chalk.magenta('fonts/\n'));
+    console.log('\nPlaced font files in ' + chalk.magenta('font/\n'));
 });
 
 function logWatcher(event) {
