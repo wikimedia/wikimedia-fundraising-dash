@@ -172,7 +172,9 @@ module.exports = function(req, res) {
 		joinClause = '',
 		i;
 
-	if ( !req.session || !req.session.passport || !req.session.passport.user ) {
+	if ( !config.debug &&
+			( !req.session || !req.session.passport || !req.session.passport.user )
+		) {
 		res.json( { error: 'Error: Not logged in' } );
 		return;
 	}
