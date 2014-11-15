@@ -220,6 +220,6 @@ module.exports = function(req, res) {
 			res.json( { error: 'Query error: ' + error } );
 			return;
 		}
-		res.json( results );
+		res.json( { results: results, sqlQuery: sqlQuery } );
 	});
 };
