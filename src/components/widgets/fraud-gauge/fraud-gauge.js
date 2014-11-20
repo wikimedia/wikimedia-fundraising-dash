@@ -38,9 +38,8 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
     });
 
     //default range slider settings
-    self.greenRange = ko.observable({ low: 0, high: 17 });
-    self.yellowRange = ko.observable({ low: 17, high: 68 });
-    self.redRange = ko.observable({ low: 68, high: 100 });
+    self.greenHighRange = ko.observable(17);
+    self.redLowRange = ko.observable(68);
 
     //color selection inside modal
     var canvas = $('#fraudPercentSlider')[0];
@@ -55,13 +54,13 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
         value: 90,
         color: '#000000'
     },{
-        value: 1.8 * (self.greenRange().high - self.greenRange().low),
+        value: 1.8 * (self.greenHighRange()),
         color: '#4cae4c'
     },{
-        value: 1.8 * (self.yellowRange().high - self.yellowRange().low),
+        value: 1.8 * (self.redLowRange() - self.greenHighRange()),
         color: '#eea236'
     }, {
-        value: 1.8 * (self.redRange().high - self.redRange().low),
+        value: 1.8 * (100 - self.redLowRange()),
         color: '#c9302c'
     },{
         value: 90,
@@ -71,26 +70,13 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
     new Chart(placeholderctx).Doughnut(ddata, {
         animation: false,
         segmentShowStroke: false,
+
         onAnimationComplete: function() {
-          function drawLine(color,left,top,bottom){
-            placeholderctx.strokeStyle = color;
-            placeholderctx.lineWidth = 1;
-
-            placeholderctx.beginPath();
-
-            placeholderctx.moveTo(left, top);
-            placeholderctx.lineTo(left,bottom);
-
-            placeholderctx.stroke();
-            placeholderctx.closePath();
-          }
-
           var center = Math.round($(placeholder).width() / 2);
-          var offset1 = center / 40;
-          var offset2 = center / 80;
 
           var cropHeight = Math.round(placeholder.height/2);
           ctx.clearRect(0,0,canvas.width,canvas.height);
+
           ctx.drawImage(
             placeholder,
             0,
@@ -200,9 +186,8 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
     self.resetGaugeSettings = function(){
 
       //reset gauge settings to defaults
-      self.greenRange({low: 0, high: 33});
-      self.yellowRange({low: 33, high: 66});
-      self.redRange({low: 66, high: 100});
+      self.greenHighRange(33);
+      self.redLowRange(66);
 
       //reset datepicker
       $("#timePeriodDropdown option:eq(0)").prop("selected", true);
@@ -270,7 +255,7 @@ function( ko, template, datePickersTemplate, c3, chartjs ){
               color: {
                   pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
                   threshold: {
-                      values: [ 0, self.lowRange(), self.highRange(), 100]
+                      values: [ 0, self.greenHighRange, self.redLowRange, 100]
                   }
               }
           });
