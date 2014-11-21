@@ -1,0 +1,28 @@
+<div class="row">
+	<div class="col-md-4 titleCol">
+		<h2 style="display:inline">Big English Monitoring</h2>
+		<p data-bind="text: getTodaysDate"></p>
+	</div>
+	<div class="col-md-8 titleCol">
+		<div class="btn-group btn-group-xs pull-right">
+	        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#bigEsqlModal"><i class="fa fa-database"></i></button>
+	        <button type="button" class="btn btn-default" data-bind="click: reloadBigEnglish"><i class="fa fa-refresh"></i></button>
+	    </div>
+	</div>
+</div>
+<div class="modal fade" id="bigEsqlModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Big English SQL:</h4>
+            </div>
+            <div class="modal-body">
+            	<h4>All December Hours:</h4>
+            	<p>select count(*) as donations, sum(total_amount) as usd_total, CEILING(TIMESTAMPDIFF(SECOND, MIN(receive_date), MAX(receive_date))/60) as minutes, sum(total_amount)/CEILING(TIMESTAMPDIFF(SECOND, MIN(receive_date), MAX(receive_date))/60)/60 as usd_per_second, DAY(receive_date) as day, HOUR(receive_date) as hour from civicrm_contribution  WHERE MONTH(receive_date) = 12 AND YEAR(receive_date) = 2013 AND total_amount < 5000 GROUP BY DAY(receive_date), HOUR(receive_date) ORDER BY day ASC, hour ASC;</p>
+            	<h4>All December Days:</h4>
+            	<p>select count(*) as donations, sum(total_amount) as usd_total, CEILING(TIMESTAMPDIFF(SECOND, MIN(receive_date), MAX(receive_date))/60) as minutes, sum(total_amount)/CEILING(TIMESTAMPDIFF(SECOND, MIN(receive_date), MAX(receive_date))/60)/60 as usd_per_second, MONTH(receive_date) as month, DAY(receive_date) as day from civicrm_contribution  WHERE MONTH(receive_date) = 12 AND YEAR(receive_date) = 2013 AND total_amount < 5000 GROUP BY MONTH(receive_date), DAY(receive_date) ORDER BY month ASC, day ASC;</p>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
