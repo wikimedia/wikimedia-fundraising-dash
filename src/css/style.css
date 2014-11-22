@@ -58,10 +58,14 @@ body {
     padding: .5em;
 }
 
-.sidebar-nav li:hover {
+.sidebar-nav li:hover, .sidebar-nav li:hover a {
     background-color: #f5f5f5;
     color: #5e668a;
     cursor: pointer;
+}
+
+.sidebar-nav a {
+    color: #f5f5f5;
 }
 
 #collapseNavMenu {
@@ -123,6 +127,14 @@ body {
     color: #F15854;
 }
 
+.titleCol {
+    padding: 0;
+}
+
+.titleCol p {
+    color: #555;
+}
+
 /* MAIN BASE QUALITY STYLEINGS */
 
 .boxedIcon {
@@ -153,50 +165,50 @@ body {
 
 /* WIDGET BASE STYLINGS */
 
-.widgetbox {
-    box-shadow: 1px 1px 2px 1px #ccc;
-    background-color: #fff;
-    margin: 15px 5px 5px 5px;
-    padding-top: 5px;
+.factbox {
+    width: 100%;
+    padding: 7px;
+    color: #f5f5f5;
 }
 
-.widgetbox-header {
-    color: #777;
-    margin-bottom: 1em;
+.factbox h3 {
+    font-size: 2em;
 }
 
-.widgetbox-content {
-    padding: 1em;
-    overflow: hidden;
-    color: #555;
+.factbox-blue {
+    background-color: rgb(49,176,213);
 }
 
-.widgetbox-half {
-
+.factbox-yellow {
+    background-color: rgb(92,184,92);
 }
 
-.widgetbox-third {
-
+.factbox-red {
+    background-color: rgb(217,83,79);
 }
 
-.widgetbox-twothird {
-
+.factbox-icon {
+    font-size: 4em;
+    text-align: center;
+    padding:0;
 }
 
-.widget-alert {
-    padding: 5px 10px;
-    margin: 7px 0;
+.factbox-header {
+    margin-top: 10px;
+    margin-bottom: -12px;
 }
 
-.collapse-caret {
+/* Big English */
 
+#bigEnglishThermometer {
+    margin-top: 10px;
+}
+
+.bigEnglish-updates .row {
+    margin: 0;
 }
 
 /* Gauges */
-
-/*#fraudGaugeWidget {
-    width: 330px;
-}*/
 
 #fraudGaugeWidget .panel-body {
     padding: 0;
@@ -313,8 +325,8 @@ input {
     padding: 1em;
 }
 
-.panel {
-    min-width: 360px;
+.panel-transparent {
+    border-color: #ccc;
 }
 
 .panel-purple {
@@ -325,6 +337,8 @@ input {
   color: #f5f5f5;
   background-color: rgb(94,102,138);
   border-color: #5e668a;
+  height:33px;
+  padding:5px 5px 0 10px;
 }
 
 .panel-purple > .panel-heading + .panel-collapse .panel-body {
@@ -337,6 +351,14 @@ input {
 
 .label {
     font-weight: normal;
+}
+
+.layoutRow:first-child {
+    padding-left: 0;
+}
+
+.layoutRow:last-child {
+    padding-right: 0;
 }
 
 .datepicker {
@@ -366,5 +388,41 @@ input {
     border-top: none;
 }
 
+/* Thermometer styles */
 
+#thermometer {
+    height: 400px;
+}
 
+#thermometer.goalProgress {
+    background: #f7f7f7;
+    padding: 5px;
+}
+
+#thermometer div.progressBar {
+    background: #ff008c;
+    color: #fff;
+    font-size: 1.5em;
+    font-family: 'helvetica neue', helvetica, arial, sans-serif;
+    letter-spacing: -1px;
+    font-weight: 700;
+    padding: 10px;
+    display: block;
+    overflow: hidden;
+    width: 20px;
+}
+
+#thermometer span.goalAmount {
+    display: none;
+    text-indent: -9999px;
+}
+
+/* C3 Bar Chart Styles */
+.c3-region {
+  fill: red;
+  fill-opacity: .1;
+}
+
+#distanceToGoalChart {
+    padding: 0 9px 0 0;
+}

@@ -20,7 +20,8 @@ var require = {
         'sifter':               'bower_modules/sifter/sifter',
         'microplugin':          'bower_modules/microplugin/src/microplugin',
         'selectize':            'bower_modules/selectize/dist/js/selectize',
-        'c3':                   'bower_modules/c3/c3'
+        'c3':                   'bower_modules/c3/c3',
+        'numeraljs':            'bower_modules/numeraljs/numeral'
     },
     shim: {
         'bootstrap': {
