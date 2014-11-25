@@ -21,6 +21,7 @@ define(
         //register individual widgets
         ko.components.register( 'fraud-gauge',                { require: 'components/widgets/fraud-gauge/fraud-gauge' });
         ko.components.register( 'totals-earned-chart',        { require: 'components/widgets/totals-earned-chart/totals-earned-chart' });
+        ko.components.register( 'distance-to-goal-chart',     { require: 'components/widgets/distance-to-goal-chart/distance-to-goal-chart' });
 
 
         //fire up router
