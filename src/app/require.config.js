@@ -21,7 +21,8 @@ var require = {
         'microplugin':          'bower_modules/microplugin/src/microplugin',
         'selectize':            'bower_modules/selectize/dist/js/selectize',
         'c3':                   'bower_modules/c3/c3',
-        'numeraljs':            'bower_modules/numeraljs/numeral'
+        'numeraljs':            'bower_modules/numeraljs/numeral',
+        'decemberData':         'bower_modules/fakeData/decemberData'
     },
     shim: {
         'bootstrap': {
