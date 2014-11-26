@@ -49,6 +49,7 @@ define( [
 			self.dayObj[d] = [ 'Hourly Totals' ];
 			for (var h = 1; h < 25; h++) {
 				self.dayObj[d][h] = 0;
+				self.secondsByHourDonationData[(d - 1) * 24 + h] = 0;
 			}
 		}
 		// Allows components in the board to subscribe to a single property
@@ -66,7 +67,10 @@ define( [
             self.decemberData = dataget.results;
 			var runningTotal = 0;
 			$.each(self.decemberData, function(el, i){
-				self.dayObj[self.decemberData[el].day][self.decemberData[el].hour + 1] = self.decemberData[el].usd_total;
+				var d = self.decemberData[el].day, h = self.decemberData[el].hour;
+				self.dayObj[d][h + 1] = self.decemberData[el].usd_total;
+				//get all seconds into seconds array
+				self.secondsByHourDonationData[(d - 1) * 24 + h] = self.decemberData[el].usd_per_second;
 				runningTotal += self.decemberData[el].usd_total;
 			});
 
@@ -83,9 +87,6 @@ define( [
 				} else {
 					self.dailyDonationData[el.day] = el.usd_total;
 				}
-
-				//get all seconds into seconds array
-				self.secondsByHourDonationData.push(el.usd_per_second);
 
 			});
 

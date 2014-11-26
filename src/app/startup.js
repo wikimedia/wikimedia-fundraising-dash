@@ -22,7 +22,7 @@ define(
         ko.components.register( 'fraud-gauge',                { require: 'components/widgets/fraud-gauge/fraud-gauge' });
         ko.components.register( 'totals-earned-chart',        { require: 'components/widgets/totals-earned-chart/totals-earned-chart' });
         ko.components.register( 'distance-to-goal-chart',     { require: 'components/widgets/distance-to-goal-chart/distance-to-goal-chart' });
-
+        ko.components.register( 'amt-per-second-chart',       { require: 'components/widgets/amt-per-second-chart/amt-per-second-chart' });
 
         //fire up router
         ko.applyBindings({ route: router.currentRoute });
