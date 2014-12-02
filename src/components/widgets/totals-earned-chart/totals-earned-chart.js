@@ -52,6 +52,9 @@ define( [
 						y: {
 							label: {
 								text: 'Dollars'
+							},
+							tick: {
+								format: function(x){ return numeral(x).format('$0,0') }
 							}
 						}
 					},
