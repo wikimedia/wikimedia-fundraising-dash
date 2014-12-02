@@ -17,8 +17,11 @@ define( [
 
         // Reload the page
         self.reloadBigEnglish = function(){
+            console.log('reloading');
 			location.reload();
 		};
+        // Do it every 5 minutes as well
+        setTimeout(self.reloadBigEnglish, 300000);
 
         // TODO: these two will come from the passed in data response
         self.goal = ko.observable(20000000);
