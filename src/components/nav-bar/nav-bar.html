@@ -1,12 +1,12 @@
 <div id="navContainer">
 	<div class="boxedIcon" id="showNavMenu" data-bind="click: showNav"><i class="fa fa-th-list"></i></div>
 	<div class="navWrapper">
-		<div class="row text-center">
+		<div class="row text-center navRow">
 			<h2 class='titlebrand'>Dash</h2>
 		</div>
 
-		<div class="row sidebar-nav">
-			<div class="col-md-12">
+		<div class="row sidebar-nav navRow">
+			<div class="col-md-12 navRow">
 				<div class="row-fluid">
 					<ul>
 						<li><span id="navDefaultBoard"><i class="fa fa-dashboard"></span></i></li>
@@ -24,9 +24,10 @@
 						<span id="navCollapseArrows"><i class="fa fa-angle-double-left"></i></span>
 					</ul>
 				</div>
-				<div>
-					<a href="/auth/drupal" data-bind="visible: showLogIn">Log in</a>
-					<span data-bind="text: welcome"></span>
+				<div class="row-fluid text-center logoutBtn">
+					<a href="/auth/drupal" data-bind="visible: showLogIn"><button class="btn btn-block btn-info">Log in</button></a>
+					<p data-bind="text: welcome"></p>
+					<a href="/logout" data-bind="visible: !showLogIn()"><button class="btn btn-block btn-info">Log out</button></a>
 				</div>
 			</div>
 		</div>

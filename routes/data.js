@@ -1,7 +1,8 @@
 var widgets = require( '../widgets' ),
 	odataParser = require( 'odata-parser' ),
 	mysql = require ( 'mysql'),
-	config = require( '../config.js' );
+	config = require( '../config.js' ),
+	util = require( 'util');
 
 /**
  * Throws an error if an value is invalid for the given column
@@ -41,7 +42,7 @@ function validateValue( value, column ) {
 		valid = false;
 	}
 	if ( !valid )	{
-		throw new Error( 'Invalid value ' + value + ' for filter ' + col.display );
+		throw new Error( 'Invalid value ' + value + ' for filter ' + column.display );
 	}
 }
 
@@ -55,7 +56,7 @@ function validateValue( value, column ) {
  * @returns {Object} describing column
  */
 function getColumn( name, widget, joins ) {
-	col = widget.filters[name];
+	var col = widget.filters[name];
 	if ( !col ) {
 		throw new Error( 'Illegal filter property ' + name );
 	}
@@ -77,7 +78,7 @@ function getColumn( name, widget, joins ) {
  * @returns {String} WHERE clause with '?' placeholders for values
  */
 function buildWhere( filterNode, widget, values, joins ) {
-	var col, op, rightClause, leftClause, val, i, pattern, ops = {
+	var col, colText, op, rightClause, leftClause, val, i, pattern, ops = {
 		'and': 'AND',
 		'or': 'OR',
 		'eq': '=',
@@ -132,7 +133,12 @@ function buildWhere( filterNode, widget, values, joins ) {
 			}
 			values.push( val ); //this may get more complex with nesting...
 
-			return col.table + '.' + col.column + ' ' + op + ' ?';
+			colText = col.table + '.' + col.column;
+			if ( col.func ) {
+				colText = col.func + '(' + colText + ')';
+			}
+
+			return colText + ' ' + op + ' ?';
 		case 'fn':
 			pattern = patterns[filterNode.func];
 			if ( !pattern ) {
@@ -166,14 +172,17 @@ module.exports = function(req, res) {
 		connection,
 		sqlQuery = '',
 		parsedFilters,
+		filter,
 		whereClause = '',
 		values = [],
 		joins = [],
 		joinClause = '',
 		i;
 
-	if ( !req.session || !req.session.passport || !req.session.passport.user ) {
-		res.json( 'Error: Not logged in' );
+	if ( !config.debug &&
+			( !req.session || !req.session.passport || !req.session.passport.user )
+		) {
+		res.json( { error: 'Error: Not logged in' } );
 		return;
 	}
 
@@ -183,11 +192,18 @@ module.exports = function(req, res) {
 	}
 
 	sqlQuery = widget.query;
-	if ( qs && qs !== '' ) {
+	if ( widget.defaultFilter || ( qs && qs !== '' ) ) {
 		try {
-			parsedFilters = odataParser.parse( unescape(qs) );
-			if ( parsedFilters.$filter ) {
-				whereClause = 'WHERE ' + buildWhere( parsedFilters.$filter, widget, values, joins );
+			if ( qs && qs !== '' ) {
+				parsedFilters = odataParser.parse( decodeURIComponent(qs) );
+				filter = parsedFilters.$filter;
+			}
+			filter = filter || widget.defaultFilter;
+			if ( filter ) {
+				if ( config.debug ) {
+					console.log( util.inspect( filter ) );
+				}
+				whereClause = 'WHERE ' + buildWhere( filter, widget, values, joins );
 			}
 		}
 		catch ( err ) {
@@ -218,6 +234,6 @@ module.exports = function(req, res) {
 			res.json( { error: 'Query error: ' + error } );
 			return;
 		}
-		res.json( results );
+		res.json( { results: results, sqlQuery: sqlQuery } );
 	});
 };

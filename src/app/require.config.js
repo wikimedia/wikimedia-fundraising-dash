@@ -19,12 +19,20 @@ var require = {
         'bootstrap-timepicker': 'bower_modules/bootstrap-timepicker/js/bootstrap-timepicker',
         'sifter':               'bower_modules/sifter/sifter',
         'microplugin':          'bower_modules/microplugin/src/microplugin',
-        'selectize':            'bower_modules/selectize/dist/js/selectize'
+        'selectize':            'bower_modules/selectize/dist/js/selectize',
+        'c3':                   'bower_modules/c3/c3',
+        'numeraljs':            'bower_modules/numeraljs/numeral',
+        'decemberData':         'bower_modules/fakeData/decemberData'
     },
     shim: {
         'bootstrap': {
             deps: [
                 'jquery'
+            ]
+        },
+        'c3': {
+            deps: [
+                'd3'
             ]
         },
         'momentjs': {

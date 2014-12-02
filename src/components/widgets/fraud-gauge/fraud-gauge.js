@@ -2,11 +2,32 @@ define([
     'knockout',
     'text!components/widgets/fraud-gauge/fraud-gauge.html',
     'gauge',
-    'noUISlider',
-    'selectize',
-    'bootstrap-datepicker'
+    'c3',
+    'chartjs'
     ],
-function( ko, template, datePickersTemplate, noUISlider ){
+function( ko, template, datePickersTemplate, c3, chartjs ){
+  //extend the chart so we can flip the circle
+  Chart.types.Doughnut.extend({
+    addData: function(segment, atIndex, silent){
+    var index = atIndex || this.segments.length;
+    this.segments.splice(index, 0, new this.SegmentArc({
+      value : segment.value,
+      outerRadius : (this.options.animateScale) ? 0 : this.outerRadius,
+      innerRadius : (this.options.animateScale) ? 0 : (this.outerRadius/100) * this.options.percentageInnerCutout,
+      fillColor : segment.color,
+      highlightColor : segment.highlight || segment.color,
+      showStroke : this.options.segmentShowStroke,
+      strokeWidth : this.options.segmentStrokeWidth,
+      strokeColor : this.options.segmentStrokeColor,
+      startAngle : Math.PI * 2.5,
+      circumference : (this.options.animateRotate) ? 0 : this.calculateCircumference(segment.value),
+      label : segment.label
+    }));
+    if (!silent){
+      this.reflow();
+      this.update();
+    }
+  }});
 
   function FraudGaugeViewModel( params ){
 
@@ -19,14 +40,15 @@ function( ko, template, datePickersTemplate, noUISlider ){
     });
 
     self.title = 'Fraud Rejections';
-    self.selectedTimePeriod = ko.observable();
+    self.selectedTimePeriod = ko.observable('Last 15 Minutes');
     self.selectedFilters = ko.observableArray([]);
     self.selectedSubFilters = ko.observableArray([]);
     self.queryRequest = [];
-    self.gaugeValue = ko.observable(3);
+    self.gaugeValue = ko.observable(0);
     self.filtersSelected = ko.observable(false);
     self.gaugeIsSetUp = ko.observable(false);
-    self.queryString = ko.observable('This widget hasn\'t been set up yet!');
+    self.queryString = ko.observable('');
+    self.queryStringSQL = ko.observable('This widget hasn\'t been set up yet!');
 
     //broken down data from above
     self.filters = ko.observableArray($.map(self.data.filters, function(val, i){return[val]}));
@@ -39,62 +61,68 @@ function( ko, template, datePickersTemplate, noUISlider ){
     });
 
     //default range slider settings
-    self.lowRange = ko.observable(33);
-    self.highRange = ko.observable(66);
-    $('#fraudPercentSlider').noUiSlider({
-      start: [ self.lowRange(), self.highRange() ],
-      range: {
-        'min': [0],
-        'max': [100]
-      },
-      step: 1,
-      connect: true
-    });
-    $('#fraudPercentSlider').on({
-      slide: function(){
-        var sliderValArray = $('#fraudPercentSlider').val();
-        self.lowRange(parseInt(sliderValArray[0]));
-        self.highRange(parseInt(sliderValArray[1]));
-      },
-    });
+    self.greenHighRange = ko.observable(17);
+    self.redLowRange = ko.observable(68);
 
-    //Gauge options
-    self.opts = {
-      lines: 12,
-      angle: 0,
-      lineWidth: 0.44,
-      pointer: {
-        strokeWidth: 0
-      },
-      limitMax: 'true',
-      colorStop: '#c12e2a',
-      strokeColor: '#E0E0E0',
-      generateGradient: true
+    self.renderGaugeChart = function(){
+
+      //color selection inside modal
+      var canvas = $('#fraudPercentSlider')[0];
+      var ctx = canvas.getContext('2d');
+
+      var placeholder = document.createElement('canvas');
+      placeholder.width = 200;
+      placeholder.height = placeholder.width;
+      var placeholderctx = placeholder.getContext('2d');
+
+      var ddata = [{
+          value: 90,
+          color: '#000000'
+      },{
+          value: 1.8 * (self.greenHighRange()),
+          color: '#4cae4c'
+      },{
+          value: 1.8 * (self.redLowRange() - self.greenHighRange()),
+          color: '#eea236'
+      }, {
+          value: 1.8 * (100 - self.redLowRange()),
+          color: '#c9302c'
+      },{
+          value: 90,
+          color: '#000000'
+      }, ];
+
+      //draw chart
+      self.gaugeChart = new Chart(placeholderctx).Doughnut(ddata, {
+          animation: false,
+          segmentShowStroke: false,
+
+          onAnimationComplete: function() {
+
+            var center = Math.round($(placeholder).width() / 2);
+
+            var cropHeight = Math.round(placeholder.height/2);
+
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+
+            ctx.drawImage(
+              placeholder,
+              0,
+              0,
+              placeholder.width,
+              cropHeight,
+              0,
+              0,
+              placeholder.width,
+              cropHeight
+            );
+
+          }
+      });
+
     };
 
-    self.getFraudFailurePercent = function(lowHi, midHi){
-      //get color thresholds
-      //TODO: these vals to come from user's choices via slider.
-      if(self.gaugeValue() < lowHi){
-        self.opts.colorStop = '#89CC23';
-      } else if(self.gaugeValue() >= lowHi && self.gaugeValue() < midHi){
-        self.opts.colorStop = '#FFA722';
-      } else {
-        self.opts.colorStop = '#c12e2a';
-      }
-
-      self.gauge.setOptions(self.opts);
-
-      return self.gaugeValue();
-    };
-
-    //#FraudRiskScoreGauge
-    self.context = document.getElementById('FraudRiskScoreGauge');
-    self.gauge = new Gauge(self.context).setOptions(self.opts);
-    self.gauge.maxValue = 100;
-    self.gauge.animationSpeed = 32;
-    self.gauge.set(self.getFraudFailurePercent());
-    ///////////////////
+    self.renderGaugeChart();
 
     self.validateSubmission = function( times, filters ){
 
@@ -188,6 +216,22 @@ function( ko, template, datePickersTemplate, noUISlider ){
       $('#'+stuff).toggleClass('hide');
     };
 
+    self.resetGaugeSettings = function(){
+
+      //reset gauge settings to defaults
+      self.greenHighRange(33);
+      self.redLowRange(66);
+      self.renderGaugeChart();
+
+      //reset datepicker
+      $("#timePeriodDropdown option:eq(0)").prop("selected", true);
+
+      //reset filters
+      $('.subfilterSubnav').addClass('hide');
+      $('input:checkbox').removeAttr('checked');
+
+    };
+
     self.submitGaugeModifications = function(){
 
       //validate values first.
@@ -206,7 +250,9 @@ function( ko, template, datePickersTemplate, noUISlider ){
 
         //gauge filters
         self.queryRequest['selectedFilters'] = self.selectedFilters();
-        self.filtersSelected(true);
+        if(self.selectedFilters().length > 0){
+          self.filtersSelected(true);
+        };
 
         //gauge subfilters
         self.queryRequest['selectedSubFilters'] = self.selectedSubFilters().sort();
@@ -218,11 +264,38 @@ function( ko, template, datePickersTemplate, noUISlider ){
         $.get( '/data/fraud?' + $.param({ '$filter': self.queryString() }).replace(
           /\+/g, '%20' ), function ( dataget ) {
           self.gaugeIsSetUp(true);
-          self.gaugeValue( parseFloat(dataget[0].fraud_percent).toFixed(2) );
-          self.gauge.set(self.getFraudFailurePercent(parseInt($('#fraudPercentSlider').val()[0]), parseInt($('#fraudPercentSlider').val()[1])));
-        } );
-      };
+          self.gaugeValue(parseFloat(dataget.results[0].fraud_percent).toFixed(2) );
+          self.queryStringSQL(dataget.sqlQuery);
 
+          self.gauge = c3.generate({
+              bindto: '#FraudRiskScoreGauge',
+              size: {
+                height: 300,
+                width: 390
+              },
+              data: {
+                  columns: [
+                      ['failure', self.gaugeValue()]
+                  ],
+                  type: 'gauge',
+                  onclick: function (d, i) { console.log("onclick", d, i); }, //TODO: make these better
+                  onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                  onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+              },
+              gauge: {
+                  min: 0,
+                  max: 100,
+                  units: 'failure rate',
+              },
+              color: {
+                  pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+                  threshold: {
+                      values: [ 0, self.greenHighRange, self.redLowRange, 100]
+                  }
+              }
+          });
+        });
+      }
 
     };
 

@@ -19,6 +19,6 @@ module.exports = {
 		log( syslog.LOG_DEBUG, message );
 	},
 	info: function( message ) {
-		log( syslog.LOG_INFO, message )
+		log( syslog.LOG_INFO, message );
 	}
 };

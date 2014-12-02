@@ -1,3 +1,4 @@
+
 <div class="panel panel-purple" id="fraudGaugeWidget">
     <div class="panel-heading">
         Fraud Rejections
@@ -16,8 +17,7 @@
                 </div>
 
                 <div class="row" id="specifiedFraudGauge" data-bind="visible: gaugeIsSetUp">
-                    <canvas id="FraudRiskScoreGauge"></canvas>
-                    <h2 class="text-center" id="fraudGaugeValue"><span data-bind="text: gaugeValue"></span>%</h2>
+                    <div id="FraudRiskScoreGauge"></div>
                 </div>
 
                 <div class="row" id="unspecifiedFraudGauge" data-bind="visible: !gaugeIsSetUp()">
@@ -40,18 +40,41 @@
                             </div>
                             <div class="modal-body">
 
-                                    <form role="form">
+                                    <form role="form" class="fraudForm">
                                         <div class="form-group">
-                                            <label for="fraudPercentSlider">Fraud Percent Ranges</label>
-                                            <p>set up the colors as they'll appear in the gauge.</p>
-                                            <div id="fraudPercentSlider"></div>
-                                            <table class="table sliderTable text-center">
-                                              <tr>
-                                                  <td data-bind="attr: { width: lowRange() + '%' }">0 - <span data-bind="text: lowRange"></span>%</td>
-                                                  <td data-bind="attr: { width: ( highRange() - lowRange() ) + '%' }"><span data-bind="text: lowRange"></span> - <span data-bind="text: highRange"></span>%</td>
-                                                  <td data-bind="attr: { width: ( 100 - highRange()) + '%' }"><span data-bind="text: highRange"></span> - 100%</td>
-                                              </tr>
-                                            </table>
+                                            <div class="well">
+                                                <label for="fraudPercentSlider">Fraud Percent Ranges</label>
+                                                <p>set up the colors as they'll appear in the gauge.</p>
+                                                <canvas id="fraudPercentSlider" width="200" height="120"></canvas>
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-4 col-lg-4">
+                                                        <label>low fraud score: up to</label>
+                                                        <div class="input-group">
+                                                          <input type="text" class="form-control" data-bind="textInput: greenHighRange, event: { mouseout: renderGaugeChart }">
+                                                          <span class="input-group-btn">
+                                                            <button class="btn btn-success percentBtn" type="button"><i class="fa fa-refresh"></i></button>
+                                                          </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4 col-lg-4">
+                                                        <label>mid-level score:</label>
+                                                        <div class="input-group">
+                                                          <span class="input-group-btn">
+                                                            <button class="btn btn-warning percentBtn" type="button"><span data-bind="text:greenHighRange() + '% to ' + redLowRange() + '%'"></button>
+                                                          </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-4 col-lg-4">
+                                                        <label>high fraud score: from</label>
+                                                        <div class="input-group">
+                                                        <input type="text" class="form-control" data-bind="textInput: redLowRange, event: { mouseout: renderGaugeChart }">
+                                                          <span class="input-group-btn">
+                                                            <button class="btn btn-danger percentBtn" type="button"><i class="fa fa-refresh"></i></button>
+                                                          </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <!--Call Date Pickers Component to handle date range-->
@@ -92,7 +115,7 @@
                                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                                 <h4 class="modal-title">Fraud Gauge SQL:</h4>
                             </div>
-                            <div class="modal-body" data-bind="text: queryString"></div>
+                            <div class="modal-body" data-bind="text: queryStringSQL"></div>
                         </div><!-- /.modal-content -->
                     </div><!-- /.modal-dialog -->
                 </div><!-- /.modal -->

@@ -8,8 +8,7 @@ var express           = require( 'express' ),
     logger            = require( './logger.js' ),
     config            = require( './config.js' ),
     server,
-    serverConfig,
-    prop;
+    serverConfig;
 
 logger.debug( 'Dash starting up' );
 
@@ -31,9 +30,9 @@ logger.debug( 'Using OAuth providerBackendURL: ' + config.providerBackendURL );
 
 // Override DNS resolution if providerBackendIP is given
 if ( config.providerBackendIP ) {
-	logger.info( 'OAuth providerBackendIP set, will use address '
-		+ config.providerBackendIP + ' for hostname "'
-		+ url.parse( config.providerBackendURL ).hostname + '"' );
+	logger.info( 'OAuth providerBackendIP set, will use address ' +
+		config.providerBackendIP + ' for hostname "' +
+		url.parse( config.providerBackendURL ).hostname + '"' );
 	evilDns.add(
 		url.parse( config.providerBackendURL ).hostname,
 		config.providerBackendIP
@@ -50,7 +49,7 @@ passport.use( new DrupalStrategy( {
 		providerBackendURL: config.providerBackendURL
 	},
 	function(token, tokenSecret, profile, done) {
-		profile.oauth = { token: token, token_secret: tokenSecret };
+		profile.oauth = { token: token, tokenSecret: tokenSecret };
 		done( null, profile );
 	}
 ) );
@@ -73,7 +72,7 @@ app.get( '/data/:widget', routes.data );
 app.get( '/metadata/:widget', routes.metadata );
 app.get( '/user/info', routes.user );
 
-app.use( express.static(__dirname + '/dist' ) );
+app.use( express.static( __dirname + ( config.debug ? '/src' : '/dist' ) ) );
 
 app.get( '/auth/drupal', passport.authenticate( 'drupal' ));
 app.get( '/auth/drupal/callback',
@@ -81,6 +80,10 @@ app.get( '/auth/drupal/callback',
 	function( req, res ) {
 		res.redirect( '/' );
 	});
+app.get( '/logout', function( req, res ) {
+	req.logout();
+	res.redirect( '/' );
+});
 
 server = app.listen(
 		serverConfig[3],
