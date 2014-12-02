@@ -31,6 +31,14 @@ define( [
 						colors: { 'Hourly Totals': 'rgb(92,184,92)'},
 						onclick: function (d, i) { c3.generate(self.dailyChart()) },
 					},
+					grid: {
+						x: {
+							show: true
+						},
+						y: {
+							show: true
+						}
+					},
 					axis: {
 						x: {
 							label: {
@@ -44,6 +52,9 @@ define( [
 						y: {
 							label: {
 								text: 'Dollars'
+							},
+							tick: {
+								format: function(x){ return numeral(x).format('$0,0') }
 							}
 						}
 					},

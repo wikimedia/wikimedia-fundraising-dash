@@ -17,8 +17,11 @@ define( [
 
         // Reload the page
         self.reloadBigEnglish = function(){
+            console.log('reloading');
 			location.reload();
 		};
+        // Do it every 5 minutes as well
+        setTimeout(self.reloadBigEnglish, 300000);
 
         // TODO: these two will come from the passed in data response
         self.goal = ko.observable(20000000);
@@ -70,7 +73,7 @@ define( [
 				var d = self.decemberData[el].day, h = self.decemberData[el].hour;
 				self.dayObj[d][h + 1] = self.decemberData[el].usd_total;
 				//get all seconds into seconds array
-				self.secondsByHourDonationData[(d - 1) * 24 + h] = self.decemberData[el].usd_per_second;
+				self.secondsByHourDonationData[(d - 1) * 24 + h+1] = self.decemberData[el].usd_per_second;
 				runningTotal += self.decemberData[el].usd_total;
 			});
 

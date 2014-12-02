@@ -15,7 +15,7 @@ Prerequisites
 
 To play with Dash, you will need:
 
-+ Node v. 0.8 (I recommend using [nvm](https://github.com/creationix/nvm) to manage node versions if you already have another version on your machine.)
++ NodeJS v. 0.8.2 (I recommend using [nvm](https://github.com/creationix/nvm) to manage node versions if you already have another version on your machine.)
 + [npm](https://www.npmjs.org/) to manage backend packages and because you need Bower.
 + [Bower](http://bower.io/), a package manager specifically optimized for front-end packages.
 + A local database that reflects fredge (not provided here since there is sensitive data involved)
@@ -93,4 +93,16 @@ Next Steps
 + My Boards, general sharing with Tags and Favorites introduced.
 + Eternal bliss and happiness
 
+Deployment
+==========
 
+WMF deployment involves a minification step, and requires NodeJS 0.10 (note this is more recent than the production execution requirement, 0.8.2).
+
++ nvm use 0.10
++ npm install -g gulp
++ gulp
++ git add dist
+
+Don't worry about the lint errors :(
+
+Commit the dist/ output to the deployment branch and push for review.
