@@ -77,6 +77,7 @@ gulp.task('css', function () {
                     'src/bower_modules/nouislider/src/jquery.nouislider.css',
                     'src/bower_modules/fontawesome/css/font-awesome.css',
                     'src/bower_modules/lato/css/lato.css',
+                    'src/bower_modules/c3/c3.css',
                     'src/css/*.css'])
         .pipe(concat('style.css')).pipe(rev()).pipe(gulp.dest('./dist/'))
         // Add rev-manifest.json as a new src to prevent rev'ing rev-manifest.json
