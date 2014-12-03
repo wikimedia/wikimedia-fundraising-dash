@@ -17,7 +17,6 @@ define( [
 
         // Reload the page
         self.reloadBigEnglish = function(){
-            console.log('reloading');
 			location.reload();
 		};
         // Do it every 5 minutes as well
@@ -47,6 +46,16 @@ define( [
         //initialize day/hour data
         self.dayObj = [];
 		self.dailyDataArray = ['Daily Total'];
+        self.dailyCountArray = ['Daily Count'];
+		for (var d = 1; d < 32; d++) {
+			self.dailyDataArray[d] = 0;
+            self.dailyCountArray[d] = 0;
+			self.dayObj[d] = [ 'Hourly Totals' ];
+			for (var h = 1; h < 25; h++) {
+				self.dayObj[d][h] = 0;
+				self.secondsByHourDonationData[(d - 1) * 24 + h] = 0;
+			}
+		}
 
 		// Allows components in the board to subscribe to a single property
         // and get notified of any changes to the available data.
@@ -73,7 +82,7 @@ define( [
 			}
 			$.each(self.decemberData, function(el, i){
 				var d = self.decemberData[el].day, h = self.decemberData[el].hour;
-				self.dayObj[d][h + 1] = self.decemberData[el].usd_total;
+				self.dayObj[d][h + 1] = { total: self.decemberData[el].usd_total, count: self.decemberData[el].donations };
 				//get all seconds into seconds array
 				self.secondsByHourDonationData[(d - 1) * 24 + h+1] = self.decemberData[el].usd_per_second;
 				runningTotal += self.decemberData[el].usd_total;
@@ -88,15 +97,17 @@ define( [
 
 				//get data slice for days: donation amt
 				if(self.dailyDonationData[el.day]){
-					self.dailyDonationData[el.day] += el.usd_total;
+					self.dailyDonationData[el.day]['amount'] += el.usd_total;
+                    self.dailyDonationData[el.day]['count'] += el.donations;
 				} else {
-					self.dailyDonationData[el.day] = el.usd_total;
+					self.dailyDonationData[el.day] = { amount: el.usd_total, count: el.donations};
 				}
 
 			});
 
 			$.each( self.dailyDonationData, function(el, i){
-				self.dailyDataArray[parseInt(el, 10)] = self.dailyDonationData[el];
+				self.dailyDataArray[parseInt(el, 10)] = self.dailyDonationData[el]['amount'];
+                self.dailyCountArray[parseInt(el, 10)] = self.dailyDonationData[el]['count'];
 			});
 			self.raised(runningTotal);
         });
