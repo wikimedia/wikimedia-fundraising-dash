@@ -60,7 +60,7 @@ gulp.task('lint', function () {
 });
 
 // Discovers all AMD dependencies, concatenates together all required .js files, minifies them
-gulp.task('js', function () {
+gulp.task('js', ['clean'], function () {
     return rjs(requireJsOptimizerConfig)
         .pipe(uglify({
             preserveComments: 'some'
@@ -72,7 +72,7 @@ gulp.task('js', function () {
         .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('css', function () {
+gulp.task('css', ['clean'], function () {
     return gulp.src(['src/bower_modules/bootstrap/dist/css/bootstrap.css',
                     'src/bower_modules/nouislider/src/jquery.nouislider.css',
                     'src/bower_modules/fontawesome/css/font-awesome.css',
@@ -87,11 +87,11 @@ gulp.task('css', function () {
 });
 
 /** Copies semantic fonts where the css expects them to be**/
-gulp.task('font', function () {
+gulp.task('font', ['clean'], function () {
     return gulp.src(['src/bower_modules/lato/font/*{ttf,woff,eot,svg}'])
         .pipe(gulp.dest('./dist/font/'));
 });
-gulp.task('fonts', function () {
+gulp.task('fonts', ['clean'], function () {
     return gulp.src(['src/bower_modules/fontawesome/fonts/*{ttf,woff,eot,svg,otf}'])
         .pipe(gulp.dest('./dist/fonts/'));
 });
@@ -162,6 +162,8 @@ gulp.task('default', ['clean', 'replace', 'lint', 'font', 'fonts'], function (ca
     callback();
     console.log('\nPlaced optimized files in ' + chalk.magenta('dist/\n'));
     console.log('\nPlaced font files in ' + chalk.magenta('font/\n'));
+
+    console.log('\nWatching changes... You\'re free to kill off this task now.');
 });
 
 function logWatcher(event) {

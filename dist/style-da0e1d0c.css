@@ -8670,11 +8670,11 @@ input {
     font-weight: normal;
 }
 
-.layoutRow:first-child {
+.layoutRow:first-child, .layoutRow .firstWidget {
     padding-left: 0;
 }
 
-.layoutRow:last-child {
+.layoutRow:last-child, .layoutRow .lastWidget {
     padding-right: 0;
 }
 

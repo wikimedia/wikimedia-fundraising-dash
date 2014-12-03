@@ -15,15 +15,6 @@ define( [
 			return moment().format( "dddd, MMMM Do YYYY, h:mm:ss a" );
 		});
 
-        // Reload the page
-        self.reloadBigEnglish = function(){
-            console.log('reloading');
-			location.reload();
-		};
-        // Do it every 5 minutes as well
-        setTimeout(self.reloadBigEnglish, 300000);
-
-        // TODO: these two will come from the passed in data response
         self.goal = ko.observable(20000000);
         self.raised = ko.observable(0);
 
@@ -40,21 +31,13 @@ define( [
             return numeral(trtd).format('$0,0');
         });
 
-        self.decemberData = [];
-        self.dailyDonationLabels = [];
         self.secondsByHourDonationData = ['Donations Per Second'];
-        self.dailyDonationData = {};
+
         //initialize day/hour data
-        self.dayObj = {};
+        self.dayObj = [];
 		self.dailyDataArray = ['Daily Total'];
-		for (var d = 1; d < 32; d++) {
-			self.dailyDataArray[d] = 0;
-			self.dayObj[d] = [ 'Hourly Totals' ];
-			for (var h = 1; h < 25; h++) {
-				self.dayObj[d][h] = 0;
-				self.secondsByHourDonationData[(d - 1) * 24 + h] = 0;
-			}
-		}
+        self.dailyCountArray = ['Daily Count'];
+
 		// Allows components in the board to subscribe to a single property
         // and get notified of any changes to the available data.
         self.dataChanged = ko.computed(function() {
@@ -66,38 +49,50 @@ define( [
 		// Only recalculate child boards once per half second
 		self.dataChanged.extend( { rateLimit: 500 } );
 
-        $.get( '/data/big-english' , function ( dataget ) {
-            self.decemberData = dataget.results;
+		self.loadData = function ( decemberData ) {
 			var runningTotal = 0;
-			$.each(self.decemberData, function(el, i){
-				var d = self.decemberData[el].day, h = self.decemberData[el].hour;
-				self.dayObj[d][h + 1] = self.decemberData[el].usd_total;
-				//get all seconds into seconds array
-				self.secondsByHourDonationData[(d - 1) * 24 + h+1] = self.decemberData[el].usd_per_second;
-				runningTotal += self.decemberData[el].usd_total;
-			});
-
-			$.each(self.decemberData, function(i, el){
-
-				//get labels from chart based on where we are in December.
-				if (self.dailyDonationLabels.indexOf(el.day) < 0){
-					self.dailyDonationLabels.push(el.day);
+			for (var d = 1; d < 32; d++) {
+				self.dailyDataArray[d] = 0;
+				self.dailyCountArray[d] = 0;
+				if (!self.dayObj[d]) {
+					self.dayObj[d] = Array(25);
+					self.dayObj[d][0] = 'Hourly Totals';
+					for (var h = 1; h < 25; h++) {
+						self.dayObj[d][h] = { total: 0, count: 0 };
+						self.secondsByHourDonationData[(d - 1) * 24 + h] = 0;
+					}
 				}
+			}
 
-				//get data slice for days: donation amt
-				if(self.dailyDonationData[el.day]){
-					self.dailyDonationData[el.day] += el.usd_total;
-				} else {
-					self.dailyDonationData[el.day] = el.usd_total;
-				}
+			var dataCount = decemberData.length;
+			for (var i = 0; i < dataCount; i++ ) {
 
-			});
+				var el = decemberData[i],
+						d = el.day,
+						h = el.hour,
+						total = el.usd_total;
+				self.dayObj[d][h + 1] = { total: total, count: el.donations };
 
-			$.each( self.dailyDonationData, function(el, i){
-				self.dailyDataArray[parseInt(el, 10)] = self.dailyDonationData[el];
-			});
+
+				runningTotal += total;
+				self.dailyDataArray[d] += total;
+				self.dailyCountArray[d] += el.donations;
+
+			};
+
 			self.raised(runningTotal);
-        });
+		};
+
+		// Reload the data
+		self.reloadBigEnglish = function(){
+			$.get( '/data/big-english' , function ( dataget ) {
+				self.loadData( dataget.results );
+			});
+		};
+		// Do it every 5 minutes as well
+		setTimeout(self.reloadBigEnglish, 300000);
+
+		self.reloadBigEnglish();
     }
 
     return { viewModel: BigEnglishBoardViewModel, template: template };

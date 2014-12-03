@@ -18,6 +18,13 @@ define( [
 				return;
 			}
 			self.hourlyChart = function(d,i){
+				var hourlyData = params.dayObj[d['x'] + 1 ],
+					hourlyCountArray = ['Hourly Count'],
+					hourlyTotalArray = ['Hourly Total'];
+				for(var i=1; i<25; i++){
+					hourlyCountArray.push(hourlyData[i]['count']);
+					hourlyTotalArray.push(hourlyData[i]['total']);
+				};
 				return {
 					bindto: '#totalsEarnedChart',
 					size: {
@@ -26,10 +33,14 @@ define( [
 					},
 					zoom: { enabled: true },
 					data: {
-						columns: [ params.dayObj[d['x'] + 1]],
+						columns: [ hourlyTotalArray, hourlyCountArray ],
 						type: 'bar',
-						colors: { 'Hourly Totals': 'rgb(92,184,92)'},
+						colors: { 'Hourly Total': 'rgb(92,184,92)', 'Hourly Count': '#f0ad4e' },
 						onclick: function (d, i) { c3.generate(self.dailyChart()) },
+						axes: {
+							'Hourly Total': 'y',
+							'Hourly Count': 'y2'
+						}
 					},
 					grid: {
 						x: {
@@ -50,14 +61,28 @@ define( [
 							}
 						},
 						y: {
-							label: {
-								text: 'Dollars'
-							},
 							tick: {
-								format: function(x){ return numeral(x).format('$0,0') }
+								format: function(x){ return numeral(x).format('0,0') }
 							}
+						},
+						y2: {
+							show: true
 						}
 					},
+					tooltip: {
+				        format: {
+				            title: function (d) { return 'Hour ' + d; },
+				            value: function (value, ratio, id) {
+				            	var display;
+				                if(id === 'Hourly Total'){
+				                	display = numeral(value).format('$0,0')
+				                } else {
+				                	display = numeral(value).format('0,0')
+				                }
+				                return display;
+				            }
+				        }
+				    },
 					bar: {
 						width: {
 							ratio: 0.5
@@ -65,6 +90,7 @@ define( [
 					}
 				};
 			};
+
 			self.dailyChart = function(d,i){
 				return {
 					bindto: '#totalsEarnedChart',
@@ -74,12 +100,16 @@ define( [
 					},
 					zoom: { enabled: true },
 					data: {
-						columns: [ params.dailyDataArray ],
+						columns: [ params.dailyDataArray, params.dailyCountArray ],
 						type: 'bar',
-						colors: { 'Daily Total': 'rgb(49,176,213)'},
+						colors: { 'Daily Total': 'rgb(49,176,213)', 'Daily Count': '#f0ad4e' },
 						onclick: function (d, i) {
 							self.totalsEarnedChart = c3.generate(self.hourlyChart(d,i));
 						},
+						axes: {
+							'Daily Total': 'y',
+							'Daily Count': 'y2'
+						}
 					},
 					grid: {
 						x: {
@@ -96,14 +126,28 @@ define( [
 							}
 						},
 						y: {
-							label: {
-								text: 'Dollars'
-							},
 							tick: {
-								format: function(x){ return numeral(x).format('$0,0') }
+								format: function(x){ return numeral(x).format('0,0') }
 							}
+						},
+						y2: {
+							show: true
 						}
 					},
+					tooltip: {
+				        format: {
+				            title: function (d) { return 'Day ' + (d+1); },
+				            value: function (value, ratio, id) {
+				            	var display;
+				                if(id === 'Daily Total'){
+				                	display = numeral(value).format('$0,0')
+				                } else {
+				                	display = numeral(value).format('0,0')
+				                }
+				                return display;
+				            }
+				        }
+				    },
 					bar: {
 						width: {
 							ratio: 0.5
