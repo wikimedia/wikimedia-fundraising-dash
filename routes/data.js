@@ -2,7 +2,11 @@ var widgets = require( '../widgets' ),
 	odataParser = require( 'odata-parser' ),
 	mysql = require ( 'mysql'),
 	config = require( '../config.js' ),
-	util = require( 'util');
+	util = require( 'util'),
+	cache = require( 'memory-cache' ),
+	urlParser = require( 'url' ),
+	querystringParser = require( 'querystring' ),
+	logger = require( '../logger.js' );
 
 /**
  * Throws an error if an value is invalid for the given column
@@ -168,7 +172,8 @@ function buildWhere( filterNode, widget, values, joins ) {
 
 module.exports = function(req, res) {
 	var widget = widgets[req.params.widget],
-		qs = require( 'url' ).parse(req.url).query,
+		qs = urlParser.parse( req.url ).query,
+		parsedQs = querystringParser.parse( qs ),
 		connection,
 		sqlQuery = '',
 		parsedFilters,
@@ -177,7 +182,9 @@ module.exports = function(req, res) {
 		values = [],
 		joins = [],
 		joinClause = '',
-		i;
+		i,
+		result,
+		cacheKey;
 
 	if ( !config.debug &&
 			( !req.session || !req.session.passport || !req.session.passport.user )
@@ -191,6 +198,19 @@ module.exports = function(req, res) {
 		return;
 	}
 
+	cacheKey = '/data/' + req.params.widget;
+	if ( parsedQs.$filter ) {
+		cacheKey += '-' + parsedQs.$filter;
+	}
+
+	if ( !parsedQs.cache || parsedQs.cache === 'false' ) {
+		result = cache.get( cacheKey );
+		if ( result ) {
+			logger.debug( 'Serving results from cache key ' + cacheKey );
+			res.json( result );
+			return;
+		}
+	}
 	sqlQuery = widget.query;
 	if ( widget.defaultFilter || ( qs && qs !== '' ) ) {
 		try {
@@ -229,11 +249,14 @@ module.exports = function(req, res) {
 			return;
 		}
 	});
-	connection.query( sqlQuery, values, function( error, results ) {
+	connection.query( sqlQuery, values, function( error, dbResults ) {
 		if ( error ) {
 			res.json( { error: 'Query error: ' + error } );
 			return;
 		}
-		res.json( { results: results, sqlQuery: sqlQuery } );
+		result = { results: dbResults, sqlQuery: sqlQuery };
+		logger.debug( 'Storing results at cache key ' + cacheKey );
+		cache.put( req.url, result, config.cacheDuration );
+		res.json( result );
 	});
 };

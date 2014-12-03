@@ -83,16 +83,23 @@ define( [
 			self.raised(runningTotal);
 		};
 
-		// Reload the data
-		self.reloadBigEnglish = function(){
-			$.get( '/data/big-english' , function ( dataget ) {
+		// Reload the data.  For the automatic reload, we're fine getting
+		// something from the cache.
+		self.reloadBigEnglish = function( automatic ){
+			var url = '/data/big-english';
+			if ( !automatic ) {
+				url += '/?cache=false';
+			}
+			$.get( url , function ( dataget ) {
 				self.loadData( dataget.results );
 			});
+			// Do it every 5 minutes as well
+			setTimeout( function () {
+				self.reloadBigEnglish( true );
+			}, 300000 );
 		};
-		// Do it every 5 minutes as well
-		setTimeout(self.reloadBigEnglish, 300000);
 
-		self.reloadBigEnglish();
+		self.reloadBigEnglish( true );
     }
 
     return { viewModel: BigEnglishBoardViewModel, template: template };
