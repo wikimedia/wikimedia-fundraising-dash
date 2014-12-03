@@ -14,9 +14,6 @@ define( [
 			self.makeCharts();
 		});
 		self.makeCharts = function() {
-			if (params.dailyDataArray.length < 2) {
-				return;
-			}
 			self.hourlyChart = function(d,i){
 				return {
 					bindto: '#totalsEarnedChart',

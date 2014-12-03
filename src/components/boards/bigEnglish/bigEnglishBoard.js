@@ -45,16 +45,9 @@ define( [
         self.secondsByHourDonationData = ['Donations Per Second'];
         self.dailyDonationData = {};
         //initialize day/hour data
-        self.dayObj = {};
+        self.dayObj = [];
 		self.dailyDataArray = ['Daily Total'];
-		for (var d = 1; d < 32; d++) {
-			self.dailyDataArray[d] = 0;
-			self.dayObj[d] = [ 'Hourly Totals' ];
-			for (var h = 1; h < 25; h++) {
-				self.dayObj[d][h] = 0;
-				self.secondsByHourDonationData[(d - 1) * 24 + h] = 0;
-			}
-		}
+
 		// Allows components in the board to subscribe to a single property
         // and get notified of any changes to the available data.
         self.dataChanged = ko.computed(function() {
@@ -69,6 +62,15 @@ define( [
         $.get( '/data/big-english' , function ( dataget ) {
             self.decemberData = dataget.results;
 			var runningTotal = 0;
+			for (var d = 1; d < 32; d++) {
+				self.dailyDataArray[d] = 0;
+				self.dayObj[d] = Array(25);
+				self.dayObj[d][0] = 'Hourly Totals';
+				for (var h = 1; h < 25; h++) {
+					self.dayObj[d][h] = 0;
+					self.secondsByHourDonationData[(d - 1) * 24 + h] = 0;
+				}
+			}
 			$.each(self.decemberData, function(el, i){
 				var d = self.decemberData[el].day, h = self.decemberData[el].hour;
 				self.dayObj[d][h + 1] = self.decemberData[el].usd_total;

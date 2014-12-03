@@ -15,7 +15,7 @@ define( [
 
 			self.updatedGoal = params.goal();
 			self.neededArray = ['Needed'];
-			for(var d = 1; d < 32; d++) {
+			for(var d = 1; d < params.dailyDataArray.length; d++) {
 				self.updatedGoal = self.updatedGoal - params.dailyDataArray[d];
 				self.neededArray[d] = self.updatedGoal;
 			}
