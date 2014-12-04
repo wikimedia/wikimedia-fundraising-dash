@@ -105,6 +105,19 @@ body {
     border-bottom: 1px #555 solid;
 }
 
+.loginWelcome > i {
+    padding: 0 3px;
+}
+
+.loginWelcome {
+    width: 100px;
+    padding: 3px;
+    background-color: rgba(255,255,255,0.4);
+    overflow-wrap: break-word;
+    padding: 3px;
+    font-size: .8em;
+}
+
 .titlebrand, .titlebrandToggle {
     background-color: #d9534f;
     overflow: hidden;

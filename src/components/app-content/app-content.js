@@ -18,6 +18,15 @@ define(
                 return value === e;
             };
         };
+
+        self.loggedIn = ko.observable(false);
+        self.welcome = ko.observable('');
+        $.get('/user/info', function(userInfo) {
+            if (userInfo) {
+                self.welcome(userInfo['name'].charAt(0).toUpperCase() + userInfo['name'].slice(1));
+                self.loggedIn(true);
+            };
+        });
     }
 
     return { viewModel: AppContent, template: templateMarkup };
