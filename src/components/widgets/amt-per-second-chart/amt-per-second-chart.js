@@ -17,7 +17,7 @@ define( [
 			self.needPerSecond = ['Needed Per Second'];
 			for( var d = 1; d < params.dayObj.length; d++ ) {
 				for ( var h = 1; h < 25; h++ ) {
-					self.updatedGoal = self.updatedGoal - params.dayObj[d][h];
+					self.updatedGoal = self.updatedGoal - params.dayObj[d][h].total;
 					var hoursLeft = ( 31 - d) * 24 + ( 24 - h );
 					self.needPerSecond[( d - 1 ) * 24 + h] = ( hoursLeft > 0 ) ? self.updatedGoal / hoursLeft / 3600 : 0;
 				}
