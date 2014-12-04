@@ -203,7 +203,8 @@ module.exports = function(req, res) {
 		cacheKey += '-' + parsedQs.$filter;
 	}
 
-	if ( !parsedQs.cache || parsedQs.cache === 'false' ) {
+	// cache=false param on QS means they want fresh results now
+	if ( !parsedQs.cache || parsedQs.cache === 'true' ) {
 		result = cache.get( cacheKey );
 		if ( result ) {
 			logger.debug( 'Serving results from cache key ' + cacheKey );
@@ -211,10 +212,15 @@ module.exports = function(req, res) {
 			return;
 		}
 	}
+
+	// remove the cache param so as not to confuse the odata parser
+	delete parsedQs.cache;
+	qs = querystringParser.stringify( parsedQs );
+
 	sqlQuery = widget.query;
-	if ( widget.defaultFilter || ( qs && qs !== '' ) ) {
+	if ( widget.defaultFilter || qs.length ) {
 		try {
-			if ( qs && qs !== '' ) {
+			if ( qs.length ) {
 				parsedFilters = odataParser.parse( decodeURIComponent(qs) );
 				filter = parsedFilters.$filter;
 			}
