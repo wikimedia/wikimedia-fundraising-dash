@@ -73,7 +73,7 @@ define( [
 						total = el.usd_total;
 				self.dayObj[d][h + 1] = { total: total, count: el.donations };
 
-
+				self.secondsByHourDonationData[(d - 1) * 24 + h] = el.usd_per_second;
 				runningTotal += total;
 				self.dailyDataArray[d] += total;
 				self.dailyCountArray[d] += el.donations;
