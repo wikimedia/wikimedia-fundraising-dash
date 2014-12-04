@@ -11,6 +11,7 @@
     "amdrequire": "0.0.3",
     "commander": "~2.2.0",
     "dotenv": "^0.4.0",
+    "evil-dns": "0.0.2",
     "express": "3.x",
     "gulp": "^3.8.8",
     "gulp-jshint": "^1.8.4",
@@ -18,13 +19,13 @@
     "gulp-rev": "^1.1.0",
     "jade": ">= 0.0.1",
     "lodash": "^2.4.1",
+    "memory-cache": "0.0.5",
     "mysql": "^2.4.3",
+    "node-syslog": "~1.1.7",
     "odata-parser": "~1.0.0",
     "passport": "^0.2.1",
-    "passport-oauth": "^1.0.0",
     "passport-drupal": "0.3.3",
-    "evil-dns": "0.0.2",
-    "node-syslog": "~1.1.7"
+    "passport-oauth": "^1.0.0"
   },
   "devDependencies": {
     "chalk": "^0.5.1",
