@@ -8,12 +8,11 @@ define( [
 
     function BigEnglishBoardViewModel( params ){
 
-        var self = this;
+        var self = this,
+			timeFormat = "dddd, MMMM Do YYYY, h:mm:ss a";
 
         // Get the date
-        self.getTodaysDate = ko.computed( function(){
-			return moment().format( "dddd, MMMM Do YYYY, h:mm:ss a" );
-		});
+        self.displayDate = ko.observable( moment().format( timeFormat ) );
 
         self.goal = ko.observable(20000000);
         self.raised = ko.observable(0);
@@ -37,6 +36,7 @@ define( [
         self.dayObj = [];
 		self.dailyDataArray = ['Daily Total'];
         self.dailyCountArray = ['Daily Count'];
+		self.lastDataPoint = { day: 1, hour: 0 };
 
 		// Allows components in the board to subscribe to a single property
         // and get notified of any changes to the available data.
@@ -49,17 +49,23 @@ define( [
 		// Only recalculate child boards once per half second
 		self.dataChanged.extend( { rateLimit: 500 } );
 
-		self.loadData = function ( decemberData ) {
-			var runningTotal = 0;
+		self.loadData = function ( decemberData, timestamp ) {
+			var runningTotal = 0,
+				currentDate = new Date();
+			currentDate.setTime( timestamp );
+			self.displayDate( moment( currentDate ).format( timeFormat ) );
+			self.lastDataPoint.day = currentDate.getDate();
+			self.lastDataPoint.hour = currentDate.getHours();
+
 			for (var d = 1; d < 32; d++) {
 				self.dailyDataArray[d] = 0;
 				self.dailyCountArray[d] = 0;
 				if (!self.dayObj[d]) {
 					self.dayObj[d] = Array(25);
 					self.dayObj[d][0] = 'Hourly Totals';
-					for (var h = 1; h < 25; h++) {
-						self.dayObj[d][h] = { total: 0, count: 0 };
-						self.secondsByHourDonationData[(d - 1) * 24 + h] = 0;
+					for (var h = 0; h < 24; h++) {
+						self.dayObj[d][h + 1] = { total: 0, count: 0 };
+						self.secondsByHourDonationData[(d - 1) * 24 + h + 1] = 0;
 					}
 				}
 			}
@@ -73,11 +79,10 @@ define( [
 						total = el.usd_total;
 				self.dayObj[d][h + 1] = { total: total, count: el.donations };
 
-				self.secondsByHourDonationData[(d - 1) * 24 + h] = el.usd_per_second;
+				self.secondsByHourDonationData[(d - 1) * 24 + h + 1] = el.usd_per_second;
 				runningTotal += total;
 				self.dailyDataArray[d] += total;
 				self.dailyCountArray[d] += el.donations;
-
 			};
 
 			self.raised(runningTotal);
@@ -87,11 +92,11 @@ define( [
 		// something from the cache.
 		self.reloadBigEnglish = function( automatic ){
 			var url = '/data/big-english';
-			if ( !automatic ) {
+			if ( automatic !== true ) {
 				url += '/?cache=false';
 			}
 			$.get( url , function ( dataget ) {
-				self.loadData( dataget.results );
+				self.loadData( dataget.results, dataget.timestamp );
 			});
 			// Do it every 5 minutes as well
 			setTimeout( function () {
