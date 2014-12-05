@@ -62,10 +62,13 @@ define( [
 						},
 						y: {
 							tick: {
-								format: function(x){ return numeral(x).format('0,0') }
+								format: function(x){ return numeral(x).format('$0,0') }
 							}
 						},
 						y2: {
+							tick: {
+								format: function(x){ return numeral(x).format('0,0') }
+							},
 							show: true
 						}
 					},
@@ -127,10 +130,13 @@ define( [
 						},
 						y: {
 							tick: {
-								format: function(x){ return numeral(x).format('0,0') }
+								format: function(x){ return numeral(x).format('$0,0') }
 							}
 						},
 						y2: {
+							tick: {
+								format: function(x){ return numeral(x).format('0,0') }
+							},
 							show: true
 						}
 					},
