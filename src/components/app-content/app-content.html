@@ -1,8 +1,21 @@
-<div class="container-fluid">
+<section id="navbar">
+	<nav-bar params="welcome: welcome, loggedIn: loggedIn"></nav-bar>
+</section>
+
+<div class="container-fluid" data-bind='visible: loggedIn'>
 	<div class="row">
 		<div data-bind="component: 'bigEnglishBoard'" class="col-md-12"></div>
 	</div>
 	<div class="row layoutRow">
 		<div data-bind="component: 'fraud-gauge'" class="col-md-4 firstWidget"></div>
+	</div>
+</div>
+
+<div class="container-fluid" data-bind='visible: !loggedIn()'>
+	<div class="row">
+		<div class="jumbotron">
+			<h1>Welcome To Dash.</h1>
+			<h3>Please <a href="/auth/drupal"><button class="btn btn-info">Log in</button></a> to continue.</h3>
+		</div>
 	</div>
 </div>
