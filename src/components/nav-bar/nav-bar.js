@@ -6,8 +6,8 @@ define( [
 
     function NavBarViewModel( params ){
     	var self = this;
-        self.loggedIn = ko.observable(params.loggedIn()),
-        self.welcome = ko.observable(params.welcome());
+        self.loggedIn = params.loggedIn,
+        self.welcome = params.welcome;
 
         self.hideNav = function(){
         	//make the nav menu fold out of view.
