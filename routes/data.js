@@ -186,9 +186,7 @@ module.exports = function(req, res) {
 		result,
 		cacheKey;
 
-	if ( !config.debug &&
-			( !req.session || !req.session.passport || !req.session.passport.user )
-		) {
+	if ( !req.session || !req.session.passport || !req.session.passport.user ) {
 		res.json( { error: 'Error: Not logged in' } );
 		return;
 	}
