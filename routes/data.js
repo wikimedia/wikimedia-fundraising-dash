@@ -186,9 +186,7 @@ module.exports = function(req, res) {
 		result,
 		cacheKey;
 
-	if ( !config.debug &&
-			( !req.session || !req.session.passport || !req.session.passport.user )
-		) {
+	if ( !req.session || !req.session.passport || !req.session.passport.user ) {
 		res.json( { error: 'Error: Not logged in' } );
 		return;
 	}
@@ -260,7 +258,7 @@ module.exports = function(req, res) {
 			res.json( { error: 'Query error: ' + error } );
 			return;
 		}
-		result = { results: dbResults, sqlQuery: sqlQuery };
+		result = { results: dbResults, sqlQuery: sqlQuery, timestamp: new Date().getTime() };
 		logger.debug( 'Storing results at cache key ' + cacheKey );
 		cache.put( req.url, result, config.cacheDuration );
 		res.json( result );

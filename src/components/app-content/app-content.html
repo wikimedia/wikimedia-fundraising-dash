@@ -2,7 +2,7 @@
 	<nav-bar params="welcome: welcome, loggedIn: loggedIn"></nav-bar>
 </section>
 
-<div class="container-fluid" data-bind='visible: loggedIn'>
+<div class="container-fluid" data-bind='if: loggedIn'>
 	<div class="row">
 		<div data-bind="component: 'bigEnglishBoard'" class="col-md-12"></div>
 	</div>
@@ -11,7 +11,7 @@
 	</div>
 </div>
 
-<div class="container-fluid" data-bind='visible: !loggedIn()'>
+<div class="container-fluid" data-bind='if: !loggedIn()'>
 	<div class="row">
 		<div class="jumbotron">
 			<h1>Welcome To Dash.</h1>

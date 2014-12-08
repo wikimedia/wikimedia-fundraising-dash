@@ -74,12 +74,25 @@ app.get( '/user/info', routes.user );
 
 app.use( express.static( __dirname + ( config.debug ? '/src' : '/dist' ) ) );
 
-app.get( '/auth/drupal', passport.authenticate( 'drupal' ));
-app.get( '/auth/drupal/callback',
-	passport.authenticate( 'drupal', { failureRedirect: '/login' }),
-	function( req, res ) {
+
+if ( config.debug ) {
+	app.get( '/auth/drupal', function( req, res ) {
+		req.session.passport = {
+			user: {
+				displayName: 'debuguser'
+			}
+		};
 		res.redirect( '/' );
 	});
+} else {
+	app.get( '/auth/drupal', passport.authenticate( 'drupal' ));
+	app.get( '/auth/drupal/callback',
+		passport.authenticate( 'drupal', { failureRedirect: '/login' }),
+		function( req, res ) {
+			res.redirect( '/' );
+		}
+	);
+}
 app.get( '/logout', function( req, res ) {
 	req.logout();
 	res.redirect( '/' );

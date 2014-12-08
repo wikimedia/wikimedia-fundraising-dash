@@ -22,6 +22,19 @@ To play with Dash, you will need:
 
 To use the live version with actual Fundraising data, you will need special permissions. Please contact ssmith@wikimedia.org.
 
+Installation
+============
+
+To install and run the application in development mode, first ensure you do
+not have anything already listening to port 8080.  If so, stop it or change
+the configured port in defaults.js, or in a new config file, using -c.
+
++ Be sure you have the submodules: git submodule update -i
++ nvm use 0.8.2
++ node server.js -d
+
+To test OAuth, omit the "-d" option when starting the server.
+
 Framework / Libraries
 =====================
 

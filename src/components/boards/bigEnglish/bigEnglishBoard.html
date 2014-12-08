@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-md-4 titleCol">
 		<h2 style="display:inline">Big English Monitoring</h2>
-		<p data-bind="text: getTodaysDate"></p>
+		<p data-bind="text: displayDate"></p>
 	</div>
 	<div class="col-md-8 titleCol">
 		<div class="btn-group btn-group-xs pull-right">
@@ -65,7 +65,7 @@
 
 <div class="row layoutRow">
     <distance-to-goal-chart params="title: 'Distance To Goal', dailyDataArray: dailyDataArray, goal: goal, dataChanged: dataChanged"></distance-to-goal-chart>
-    <amt-per-second-chart params="title: 'USD/Second Required (Average)', dayObj: dayObj, goal: goal, secondsByHourDonationData: secondsByHourDonationData, dataChanged: dataChanged"></amt-per-second-chart>
+    <amt-per-second-chart params="title: 'USD/Second Required (Average)', dayObj: dayObj, goal: goal, secondsByHourDonationData: secondsByHourDonationData, dataChanged: dataChanged, lastDataPoint: lastDataPoint"></amt-per-second-chart>
 </div>
 
 <div class="modal fade" id="bigEsqlModal">
