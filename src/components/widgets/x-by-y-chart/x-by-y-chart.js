@@ -3,19 +3,69 @@ define( [
     'text!components/widgets/x-by-y-chart/x-by-y-chart.html',
     'momentjs',
     'numeraljs',
-    'chartjs'
-], function( ko, template, moment, numeral, Chart ){
+    'chartjs',
+    'select2'
+], function( ko, template, moment, numeral, Chart, select2 ){
 
 
     function XByYChartViewModel( params ){
 
         var self = this;
-        self.title = ko.observable('This is the title');
-        self.xyIsSetUp = ko.observable(true);
+        self.xyIsSetUp = ko.observable(false);
         self.chartWidth = ko.observable('900');
         self.chartHeight = ko.observable('550');
+        self.showSlice = ko.observable();
+        self.bySlice = ko.observable();
+        self.timeChoice = ko.observable();
 
-        self.makeChart = function(){
+        //this is a placeholder.
+        //TODO: break the filters into their parent groups to work with the multi-select box.
+        self.filters = ko.observableArray(['Country', 'Currency', 'Gateway', 'Campaign', 'Referrer']);
+        self.chosenFilters = ko.observableArray([]);
+        self.addFilter = function(filter){
+        	console.log(filter);
+        	self.chosenFilters.push(filter);
+        };
+
+        self.title = ko.computed(function(){
+        	return self.showSlice() + ' by ' + self.bySlice();
+        });
+
+        //saved charts
+        //TODO: these will trigger a saved set of parameters to draw the chart with.
+        self.presetTitles = ko.observableArray([
+        	'Donations During Big English 2014',
+        	'Donations for Fiscal Year 2014'
+        ]);
+        ///////
+
+        self.ySlices = ko.observableArray([
+        	'Donations',
+        	'Failed Donations'
+        ]);
+
+        self.xSlices = ko.observableArray([
+        	'Country',
+        	'Currency',
+        	'Method',
+        	'Source',
+        	'Campaign',
+        	'Medium',
+        	'Referrer',
+        	'Gateway',
+        	'Fraud Score'
+        ]);
+
+        self.timeChoices = ko.observableArray([
+        	'Month',
+        	'Week',
+        	'Day',
+        	'Hour',
+        	'Minute',
+        	'Second'
+        ]);
+
+        self.submitXY = function(){
         	self.fakeData = {
 		    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
 		    datasets: [
@@ -40,19 +90,14 @@ define( [
 		            data: [28, 48, 40, 19, 86, 27, 90]
 		        }
 		    ]
-			};
-			var ctx = $('#x-by-yChart').get(0).getContext('2d');
-			self.fakeChart = new Chart(ctx).Line(self.fakeData);
+		};
+		var ctx = $('#x-by-yChart').get(0).getContext('2d');
+		self.fakeChart = new Chart(ctx).Line(self.fakeData);
+
+	        self.xyIsSetUp(true);
         };
 
-        if(self.xyIsSetUp){
-        	self.makeChart();
-		}
-
-        self.submitXY = function(){
-        	self.xyIsSetUp(true);
-        	self.makeChart();
-        };
+        $('#selectXYFilters').select2();
 
 
 

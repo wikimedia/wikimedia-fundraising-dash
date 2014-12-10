@@ -37,7 +37,8 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
             'components/widgets/distance-to-goal-chart/distance-to-goal-chart',
             'components/widgets/totals-earned-chart/totals-earned-chart',
             'components/widgets/amt-per-second-chart/amt-per-second-chart',
-            'components/boards/bigEnglish/bigEnglishBoard'
+            'components/boards/bigEnglish/bigEnglishBoard',
+            'components/widgets/x-by-y-chart/x-by-y-chart'
         ],
         insertRequire: ['app/startup'],
         bundles: {
@@ -77,6 +78,7 @@ gulp.task('css', ['clean'], function () {
                     'src/bower_modules/fontawesome/css/font-awesome.css',
                     'src/bower_modules/lato/css/lato.css',
                     'src/bower_modules/c3/c3.css',
+                    'src/bower_modules/select2/select2.css',
                     'src/css/*.css'])
         .pipe(concat('style.css')).pipe(rev()).pipe(gulp.dest('./dist/'))
         // Add rev-manifest.json as a new src to prevent rev'ing rev-manifest.json
