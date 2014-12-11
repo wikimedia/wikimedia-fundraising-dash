@@ -11,6 +11,8 @@ define( [
         var self = this,
 			timeFormat = "dddd, MMMM Do YYYY, h:mm:ss a";
 
+        self.dataLoading = ko.observable(true);
+
         // Get the date
         self.displayDate = ko.observable( moment().format( timeFormat ) );
 
@@ -45,6 +47,32 @@ define( [
             // goal has been reset.  So the total remaining is a good proxy
             return self.totalRemainingToDate();
         });
+
+        //todo: this could go elsewhere
+        self.ellipsis = ko.observable('');
+        self.ellipsisObj = {
+            'value' : ['', '.', '..', '...', '....'],
+            'count' : 0,
+            'run' : false,
+            'timer' : null,
+            'element' : '.ellipsis',
+            'start' : function () {
+              var t = this;
+                this.run = true;
+                this.timer = setInterval(function () {
+                    if (t.run) {
+                        self.ellipsis(t.value[t.count % t.value.length]);
+                        t.count++;
+                    }
+                }, 400);
+            },
+            'stop' : function () {
+                this.run = false;
+                clearInterval(this.timer);
+                this.count = 0;
+            }
+        };
+        self.ellipsisObj.start();
 
 		// Only recalculate child boards once per half second
 		self.dataChanged.extend( { rateLimit: 500 } );
@@ -91,12 +119,14 @@ define( [
 		// Reload the data.  For the automatic reload, we're fine getting
 		// something from the cache.
 		self.reloadBigEnglish = function( automatic ){
+            self.dataLoading(true);
 			var url = '/data/big-english';
 			if ( automatic !== true ) {
 				url += '/?cache=false';
 			}
 			$.get( url , function ( dataget ) {
 				self.loadData( dataget.results, dataget.timestamp );
+                self.dataLoading(false);
 			});
 			// Do it every 5 minutes as well
 			setTimeout( function () {

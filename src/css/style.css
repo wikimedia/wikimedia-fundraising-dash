@@ -439,3 +439,24 @@ input {
 #distanceToGoalChart {
     padding: 0 9px 0 0;
 }
+
+.loading {
+    position: fixed;
+    top: 360px;
+    left: 50%;
+    margin-top: -96px;
+    margin-left: -96px;
+    background-color: #5bc0de;
+    opacity: .85;
+    border-radius: 25px;
+    width: 192px;
+    height: 192px;
+    padding: 37px;
+    color: #ffffff;
+    z-index: 99999;
+    font-size: 110%;
+}
+
+.loading div {
+    margin-left: 10px;
+}
