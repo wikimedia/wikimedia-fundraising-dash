@@ -49,7 +49,23 @@ function validateValue( value, column ) {
 		throw new Error( 'Invalid value ' + value + ' for filter ' + column.display );
 	}
 }
-
+/**
+ * Adds to the list of join statements
+ * @param string table alias required
+ * @param Object widget
+ * @param Array joins
+ */
+function addJoin( table, widget, joins ) {
+	var i;
+	if ( table !== widget.mainTableAlias && joins.indexOf( table ) === -1 ) {
+		if ( widget.optionalJoins[table].requires ) {
+			for ( i = 0; i < widget.optionalJoins[table].requires.length; i++ ) {
+				addJoin( widget.optionalJoins[table].requires[i], widget, joins );
+			}
+		}
+		joins.push( table );
+	}
+}
 /**
  * Gets a filter and adds it to joins if not yet present
  * Throws an error if the column does not exist
@@ -64,12 +80,27 @@ function getColumn( name, widget, joins ) {
 	if ( !col ) {
 		throw new Error( 'Illegal filter property ' + name );
 	}
-	if ( col.table !== widget.mainTableAlias && joins.indexOf( col.table ) === -1 ) {
-		joins.push( col.table );
-	}
+	addJoin( col.table, widget, joins );
 	return col;
 }
 
+/**
+ * Formats a column object for SQL
+ * @param Object filter column object
+ * @returns SQL representation of the given column for use in where or group clauses
+ */
+function getColumnText( column ) {
+	var colText = column.table + '.' + column.column;
+	if ( column.func ) {
+		// If the function has a placeholder, use that. Otherwise just add parens.
+		if ( column.func.match( /\[\[COL\]\]/ ) ) {
+			colText = column.func.replace( '[[COL]]', colText );
+		} else {
+			colText = column.func + '(' + colText + ')';
+		}
+	}
+	return colText;
+}
 /**
  * Create a SQL WHERE clause given a parsed filter node.
  * Uses '?' placeholders in clause, and appends literal values to values array
@@ -137,10 +168,7 @@ function buildWhere( filterNode, widget, values, joins ) {
 			}
 			values.push( val ); //this may get more complex with nesting...
 
-			colText = col.table + '.' + col.column;
-			if ( col.func ) {
-				colText = col.func + '(' + colText + ')';
-			}
+			colText = getColumnText( col );
 
 			return colText + ' ' + op + ' ?';
 		case 'fn':
@@ -182,6 +210,9 @@ module.exports = function(req, res) {
 		values = [],
 		joins = [],
 		joinClause = '',
+		groupCol,
+		groupClause = '',
+		selectGroup = '',
 		i,
 		result,
 		cacheKey;
@@ -201,6 +232,10 @@ module.exports = function(req, res) {
 		cacheKey += '-' + parsedQs.$filter;
 	}
 
+	if ( parsedQs.group ) {
+		cacheKey += '-' + parsedQs.group;
+	}
+
 	// cache=false param on QS means they want fresh results now
 	if ( !parsedQs.cache || parsedQs.cache === 'true' ) {
 		result = cache.get( cacheKey );
@@ -210,12 +245,43 @@ module.exports = function(req, res) {
 			return;
 		}
 	}
+	logger.debug( 'Group:' + util.inspect( parsedQs.group) );
+	sqlQuery = widget.query;
+	if ( widget.defaultGroup && !parsedQs.group ) {
+		parsedQs.group = widget.defaultGroup;
+	}
 
-	// remove the cache param so as not to confuse the odata parser
+	if ( parsedQs.group ) {
+		try{
+			if ( !Array.isArray( parsedQs.group ) ) {
+				parsedQs.group = [ parsedQs.group ];
+			}
+			groupClause = 'GROUP BY ';
+			for ( i = 0; i < parsedQs.group.length; i++ ) {
+				groupCol = getColumn( parsedQs.group[i], widget, joins );
+				if ( !groupCol.canGroup ) {
+					throw new Error( 'Can not group by ' + parsedQs.group[i] );
+				}
+				if ( i > 0 ) {
+					groupClause += ', ';
+				}
+				groupClause += getColumnText( groupCol );
+				// Assuming the [[SELECTGROUP]] comes after at least one other
+				// selected property, so always prepending a comma
+				selectGroup += ', ' + getColumnText( groupCol ) + ' AS ' + parsedQs.group[i];
+			}
+		}
+		catch ( err ) {
+			res.json( { error: err.message } );
+			return;
+		}
+	}
+	// remove params the odata parser can't handle
 	delete parsedQs.cache;
+	delete parsedQs.group;
+
 	qs = querystringParser.stringify( parsedQs );
 
-	sqlQuery = widget.query;
 	if ( widget.defaultFilter || qs.length ) {
 		try {
 			if ( qs.length ) {
@@ -237,9 +303,11 @@ module.exports = function(req, res) {
 	}
 	sqlQuery = sqlQuery.replace( '[[WHERE]]', whereClause );
 	for ( i = 0; i < joins.length; i++ ) {
-		joinClause += widget.optionalJoins[joins[i]] + ' ';
+		joinClause += widget.optionalJoins[joins[i]].text + ' ';
 	}
 	sqlQuery = sqlQuery.replace( '[[JOINS]]', joinClause );
+	sqlQuery = sqlQuery.replace( '[[GROUP]]', groupClause );
+	sqlQuery = sqlQuery.replace( '[[SELECTGROUP]]', selectGroup );
 
 	connection = mysql.createConnection({
 		host: config.dbserver,
@@ -253,6 +321,7 @@ module.exports = function(req, res) {
 			return;
 		}
 	});
+	logger.debug( 'Query: ' + sqlQuery );
 	connection.query( sqlQuery, values, function( error, dbResults ) {
 		if ( error ) {
 			res.json( { error: 'Query error: ' + error } );
