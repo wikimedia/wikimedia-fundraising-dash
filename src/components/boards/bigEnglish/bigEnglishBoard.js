@@ -54,8 +54,8 @@ define( [
 				currentDate = new Date();
 			currentDate.setTime( timestamp );
 			self.displayDate( moment( currentDate ).format( timeFormat ) );
-			self.lastDataPoint.day = currentDate.getDate();
-			self.lastDataPoint.hour = currentDate.getHours();
+			self.lastDataPoint.day = currentDate.getUTCDate();
+			self.lastDataPoint.hour = currentDate.getUTCHours();
 
 			for (var d = 1; d < 32; d++) {
 				self.dailyDataArray[d] = 0;
