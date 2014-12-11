@@ -1,10 +1,23 @@
-var syslog = require( 'node-syslog' );
+var hasSyslog = !!process.platform.match(/linux/),
+	LOG_DEBUG = 0,
+	LOG_INFO = 1,	
+	LOG_ERR = 2,
+	syslog,
+	constMap = [];
 
-syslog.init( 'dash', syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0 );
+if ( hasSyslog ) {
+	syslog = require( 'node-syslog' );
+	syslog.init( 'dash', syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0 );
+	constMap[LOG_DEBUG] = syslog.LOG_DEBUG;
+	constMap[LOG_INFO] = syslog.LOG_INFO;
+	constMap[LOG_ERR] = syslog.LOG_ERR;
+}
 
 function log( level, message ) {
-	syslog.log( level, message );
-	if ( level === syslog.LOG_ERR ) {
+	if ( hasSyslog ) {
+		syslog.log( constMap[level], message );
+	}
+	if ( level === LOG_ERR ) {
 		console.error( message );
 	} else {
 		console.log( message );
@@ -13,12 +26,12 @@ function log( level, message ) {
 
 module.exports = {
 	error: function( message ) {
-		log( syslog.LOG_ERR, message );
+		log( LOG_ERR, message );
 	},
 	debug: function( message ) {
-		log( syslog.LOG_DEBUG, message );
+		log( LOG_DEBUG, message );
 	},
 	info: function( message ) {
-		log( syslog.LOG_INFO, message );
+		log( LOG_INFO, message );
 	}
 };
