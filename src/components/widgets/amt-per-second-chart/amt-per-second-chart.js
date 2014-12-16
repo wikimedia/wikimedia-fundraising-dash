@@ -1,8 +1,9 @@
 define( [
     'knockout',
     'text!components/widgets/amt-per-second-chart/amt-per-second-chart.html',
-    'c3'
-], function( ko, template, c3 ){
+    'c3',
+    'numeraljs'
+], function( ko, template, c3, numeral ){
 
 
     function AmtPerSecondChartViewModel( params ){

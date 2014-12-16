@@ -1,8 +1,9 @@
 define( [
     'knockout',
     'text!components/widgets/totals-earned-chart/totals-earned-chart.html',
-    'c3'
-], function( ko, template, c3 ){
+    'c3',
+    'numeraljs'
+], function( ko, template, c3, numeral ){
 
 
     function TotalsEarnedChartViewModel( params ){
