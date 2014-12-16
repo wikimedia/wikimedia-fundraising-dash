@@ -72,8 +72,9 @@ app.get( '/data/:widget', routes.data );
 app.get( '/metadata/:widget', routes.metadata );
 app.get( '/user/info', routes.user );
 
+/*jslint -W024*/
 app.use( express.static( __dirname + ( config.debug ? '/src' : '/dist' ) ) );
-
+/*jslint +W024*/
 
 if ( config.debug ) {
 	app.get( '/auth/drupal', function( req, res ) {

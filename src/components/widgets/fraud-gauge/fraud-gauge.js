@@ -1,11 +1,10 @@
 define([
     'knockout',
     'text!components/widgets/fraud-gauge/fraud-gauge.html',
-    'gauge',
     'c3',
     'chartjs'
     ],
-function( ko, template, datePickersTemplate, c3, chartjs ){
+function( ko, template, c3, Chart ){
   //extend the chart so we can flip the circle
   Chart.types.Doughnut.extend({
     addData: function(segment, atIndex, silent){
