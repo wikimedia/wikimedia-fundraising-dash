@@ -1,8 +1,9 @@
 define( [
     'knockout',
     'text!components/widgets/amt-per-second-chart/amt-per-second-chart.html',
-    'c3'
-], function( ko, template, c3 ){
+    'c3',
+    'numeraljs'
+], function( ko, template, c3, numeral ){
 
 
     function AmtPerSecondChartViewModel( params ){
@@ -12,6 +13,9 @@ define( [
         self.title = ko.observable(params.title);
 
 		self.makeChart = function() {
+			if ( params.dayObj.length < 2 ) {
+				return;
+			}
 			var numPoints = ( params.lastDataPoint.day - 1 ) * 24 + params.lastDataPoint.hour + 1,
 				xs = new Array( numPoints + 2 ), // label, data to date, final point
 				index = 0,
@@ -36,8 +40,8 @@ define( [
 					}
 					var hoursLeft = ( 31 - d) * 24 + ( 24 - h );
 					xs[index] = index;
-					self.needPerSecond[index] = ( hoursLeft > 0 )
-						? ( remainingNeeded / hoursLeft ) / 3600
+					self.needPerSecond[index] = ( hoursLeft > 0 ) ?
+						( remainingNeeded / hoursLeft ) / 3600
 						: 0;
 				}
 			}
@@ -74,12 +78,12 @@ define( [
 					x: {
 						tick: {
 							count: 31,
-							format: function(x){ return "Dec " + ( Math.floor( x / 24 ) + 1 ) }
+							format: function(x){ return 'Dec ' + ( Math.floor( x / 24 ) + 1 ); }
 						}
 					},
 					y: {
 						tick: {
-							format: function(x){ return numeral(x).format('$0,0') }
+							format: function(x){ return numeral(x).format('$0,0'); }
 						}
 					}
 				},
@@ -89,7 +93,7 @@ define( [
 							var day = Math.floor( x / 24 ) + 1;
 							var hour = x % 24;
 							return 'Dec ' + day + ' ' + hour + ':00 &ndash; ' + hour + ':59 UTC';
-						},
+						}
 					}
 				}
 			} );

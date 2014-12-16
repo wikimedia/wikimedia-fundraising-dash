@@ -9,7 +9,7 @@ define( [
     function BigEnglishBoardViewModel( params ){
 
         var self = this,
-			timeFormat = "dddd, MMMM Do YYYY, h:mm:ss a";
+			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
 
         // Get the date
         self.displayDate = ko.observable( moment().format( timeFormat ) );
@@ -27,7 +27,7 @@ define( [
 
         self.totalRemainingToDate = ko.computed( function(){
             var trtd = self.goal() - self.raised();
-            return numeral(trtd).format('$0,0');
+            return numeral(trtd >= 0 ? trtd : 0).format('$0,0');
         });
 
         self.secondsByHourDonationData = ['Donations Per Second'];
@@ -43,7 +43,7 @@ define( [
         self.dataChanged = ko.computed(function() {
 			// For now, we only want to trigger if new money has come in or the
             // goal has been reset.  So the total remaining is a good proxy
-            return self.totalRemainingToDate();
+            return self.goal() - self.raised();
         });
 
 		// Only recalculate child boards once per half second
@@ -61,7 +61,7 @@ define( [
 				self.dailyDataArray[d] = 0;
 				self.dailyCountArray[d] = 0;
 				if (!self.dayObj[d]) {
-					self.dayObj[d] = Array(25);
+					self.dayObj[d] = new Array(25);
 					self.dayObj[d][0] = 'Hourly Totals';
 					for (var h = 0; h < 24; h++) {
 						self.dayObj[d][h + 1] = { total: 0, count: 0 };
@@ -74,16 +74,16 @@ define( [
 			for (var i = 0; i < dataCount; i++ ) {
 
 				var el = decemberData[i],
-						d = el.day,
-						h = el.hour,
+						day = el.day,
+						hour = el.hour,
 						total = el.usd_total;
-				self.dayObj[d][h + 1] = { total: total, count: el.donations };
+				self.dayObj[day][hour + 1] = { total: total, count: el.donations };
 
-				self.secondsByHourDonationData[(d - 1) * 24 + h + 1] = el.usd_per_second;
+				self.secondsByHourDonationData[(day - 1) * 24 + hour + 1] = el.usd_per_second;
 				runningTotal += total;
-				self.dailyDataArray[d] += total;
-				self.dailyCountArray[d] += el.donations;
-			};
+				self.dailyDataArray[day] += total;
+				self.dailyCountArray[day] += el.donations;
+			}
 
 			self.raised(runningTotal);
 		};

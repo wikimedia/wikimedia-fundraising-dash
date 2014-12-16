@@ -38,11 +38,12 @@
 	// Legacy
 	"nomen": true,
 
-	"predef": [
-		"require",
-		"module",
-		"__dirname",
-		"console",
-		"process"
-	]
+	"globals": {
+		"console": false,
+		"define": false,
+		"__dirname": false,
+		"module": false,
+		"process": false,
+		"require": true
+	}
 }

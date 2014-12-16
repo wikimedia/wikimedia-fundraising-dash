@@ -1,8 +1,9 @@
 define( [
     'knockout',
     'text!components/widgets/totals-earned-chart/totals-earned-chart.html',
-    'c3'
-], function( ko, template, c3 ){
+    'c3',
+    'numeraljs'
+], function( ko, template, c3, numeral ){
 
 
     function TotalsEarnedChartViewModel( params ){
@@ -18,13 +19,13 @@ define( [
 				return;
 			}
 			self.hourlyChart = function(d,i){
-				var hourlyData = params.dayObj[d['x'] + 1 ],
+				var hourlyData = params.dayObj[d.x + 1 ],
 					hourlyCountArray = ['Hourly Count'],
 					hourlyTotalArray = ['Hourly Total'];
-				for(var i=1; i<25; i++){
-					hourlyCountArray.push(hourlyData[i]['count']);
-					hourlyTotalArray.push(hourlyData[i]['total']);
-				};
+				for(var j=1; j<25; j++){
+					hourlyCountArray.push(hourlyData[j].count);
+					hourlyTotalArray.push(hourlyData[j].total);
+				}
 				return {
 					bindto: '#totalsEarnedChart',
 					size: {
@@ -36,7 +37,7 @@ define( [
 						columns: [ hourlyTotalArray, hourlyCountArray ],
 						type: 'bar',
 						colors: { 'Hourly Total': 'rgb(92,184,92)', 'Hourly Count': '#f0ad4e' },
-						onclick: function (d, i) { c3.generate(self.dailyChart()) },
+						onclick: function (d, i) { c3.generate(self.dailyChart()); },
 						axes: {
 							'Hourly Total': 'y',
 							'Hourly Count': 'y2'
@@ -53,7 +54,7 @@ define( [
 					axis: {
 						x: {
 							label: {
-								text: 'December ' + ( d['x'] + 1 ),
+								text: 'December ' + ( d.x + 1 ),
 								position: 'outer-left'
 							},
 							tick: {
@@ -62,12 +63,12 @@ define( [
 						},
 						y: {
 							tick: {
-								format: function(x){ return numeral(x).format('$0,0') }
+								format: function(x){ return numeral(x).format('$0,0'); }
 							}
 						},
 						y2: {
 							tick: {
-								format: function(x){ return numeral(x).format('0,0') }
+								format: function(x){ return numeral(x).format('0,0'); }
 							},
 							show: true
 						}
@@ -78,9 +79,9 @@ define( [
 				            value: function (value, ratio, id) {
 				            	var display;
 				                if(id === 'Hourly Total'){
-				                	display = numeral(value).format('$0,0')
+				                	display = numeral(value).format('$0,0');
 				                } else {
-				                	display = numeral(value).format('0,0')
+				                	display = numeral(value).format('0,0');
 				                }
 				                return display;
 				            }
@@ -125,17 +126,17 @@ define( [
 					axis: {
 						x: {
 							tick: {
-								format: function(x){ return "Dec " + (x+1) }
+								format: function(x){ return 'Dec ' + (x+1); }
 							}
 						},
 						y: {
 							tick: {
-								format: function(x){ return numeral(x).format('$0,0') }
+								format: function(x){ return numeral(x).format('$0,0'); }
 							}
 						},
 						y2: {
 							tick: {
-								format: function(x){ return numeral(x).format('0,0') }
+								format: function(x){ return numeral(x).format('0,0'); }
 							},
 							show: true
 						}
@@ -146,9 +147,9 @@ define( [
 				            value: function (value, ratio, id) {
 				            	var display;
 				                if(id === 'Daily Total'){
-				                	display = numeral(value).format('$0,0')
+				                	display = numeral(value).format('$0,0');
 				                } else {
-				                	display = numeral(value).format('0,0')
+				                	display = numeral(value).format('0,0');
 				                }
 				                return display;
 				            }

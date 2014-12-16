@@ -11,13 +11,16 @@ define( [
 
         self.title = ko.observable(params.title);
 		self.makeCharts = function() {
+			if ( params.dailyDataArray.length < 2 ) {
+				return;
+			}
 			self.goal = ko.observable(params.goal);
 
 			self.updatedGoal = params.goal();
 			self.neededArray = ['Needed'];
 			for(var d = 1; d < params.dailyDataArray.length; d++) {
 				self.updatedGoal = self.updatedGoal - params.dailyDataArray[d];
-				self.neededArray[d] = self.updatedGoal;
+				self.neededArray[d] = self.updatedGoal >= 0 ? self.updatedGoal : 0;
 			}
 
 			self.distanceToGoalChart = c3.generate({
@@ -42,7 +45,7 @@ define( [
 				axis: {
 					x: {
 						tick: {
-							format: function(x){ return "Dec " + (x+1) }
+							format: function(x){ return 'Dec ' + (x+1); }
 						}
 					},
 					y: {
@@ -51,12 +54,12 @@ define( [
 							position: 'outer-middle'
 						},
 						tick: {
-							format: function(x){ return '$' + x/1000000 + "m" }
+							format: function(x){ return '$' + x/1000000 + 'm'; }
 						}
 					}
-				},
+				}
 			});
-		}
+		};
 		params.dataChanged.subscribe(function() {
 			self.makeCharts();
 		});

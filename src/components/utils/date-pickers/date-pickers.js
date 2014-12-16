@@ -28,11 +28,11 @@ define( [
             var timePeriod;
 
             if (self.dateBeginRange() && self.dateEndRange()){
-                timePeriod = "from " + self.dateBeginRange() + " to " + self.dateEndRange();
+                timePeriod = 'from ' + self.dateBeginRange() + ' to ' + self.dateEndRange();
             } else if(self.chosenTimePeriodPresetDate()){
                 timePeriod = self.chosenTimePeriodPresetDate();
             } else if(self.chosenTimePeriodDate() && self.chosenTimePeriodFromTime() && self.chosenTimePeriodToTime()) {
-                timePeriod = self.chosenTimePeriodDate() + " from " + self.chosenTimePeriodFromTime() + " to " + self.chosenTimePeriodToTime();
+                timePeriod = self.chosenTimePeriodDate() + ' from ' + self.chosenTimePeriodFromTime() + ' to ' + self.chosenTimePeriodToTime();
             }
 
             return timePeriod;
