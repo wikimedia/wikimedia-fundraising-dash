@@ -1,5 +1,5 @@
 var require = {
-    baseUrl: ".",
+    baseUrl: '.',
     paths: {
         'bootstrap':            'bower_modules/bootstrap/dist/js/bootstrap',
         'crossroads':           'bower_modules/crossroads/dist/crossroads.min',

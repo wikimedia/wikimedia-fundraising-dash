@@ -6,7 +6,7 @@ define( [
 
     function NavBarViewModel( params ){
     	var self = this;
-        self.loggedIn = params.loggedIn,
+        self.loggedIn = params.loggedIn;
         self.welcome = params.welcome;
 
         self.hideNav = function(){

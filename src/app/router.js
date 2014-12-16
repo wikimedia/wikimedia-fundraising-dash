@@ -11,7 +11,8 @@ define(
 
     function Router( config ) {
         var self = this;
-        var currentRoute = self.currentRoute = ko.observable({});
+
+        self.currentRoute = ko.observable({});
 
         crossroads.addRoute( ':page:/:action:', function( requestParams ) {
             var routeParams = $.extend( config.defaultParams, requestParams );
