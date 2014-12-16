@@ -17,7 +17,7 @@ define( [
 			self.neededArray = ['Needed'];
 			for(var d = 1; d < params.dailyDataArray.length; d++) {
 				self.updatedGoal = self.updatedGoal - params.dailyDataArray[d];
-				self.neededArray[d] = self.updatedGoal;
+				self.neededArray[d] = self.updatedGoal >= 0 ? self.updatedGoal : 0;
 			}
 
 			self.distanceToGoalChart = c3.generate({

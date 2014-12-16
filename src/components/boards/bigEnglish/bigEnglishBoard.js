@@ -27,7 +27,7 @@ define( [
 
         self.totalRemainingToDate = ko.computed( function(){
             var trtd = self.goal() - self.raised();
-            return numeral(trtd).format('$0,0');
+            return numeral(trtd >= 0 ? trtd : 0).format('$0,0');
         });
 
         self.secondsByHourDonationData = ['Donations Per Second'];
@@ -43,7 +43,7 @@ define( [
         self.dataChanged = ko.computed(function() {
 			// For now, we only want to trigger if new money has come in or the
             // goal has been reset.  So the total remaining is a good proxy
-            return self.totalRemainingToDate();
+            return self.goal() - self.raised();
         });
 
 		// Only recalculate child boards once per half second
