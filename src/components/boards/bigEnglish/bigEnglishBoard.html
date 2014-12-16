@@ -12,6 +12,13 @@
 	</div>
 </div>
 
+<span data-bind="if: dataLoading">
+    <div class="loading">
+        <img src="/images/catloader.gif" />
+        <div>Loading Dash<span class="ellipsis" data-bind="text: ellipsis"></span></div>
+    </div>
+</span>
+
 <div class="row">
     <div class="panel panel-transparent">
         <div class="panel-body">
