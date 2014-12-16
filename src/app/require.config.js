@@ -1,3 +1,5 @@
+/* jshint -W098 */
+
 var require = {
     baseUrl: '.',
     paths: {
