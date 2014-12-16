@@ -170,6 +170,24 @@ function buildWhere( filterNode, widget, values, joins ) {
 	return '';
 }
 
+/**
+ * Create a SQL string to show what the query looks like with parameter values
+ * inserted at placeholders.
+ * CAUTION: Only for display. Do not send the output of this function to the db!
+ * @param string sqlQuery query text with '?' placeholders
+ * @param Array values parameter values to insert
+ * @returns string query formatted for display. DO NOT SEND TO DB!
+ */
+function substituteParams( sqlQuery, values) {
+	var valueIndex = 0;
+	while ( sqlQuery.indexOf( '?' ) > -1 ) {
+		// Replace only the first ?
+		sqlQuery = sqlQuery.replace( /\?/, '\'' + values[valueIndex] + '\'' );
+		valueIndex++;
+	}
+	return sqlQuery;
+}
+
 module.exports = function(req, res) {
 	var widget = widgets[req.params.widget],
 		qs = urlParser.parse( req.url ).query,
@@ -258,7 +276,7 @@ module.exports = function(req, res) {
 			res.json( { error: 'Query error: ' + error } );
 			return;
 		}
-		result = { results: dbResults, sqlQuery: sqlQuery, timestamp: new Date().getTime() };
+		result = { results: dbResults, sqlQuery: substituteParams( sqlQuery, values), timestamp: new Date().getTime() };
 		logger.debug( 'Storing results at cache key ' + cacheKey );
 		cache.put( req.url, result, config.cacheDuration );
 		res.json( result );
