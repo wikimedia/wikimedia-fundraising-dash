@@ -42,7 +42,7 @@ define( [
 				axis: {
 					x: {
 						tick: {
-							format: function(x){ return "Dec " + (x+1) }
+							format: function(x){ return 'Dec ' + (x+1); }
 						}
 					},
 					y: {
@@ -51,12 +51,12 @@ define( [
 							position: 'outer-middle'
 						},
 						tick: {
-							format: function(x){ return '$' + x/1000000 + "m" }
+							format: function(x){ return '$' + x/1000000 + 'm'; }
 						}
 					}
-				},
+				}
 			});
-		}
+		};
 		params.dataChanged.subscribe(function() {
 			self.makeCharts();
 		});

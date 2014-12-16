@@ -3,8 +3,7 @@
 var fs          = require('fs'),
     vm          = require('vm'),
     merge       = require('deeply'),
-    chalk       = require('chalk'),
-    es          = require('event-stream');
+    chalk       = require('chalk');
 
 // Gulp and plugins
 var gulp                    = require('gulp'),
@@ -38,13 +37,13 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
             'components/widgets/distance-to-goal-chart/distance-to-goal-chart',
             'components/widgets/totals-earned-chart/totals-earned-chart',
             'components/widgets/amt-per-second-chart/amt-per-second-chart',
-            'components/boards/bigEnglish/bigEnglishBoard',
+            'components/boards/bigEnglish/bigEnglishBoard'
         ],
         insertRequire: ['app/startup'],
         bundles: {
             // If you want parts of the site to load on demand, remove them from the 'include' list
             // above, and group them into bundles here.
-            'date-pickers': ['components/utils/date-pickers/date-pickers'],
+            'date-pickers': ['components/utils/date-pickers/date-pickers']
             // 'vega-timeseries': ['components/visualizers/vega-timeseries/vega-timeseries']
 
         }
@@ -115,7 +114,7 @@ gulp.task('replace', ['css', 'js'], function () {
     bundles.forEach(function (element, index, array) {
         var l = element.length;
         // we are trying to match  "project-selector" (quotes-included)
-        regex = regex + '\"(' + element.substr(0, element.length - 3) + ')\":|';
+        regex = regex + '\"(' + element.substr(0, l - 3) + ')\":|';
 
     });
 
@@ -127,14 +126,14 @@ gulp.task('replace', ['css', 'js'], function () {
         // remove quotes from match and add ".js"
         // so we can key on the manifest with versions
         match = match.substring(1, match.length - 2);
-        match = match + ".js";
+        match = match + '.js';
         var version = jsManifest[match];
 
         version = '\"' + version + '\":';
         return version;
     }
 
-    var regexObj = new RegExp(regex, "g");
+    var regexObj = new RegExp(regex, 'g');
 
     gulp.src(['./dist/' + jsManifest['scripts.js']])
         .pipe(replace(regexObj, replaceByVersion))

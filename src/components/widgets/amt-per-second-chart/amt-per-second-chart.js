@@ -36,8 +36,8 @@ define( [
 					}
 					var hoursLeft = ( 31 - d) * 24 + ( 24 - h );
 					xs[index] = index;
-					self.needPerSecond[index] = ( hoursLeft > 0 )
-						? ( remainingNeeded / hoursLeft ) / 3600
+					self.needPerSecond[index] = ( hoursLeft > 0 ) ?
+						( remainingNeeded / hoursLeft ) / 3600
 						: 0;
 				}
 			}
@@ -74,12 +74,12 @@ define( [
 					x: {
 						tick: {
 							count: 31,
-							format: function(x){ return "Dec " + ( Math.floor( x / 24 ) + 1 ) }
+							format: function(x){ return 'Dec ' + ( Math.floor( x / 24 ) + 1 ); }
 						}
 					},
 					y: {
 						tick: {
-							format: function(x){ return numeral(x).format('$0,0') }
+							format: function(x){ return numeral(x).format('$0,0'); }
 						}
 					}
 				},
@@ -89,7 +89,7 @@ define( [
 							var day = Math.floor( x / 24 ) + 1;
 							var hour = x % 24;
 							return 'Dec ' + day + ' ' + hour + ':00 &ndash; ' + hour + ':59 UTC';
-						},
+						}
 					}
 				}
 			} );
