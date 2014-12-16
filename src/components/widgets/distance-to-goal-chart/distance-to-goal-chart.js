@@ -11,6 +11,9 @@ define( [
 
         self.title = ko.observable(params.title);
 		self.makeCharts = function() {
+			if ( params.dailyDataArray.length < 2 ) {
+				return;
+			}
 			self.goal = ko.observable(params.goal);
 
 			self.updatedGoal = params.goal();

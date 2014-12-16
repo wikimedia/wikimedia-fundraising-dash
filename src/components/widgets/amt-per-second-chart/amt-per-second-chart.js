@@ -12,6 +12,9 @@ define( [
         self.title = ko.observable(params.title);
 
 		self.makeChart = function() {
+			if ( params.dayObj.length < 2 ) {
+				return;
+			}
 			var numPoints = ( params.lastDataPoint.day - 1 ) * 24 + params.lastDataPoint.hour + 1,
 				xs = new Array( numPoints + 2 ), // label, data to date, final point
 				index = 0,
