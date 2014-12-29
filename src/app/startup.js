@@ -23,6 +23,7 @@ define(
         ko.components.register( 'totals-earned-chart',        { require: 'components/widgets/totals-earned-chart/totals-earned-chart' });
         ko.components.register( 'distance-to-goal-chart',     { require: 'components/widgets/distance-to-goal-chart/distance-to-goal-chart' });
         ko.components.register( 'amt-per-second-chart',       { require: 'components/widgets/amt-per-second-chart/amt-per-second-chart' });
+        ko.components.register( 'x-by-y-chart',               { require: 'components/widgets/x-by-y-chart/x-by-y-chart' });
 
         //fire up router
         ko.applyBindings({ route: router.currentRoute });

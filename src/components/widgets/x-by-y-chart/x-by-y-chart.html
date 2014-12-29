@@ -1,0 +1,129 @@
+<div class="row">
+	<div class="panel panel-purple">
+        <div class="panel-heading">
+	        <div class="btn-group btn-group-xs pull-right">
+	            <button type="button" class="btn btn-default dropdown-toggle"><i class="fa fa-database"></i></button>
+	            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modifyXYModal"><i class="fa fa-edit"></i></button>
+	        </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+	            <div class="col-md-12">
+
+	                <div class="row-fluid">
+	                    <h1 data-bind="visible: xyIsSetUp(), text: title"></h1>
+	                </div>
+
+	                <div class="row" id="specifiedXYchart" data-bind="visible: xyIsSetUp">
+	                	<div class="col-md-2">
+	                		<div class="row">
+		                		<div class="sidebox">
+			                		<h4>Show:</h4>
+			                		<select>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                		</select>
+			                	</div>
+		                	</div>
+		                	<div class="row">
+		                		<div class="sidebox">
+			                		<h4>And (optional):</h4>
+			                		<select>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                		</select>
+			                	</div>
+		                	</div>
+		                	<div class="row">
+		                		<div class="sidebox">
+			                		<h4>By:</h4>
+			                		<select>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                		</select>
+			                	</div>
+		                	</div>
+		                	<div class="row">
+		                		<div class="sidebox">
+			                		<h4>Filters:</h4>
+			                		<select>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                			<option>Thing</option>
+			                		</select>
+			                	</div>
+		                	</div>
+	                	</div>
+	                	<div class="col-md-8">
+		                    <canvas id='x-by-yChart' height="550" width="900"></canvas>
+	                	</div>
+	                	<div class="col-md-2">
+	                		<button class="btn-info">Thing</button>
+	                		<button class="btn-info">Thing</button>
+	                		<button class="btn-info">Thing</button>
+	                		<button class="btn-info">Thing</button>
+	                		<button class="btn-info">Thing</button>
+	                	</div>
+	                </div>
+
+	                <div class="row" id="unspecifiedXYchart" data-bind="visible: !xyIsSetUp()">
+	                    <div class="col-md-12">
+	                        <div class="setupAsk">
+	                        	<h3><i class="fa fa-gears"></i> This widget hasn't been set up yet.</h3>
+	                        	<button type="button" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#modifyModal">Set it up</button>
+	                        </div>
+	                    </div>
+	                </div>
+
+	            </div>
+	        </div>
+    	</div>
+    </div>
+</div>
+
+<div class="modal fade" id="modifyXYModal">
+	<div class="modal-dialog">
+	    <div class="modal-content">
+	        <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	            <h4 class="modal-title">Set up the chart!</h4>
+	        </div>
+	        <div class="modal-body">
+		        <div class="row">
+		        	<div class="col-md-6">
+		        		<label>Chart Title:</label>
+		                <div class="input-group">
+		                    <input type="text" class="form-control" data-bind="textInput: title">
+		                </div>
+	                </div>
+	                <div class="col-md-6">
+		        		<label>Something else:</label>
+		                <div class="input-group">
+		                    <input type="text" class="form-control">
+		                </div>
+	                </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success pull-right" data-dismiss="modal" data-bind="click: submitXY">Submit</button>
+            </div>
+	    </div>
+	</div>
+</div>
