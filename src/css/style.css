@@ -80,7 +80,7 @@ select {
     padding: 5%;
     font-size: 1.4em;
     color: rgba(0,0,0,0.6);
-    min-width: 400px;
+    min-width: 300px;
 }
 
 .setupWidget {
@@ -267,6 +267,15 @@ select {
 
 ul.filterPickerList {
     list-style-type: none;
+}
+
+.subFilterPickerList {
+    padding: 3px;
+    display: inline;
+}
+
+.subFilterPickerList input {
+    height: 12px;
 }
 
 #filterNav > li > input, .subfilterSubnav > li > input{
@@ -504,4 +513,14 @@ input {
     min-height: 36px;
     min-width: 200px;
     margin-left: 1px;
+}
+
+.xyGroupOption {
+    overflow: hidden;
+    min-width: 250px;
+    margin: 10px auto;
+}
+
+.xyGroupOption .panel-heading{
+    overflow: hidden;
 }

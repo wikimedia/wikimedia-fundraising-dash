@@ -2,7 +2,7 @@
 	<div class="panel panel-purple">
         <div class="panel-heading">
 	        <div class="btn-group btn-group-xs pull-right">
-		        <button type="button" class="btn btn-default dropdown-toggle"><i class="fa fa-database"></i></button>
+		        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#XYsqlModal"><i class="fa fa-database"></i></button>
 		        <button type="button" id="savedCharts" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-target="#XYsavedChart"><i class="fa fa-area-chart"></i> Saved charts...</button>
 		        <ul class="dropdown-menu" role="menu" aria-labelledby="savedCharts" id="savedChartsMenu" data-bind="foreach: presetTitles, style: { width: '300px'}">
 					<li data-bind="text: $data"></li>
@@ -42,7 +42,6 @@
             	</div>
 
 	            <div class="col-md-10">
-
 
 
 	                <div class="row" id="specifiedXYchart">
@@ -92,14 +91,34 @@
 	            <h4 class="modal-title">Set up the chart!</h4>
 	        </div>
 	        <div class="modal-body">
-		        <div class="row-fluid well">
-		        	<label for="selectXYFilters">Additional filters to show:</label><br>
-					<select multiple name="selectedXYFilters" id="selectXYFilters" class="filters" placeholder="Filters..." data-bind="options: filters, selectedOptions: chosenFilters"></select>
-                </div>
-                <div class="row-fluid well">
+
+                <div class="row-fluid">
 		        	<label for="startingTimeRange">Starting time range:</label><br>
-					<select id="startingTimeRange" placeholder="Range..." data-bind="options: timeChoices"></select>
+					<select id="startingTimeRange" class="well" placeholder="Range..." data-bind="options: timeChoices"></select>
                 </div>
+
+		        <div class="row-fluid">
+		        	<label for="selectXYFilters">Additional filters to show:</label><br>
+		        	<span data-bind="foreach: groupChoices">
+		        		<div class="panel panel-default xyGroupOption">
+		        			<div class="panel-heading">
+								<span data-bind="text: $data.name" class="pull-left"></span>
+								<span class="pull-right" data-bind="if: $data.choices"><i class="fa fa-caret-down" data-bind="click: $parent.showPanelBody($data.name)"></i></span>
+								<span class="pull-right" data-bind="if: !$data.choices"><input type="checkbox" data-bind="value: 'group='+$data.name, checked: $parent.chosenFilters"></i></span>
+							</div>
+							<div class="panel-body hide" data-bind="if: $data.choices, visible: $data.choices, attr: { id: $data.name + 'body' }">
+								<ul data-bind="foreach: $data.choices" class="filterPickerList">
+									<li class="subFilterPickerList">
+										<span class="label label-info">
+											<input type="checkbox" data-bind="value: $parent.name + ' eq \'' + $data + '\'', checked: $parents[1].chosenFilters"><span data-bind="text: $data"></span>
+										</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</span>
+                </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -132,4 +151,16 @@
             </div>
 	    </div>
 	</div>
+</div>
+
+<div class="modal fade" id="XYsqlModal">
+	<div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Fraud Gauge SQL:</h4>
+            </div>
+            <div class="modal-body" data-bind="text: queryStringXYsql"></div>
+        </div><!-- /.modal-content -->
+    </div>
 </div>

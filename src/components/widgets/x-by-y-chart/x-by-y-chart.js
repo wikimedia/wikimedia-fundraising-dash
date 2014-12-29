@@ -11,6 +11,7 @@ define( [
     function XByYChartViewModel( params ){
 
         var self = this;
+
         self.xyIsSetUp = ko.observable(false);
         self.chartWidth = ko.observable('900');
         self.chartHeight = ko.observable('550');
@@ -18,18 +19,18 @@ define( [
         self.bySlice = ko.observable();
         self.timeChoice = ko.observable();
 
-        //this is a placeholder.
-        //TODO: break the filters into their parent groups to work with the multi-select box.
-        self.filters = ko.observableArray(['Country', 'Currency', 'Gateway', 'Campaign', 'Referrer']);
-        self.chosenFilters = ko.observableArray([]);
-        self.addFilter = function(filter){
-        	console.log(filter);
-        	self.chosenFilters.push(filter);
-        };
+        self.queryStringXYsql = ko.observable('This widget hasn\'t been set up yet!');
+        self.queryRequest = {};
+        self.chosenFilters = ko.observableArray();
+        self.subChoices = ko.observableArray();
 
         self.title = ko.computed(function(){
         	return self.showSlice() + ' by ' + self.bySlice();
         });
+
+        self.showPanelBody = function(area){
+            $('#'+area+'body').toggleClass('hide');
+        };
 
         //saved charts
         //TODO: these will trigger a saved set of parameters to draw the chart with.
@@ -44,28 +45,103 @@ define( [
         	'Failed Donations'
         ]);
 
-        self.xSlices = ko.observableArray([
-        	'Country',
-        	'Currency',
-        	'Method',
-        	'Source',
-        	'Campaign',
-        	'Medium',
-        	'Referrer',
-        	'Gateway',
-        	'Fraud Score'
-        ]);
+        self.xSlices = ko.observableArray();
 
-        self.timeChoices = ko.observableArray([
-        	'Month',
-        	'Week',
-        	'Day',
-        	'Hour',
-        	'Minute',
-        	'Second'
-        ]);
+        self.timeChoices = ko.observableArray();
+
+        self.groupChoices = ko.observableArray();
+
+        //populate user choices dynamically
+        self.populateChoices = (function(){
+            //populate y slices
+            //TODO: this one will be user-defined, and developed in full later
+            //since right now the specifics are a bit obscured.
+            $.get( 'metadata/x-by-y', function(reqData){
+              self.metadata = reqData;
+
+
+                var xArray = [], timeArray = [], groupArray = [];
+                $.each(self.metadata.filters, function(prop, obj){
+
+                    if(obj.type !== 'number' || prop === 'Amount'){
+
+                        if(obj.canGroup){
+                            if(obj.values){
+                                groupArray.push({ 'name': prop, 'choices': obj.values });
+                            } else {
+                                groupArray.push({ 'name': prop });
+                            }
+
+                            $('select #'+prop).select2();
+                        }
+
+                        xArray.push(prop);
+                    } else {
+                        timeArray.push(prop);
+                    }
+                });
+                self.xSlices(xArray);
+                self.timeChoices(timeArray);
+                self.groupChoices(groupArray);
+
+            });
+
+        })();
+
+        self.convertToQuery = function( userChoices ){
+
+            var groupStr = '', filterStr = '$filter=';
+            //y slice
+            //right now this doesn't matter because it's always 'donations'
+
+            //additional filters:
+            var filterObj = {}, haveMultipleSubfilters = [];
+            $.each( userChoices.additionalFilters, function(el, subfilter){
+                if(subfilter.substring(0,5)==='group'){
+                    groupStr += subfilter + '&';
+                } else {
+                    var filter = subfilter.substr(0, subfilter.indexOf(' '));
+
+                    if(!filterObj[filter]){
+                      filterObj[filter] = subfilter;
+                    } else {
+                      filterObj[filter] += ' or ' + subfilter;
+                      haveMultipleSubfilters.push(filter);
+                    }
+                }
+            });
+
+            $.each( filterObj, function(el, s){
+                if( haveMultipleSubfilters.indexOf(el) > -1){
+                  filterStr += '(' + filterObj[el] + ')';
+                } else {
+                  filterStr += filterObj[el];
+                }
+                filterStr += ' and ';
+            });
+
+            //cut off last AND
+            return (groupStr + filterStr.slice(0, -5));
+        };
 
         self.submitXY = function(){
+
+            //here is an example query string for grabbing Big English countries by day for Dec:
+            // http://localhost:8080/data/x-by-y?group=Day&group=Country&$filter=DT gt
+            //'2014-12-01T00:00:00Z' and Country eq 'US' or Country eq 'CA' or Country eq 'NZ'
+            //or Country eq 'AU' or Country eq 'GB'
+
+            //get all the choices into a queryRequest object
+            self.queryRequest.ySlice = self.showSlice();
+            self.queryRequest.xSlice = self.bySlice();
+            self.queryRequest.additionalFilters = self.chosenFilters();
+            var queryString = self.convertToQuery(self.queryRequest);
+
+            $.get( '/data/x-by-y?' + $.param({ '$': queryString }).replace(
+          /\+/g, '%20' ), function ( dataget ) {
+                console.log('dataget: ', dataget);
+            });
+
         	self.fakeData = {
 		    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
 		    datasets: [
@@ -96,10 +172,6 @@ define( [
 
 	        self.xyIsSetUp(true);
         };
-
-        $('#selectXYFilters').select2();
-
-
 
     }
 

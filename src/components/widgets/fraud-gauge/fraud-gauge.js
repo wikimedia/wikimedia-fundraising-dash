@@ -31,11 +31,19 @@ function( ko, template, c3, Chart ){
   function FraudGaugeViewModel( params ){
 
     var self = this;
-
-    $.ajaxSetup({async:false});
+    self.filters = ko.observableArray();
 
     $.get( 'metadata/fraud', function(reqData){
       self.data = reqData;
+      //broken down data from above
+      self.filters($.map(self.data.filters, function(val, i){return [val];}));
+      self.filterNames = ko.computed( function(){
+        var names = [];
+        $.each(self.filters(), function(el, i){
+          names.push(i.display);
+        });
+        return names;
+      });
     });
 
     self.title = 'Fraud Rejections';
@@ -46,18 +54,9 @@ function( ko, template, c3, Chart ){
     self.gaugeValue = ko.observable(0);
     self.filtersSelected = ko.observable(false);
     self.gaugeIsSetUp = ko.observable(false);
-    self.queryString = ko.observable('');
     self.queryStringSQL = ko.observable('This widget hasn\'t been set up yet!');
 
-    //broken down data from above
-    self.filters = ko.observableArray($.map(self.data.filters, function(val, i){return [val];}));
-    self.filterNames = ko.computed( function(){
-      var names = [];
-      $.each(self.filters(), function(el, i){
-        names.push(i.display);
-      });
-      return names;
-    });
+
 
     //default range slider settings
     self.greenHighRange = ko.observable(17);
@@ -256,9 +255,9 @@ function( ko, template, c3, Chart ){
 
         //put it all into a real query
         //this will be a function call - TODO: make parsing function
-        self.queryString( self.convertToQuery(self.queryRequest));
+        var queryString = self.convertToQuery(self.queryRequest);
 
-        $.get( '/data/fraud?' + $.param({ '$filter': self.queryString() }).replace(
+        $.get( '/data/fraud?' + $.param({ '$filter': queryString }).replace(
           /\+/g, '%20' ), function ( dataget ) {
           self.gaugeIsSetUp(true);
           self.gaugeValue(parseFloat(dataget.results[0].fraud_percent).toFixed(2) );
