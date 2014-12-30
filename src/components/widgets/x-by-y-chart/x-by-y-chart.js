@@ -24,6 +24,13 @@ define( [
         self.chosenFilters = ko.observableArray();
         self.subChoices = ko.observableArray();
 
+        self.chartSaved = ko.observable(false);
+        self.optionStateChanged = ko.observable(false);
+        self.logStateChange = function(n){
+            self.optionStateChanged(n);
+            self.chartSaved(false);
+        };
+
         self.title = ko.computed(function(){
         	return self.showSlice() + ' by ' + self.bySlice();
         });
@@ -68,14 +75,15 @@ define( [
                         if(obj.canGroup){
                             if(obj.values){
                                 groupArray.push({ 'name': prop, 'choices': obj.values });
-                            } else {
-                                groupArray.push({ 'name': prop });
                             }
 
                             $('select #'+prop).select2();
+
+                            //TODO: later this will do something different/more specific.
+                            xArray.push(prop);
                         }
 
-                        xArray.push(prop);
+
                     } else {
                         timeArray.push(prop);
                     }
@@ -89,39 +97,50 @@ define( [
         })();
 
         self.convertToQuery = function( userChoices ){
-
-            var groupStr = '', filterStr = '$filter=';
             //y slice
             //right now this doesn't matter because it's always 'donations'
 
-            //additional filters:
-            var filterObj = {}, haveMultipleSubfilters = [];
-            $.each( userChoices.additionalFilters, function(el, subfilter){
-                if(subfilter.substring(0,5)==='group'){
-                    groupStr += subfilter + '&';
-                } else {
-                    var filter = subfilter.substr(0, subfilter.indexOf(' '));
+            var groupStr = 'group=' + userChoices.xSlice;
 
+            //additional filters:
+            if( userChoices.additionalFilters.length > 0 ){
+
+                var filterStr = '$filter=';
+
+                var filterObj = {}, haveMultipleSubfilters = [];
+                $.each( userChoices.additionalFilters, function(el, subfilter){
+                    var filter = subfilter.substr(0, subfilter.indexOf(' '));
                     if(!filterObj[filter]){
                       filterObj[filter] = subfilter;
                     } else {
                       filterObj[filter] += ' or ' + subfilter;
                       haveMultipleSubfilters.push(filter);
                     }
-                }
-            });
+                });
 
-            $.each( filterObj, function(el, s){
-                if( haveMultipleSubfilters.indexOf(el) > -1){
-                  filterStr += '(' + filterObj[el] + ')';
+                $.each( filterObj, function(el, s){
+                    if( haveMultipleSubfilters.indexOf(el) > -1){
+                      filterStr += '(' + filterObj[el] + ')';
+                    } else {
+                      filterStr += filterObj[el];
+                    }
+                    filterStr += ' and ';
+                });
+
+                //cut off last AND
+                if( filterStr !== '$filter=' ){
+                    return groupStr + '&' + (filterStr.slice(0, -5));
                 } else {
-                  filterStr += filterObj[el];
+                    return groupStr;
                 }
-                filterStr += ' and ';
-            });
+            } else {
+                return groupStr;
+            }
+        };
 
-            //cut off last AND
-            return (groupStr + filterStr.slice(0, -5));
+        self.saveXY = function(){
+            //TODO: save it in the user profile
+            self.chartSaved(true);
         };
 
         self.submitXY = function(){
@@ -137,7 +156,7 @@ define( [
             self.queryRequest.additionalFilters = self.chosenFilters();
             var queryString = self.convertToQuery(self.queryRequest);
 
-            $.get( '/data/x-by-y?' + $.param({ '$': queryString }).replace(
+            $.get( '/data/x-by-y?' + (queryString).replace(
           /\+/g, '%20' ), function ( dataget ) {
                 console.log('dataget: ', dataget);
             });
@@ -167,8 +186,8 @@ define( [
 		        }
 		    ]
 		};
-		var ctx = $('#x-by-yChart').get(0).getContext('2d');
-		self.fakeChart = new Chart(ctx).Line(self.fakeData);
+    		var ctx = $('#x-by-yChart').get(0).getContext('2d');
+    		self.fakeChart = new Chart(ctx).Line(self.fakeData);
 
 	        self.xyIsSetUp(true);
         };
