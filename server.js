@@ -80,7 +80,7 @@ if ( config.debug ) {
 	app.get( '/auth/drupal', function( req, res ) {
 		req.session.passport = {
 			user: {
-				displayName: 'debuguser'
+				displayName: 'HoneyD'
 			}
 		};
 		res.redirect( '/' );

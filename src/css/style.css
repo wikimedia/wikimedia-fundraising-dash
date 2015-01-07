@@ -11,7 +11,7 @@ body {
 }
 
 .container-fluid {
-    padding: 15px 25px 0 0;
+    padding: 15px 65px;
 }
 
 #dashApp {
@@ -24,15 +24,15 @@ body {
 }
 
 .navRow {
-    width: 100px;
+    width: 200px;
     padding:0;
     margin: 0;
 }
 
 .navWrapper {
-    margin-left: -100px;
-    left: 100px;
-    width: 100px;
+    margin-left: -200px;
+    left: 200px;
+    width: 200px;
     position: fixed;
     height: 100%;
     overflow-y: auto;
@@ -55,18 +55,18 @@ select {
     margin-bottom: 0;
 }
 
-.sidebar-nav li {
-    font-size: 24px;
-    display: inline-block;
-    width: 48.5px;
-    text-align: center;
-    padding: .5em;
+.mainNavButton, .mainNavButtonLogin {
+    font-size: 16px;
+    font-weight: normal;
+    width: 100%;
+    text-align: left;
+    padding: 1em;
+    border-bottom: rgba(255,255,255,0.3) solid 1px;
+    overflow: hidden;
 }
 
-.sidebar-nav li:hover, .sidebar-nav li:hover a {
-    background-color: #f5f5f5;
-    color: #5e668a;
-    cursor: pointer;
+.mainNavButton i {
+    margin-right: 8px;
 }
 
 .sidebar-nav a {
@@ -117,28 +117,46 @@ select {
     cursor: pointer;
 }
 
+.selectedSubNav {
+    background-color: #f5f5f5;
+    color: #5e668a;
+    cursor: pointer;
+    border-top: 1px rgba(94,102,138,0.5) solid;
+}
+
+.subNavButton {
+    background-color: rgba(255,255,255,0.5);
+    color: #5e668a;
+    cursor: pointer;
+    transition:700ms ease-in;
+}
+
+.subNavButton {
+    border-top: 1px rgba(94,102,138,0.5) solid;
+}
+
+.subNavButton a {
+    color: #5e668a;
+}
+
+.subNavBoardOpts li {
+    padding: 10px;
+    text-align: right;
+}
+
+.subNavBoardOpts li:hover {
+    background-color: rgba(94,102,138,0.2);
+}
+
 #welcomeTitle {
     margin-bottom: 50px;
     border-bottom: 1px #555 solid;
 }
 
-.loginWelcome > i {
-    padding: 0 3px;
-}
-
-.loginWelcome {
-    width: 100px;
-    padding: 3px;
-    background-color: rgba(255,255,255,0.4);
-    overflow-wrap: break-word;
-    padding: 3px;
-    font-size: .8em;
-}
-
 .titlebrand, .titlebrandToggle {
     background-color: #d9534f;
     overflow: hidden;
-    padding: 8px;
+    padding: 12px;
     margin: 0;
 }
 

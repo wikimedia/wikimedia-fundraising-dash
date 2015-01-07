@@ -7,28 +7,51 @@
 
 		<div class="row sidebar-nav navRow">
 			<div class="col-md-12 navRow">
-				<div class="row-fluid">
-					<ul>
-						<li><span id="navDefaultBoard"><i class="fa fa-dashboard"></span></i></li>
-						<li><span id="navProfileSettings"><i class="fa fa-user"></span></i></li>
-					</ul>
+
+				<div class="row-fluid text-center" id="collapseNavMenu" data-bind="click: hideNav">
+					<span id="navCollapseArrows"><i class="fa fa-angle-double-left"></i></span>
 				</div>
-				<div class="row-fluid">
-					<ul>
-						<li><span id="navFavorites"><i class="fa fa-star-o"></span></i></li>
-						<li><span id="navLibrary"><i class="fa fa-book"></span></i></li>
-					</ul>
+
+				<div class="row-fluid mainNavButtonLogin" data-bind="visible: !loggedIn()">
+					<span class="row-fluid text-center loginBtn">
+						<i class="fa fa-user"></i>
+						<a href="/auth/drupal">Log in</a>
+					</span>
 				</div>
-				<div class="row-fluid">
-					<ul class="text-center" id="collapseNavMenu" data-bind="click: hideNav">
-						<span id="navCollapseArrows"><i class="fa fa-angle-double-left"></i></span>
-					</ul>
-				</div>
-				<div class="row-fluid text-center logoutBtn" data-bind="visible: loggedIn">
-					<a href="/logout"><button class="btn btn-block btn-info">Log out</button></a>
-					<p class="loginWelcome"><i class="fa fa-user"></i> <span data-bind="text: welcome"></span></p>
-				</div>
+
+				<span class="showProfile" data-bind="visible: loggedIn">
+					<div class="row-fluid mainNavButton profileLinks" data-bind="click: toggleProfileList">
+						<i class="fa fa-user"></i><span class="loginWelcome" data-bind="text: welcome"></span>
+					</div>
+
+					<div class="hide subNavBoardOpts subNavButton" id="profileLinks">
+						<ul>
+							<li><a href="/logout">Log out</a></li>
+							<li><a href="#">Profile</a></li>
+						</ul>
+					</div>
+				</span>
+
+				<span class="showNav" data-bind="visible: loggedIn">
+					<div class="row-fluid mainNavButton boards" data-bind="click: toggleBoardList">
+						<i class="fa fa-pie-chart"></i><span> Boards</span>
+					</div>
+
+					<div class="hide subNavBoardOpts subNavButton" id="boards">
+						<ul data-bind="foreach: userBoards">
+							<li><span data-bind="text: name"></span></li>
+						</ul>
+					</div>
+
+					<div class="mainNavButton"><i class="fa fa-plug"></i><span> Library</span>
+					</div>
+
+					<div class="mainNavButton"><i class="fa fa-calculator"></i><span> Reports</span>
+					</div>
+				</span>
+
 			</div>
 		</div>
 	</div>
 </div>
+

@@ -13,6 +13,17 @@ define(
         self.description = ko.observable();
         self.graphs = ko.observableArray([]);
 
+        //set this based on user settings.
+        self.userDefaultBoard = ko.observable('bigEnglishBoard');
+
+        //for now make this dummy - it should come from params/global user settings
+        self.userBoards = ko.observableArray([
+            { name: 'Big English', component: 'bigEnglishBoard' },
+            { name: 'A/B Testing', component: 'bigEnglishBoard' },
+            { name: 'Fraud Monitoring', component: 'bigEnglishBoard' },
+            { name: 'Times Honey is Cute', component: 'bigEnglishBoard' }
+        ]);
+
         self.loggedIn = ko.observable(false);
         self.welcome = ko.observable('');
         $.get('/user/info', function(userInfo) {
