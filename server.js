@@ -7,6 +7,7 @@ var express           = require( 'express' ),
     url               = require( 'url' ),
     logger            = require( './logger.js' ),
     config            = require( './config.js' ),
+    persistence       = require( './persistence.js' ),
     server,
     serverConfig;
 
@@ -70,7 +71,7 @@ app.set( 'view options', { pretty: true } );
 
 app.get( '/data/:widget', routes.data );
 app.get( '/metadata/:widget', routes.metadata );
-app.get( '/user/info', routes.user );
+app.get( '/user/info', routes.user.info );
 
 /*jslint -W024*/
 app.use( express.static( __dirname + ( config.debug ? '/src' : '/dist' ) ) );
@@ -80,17 +81,27 @@ if ( config.debug ) {
 	app.get( '/auth/drupal', function( req, res ) {
 		req.session.passport = {
 			user: {
-				displayName: 'HoneyD'
+				displayName: 'HoneyD',
+				id: 1337,
+				provider: 'debug'
 			}
 		};
-		res.redirect( '/' );
+		persistence.loginUser( req.session.passport.user ).then( function() {
+			res.redirect( '/' );
+		}, function( error ) {
+			res.json( error );
+		});
 	});
 } else {
 	app.get( '/auth/drupal', passport.authenticate( 'drupal' ));
 	app.get( '/auth/drupal/callback',
 		passport.authenticate( 'drupal', { failureRedirect: '/login' }),
 		function( req, res ) {
-			res.redirect( '/' );
+			persistence.loginUser( req.session.passport.user ).then( function() {
+				res.redirect( '/' );
+			}, function( error ) {
+				res.json( error );
+			});
 		}
 	);
 }
