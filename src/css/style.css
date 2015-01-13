@@ -74,13 +74,11 @@ select {
 }
 
 .setupAsk {
-    width: 40%;
     margin: 0 auto;
     background-color: rgba(0,0,0,0.03);
     padding: 5%;
     font-size: 1.4em;
     color: rgba(0,0,0,0.6);
-    min-width: 300px;
 }
 
 .setupWidget {
@@ -183,6 +181,10 @@ select {
     color: #fff;
 }
 
+.lightWell {
+    background-color: rgba(0,0,0,0.009);
+}
+
 .noUi-base {
     background-color: #dff0d8;
 }
@@ -267,11 +269,13 @@ select {
 
 ul.filterPickerList {
     list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
-.subFilterPickerList {
-    padding: 3px;
-    display: inline;
+.filterPickerList > li {
+    margin: 0;
+    padding: 0;
 }
 
 .subFilterPickerList input {
@@ -338,6 +342,10 @@ ul.filterPickerList {
 .btn {
     border-radius: 0;
     padding: .7em;
+}
+
+.btn-col {
+    margin: 5px 0;
 }
 
 .btn-mint {

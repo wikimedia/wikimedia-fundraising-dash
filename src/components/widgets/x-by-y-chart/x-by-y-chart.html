@@ -13,36 +13,67 @@
 
 
         <div class="panel-body">
-            <div class="row">
-            	<div class="col-md-2">
+            <div class="row-fluid">
+            	<div class="col-md-3 col-sm-12">
 
-            		<div class="row-fluid">
-                		<div class="well">
-	                		<h4>Show:</h4>
-	                		<select data-bind="options: ySlices, value: showSlice"></select>
+	                <div class="row">
+                		<div class="well lightWell col-md-12">
+	                		<form id="XYform" data-bind="event: {change: logStateChange(true)}">
+	                			<div class="row-fluid">
+			                		<h4>Show:</h4>
+			                		<select data-bind="options: ySlices, value: showSlice"></select>
+			                		<hr>
+					            </div>
+					            <div class="row-fluid">
+			                		<h4>By:</h4>
+			                		<select data-bind="options: xSlices, value: bySlice"></select>
+			                		<hr>
+				                </div>
+
+	                			<div class="row-fluid">
+						        	<h4>Starting time range:</h4><br>
+									<select id="startingTimeRange" placeholder="Range..." data-bind="options: timeChoices"></select>
+									<hr>
+				                </div>
+
+						        <div class="row-fluid">
+						        	<label for="selectXYFilters">Additional filters:</label><br>
+						        	<span data-bind="foreach: groupChoices">
+						        		<div class="panel panel-default xyGroupOption">
+						        			<div class="panel-heading">
+												<span data-bind="text: $data.name" class="pull-left"></span>
+												<span class="pull-right" data-bind="if: $data.choices"><i class="fa fa-caret-down" data-bind="click: $parent.showPanelBody($data.name)"></i></span>
+											</div>
+											<div class="panel-body hide" data-bind="visible: $data.choices, attr: { id: $data.name + 'body' }">
+												<ul data-bind="foreach: $data.choices" class="filterPickerList list-inline">
+													<li class="subFilterPickerList">
+														<span class="label label-info">
+															<input type="checkbox" data-bind="value: $parent.name + ' eq \'' + $data + '\'', checked: $parents[1].chosenFilters"><span data-bind="text: $data"></span>
+														</span>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</span>
+				                </div>
+				            </form>
 	                	</div>
-		            </div>
-		            <div class="row-fluid">
-                		<div class="well">
-	                		<h4>By:</h4>
-	                		<select data-bind="options: xSlices, value: bySlice"></select>
-	                	</div>
+
 	                </div>
-	                <div class="row-fluid">
-                		<div class="well">
-	                		<button class="btn btn-block btn-info" data-toggle="modal" data-target="#XYfilterModal"><i class="fa fa-filter"></i> Narrow further....</button>
-	                	</div>
+
+	                <div class="row">
+	                	<button class="btn btn-block btn-col btn-info" data-bind="click: submitXY"><i class="fa fa-area-chart"></i> Preview chart </button>
 	                </div>
-	                <div class="row-fluid">
-                		<div class="well">
-	                		<button class="btn btn-block btn-success" data-bind="click: submitXY"><i class="fa fa-area-chart"></i> See chart </button>
-	                	</div>
+	                <div class="row">
+                		<button class="btn btn-block btn-col btn-danger" data-bind="visible: !chartSaved() && optionStateChanged, click: saveXY"><i class="fa fa-save"></i> Save chart </button>
+                	</div>
+	                <div class="row">
+                		<button class="btn btn-block btn-col btn-success" data-bind="visible: chartSaved"><i class="fa fa-check-circle-o"></i> Chart saved. </button>
 	                </div>
 
             	</div>
 
-	            <div class="col-md-10">
-
+	            <div class="col-md-9 col-sm-12">
 
 	                <div class="row" id="specifiedXYchart">
 	                	<div class="col-md-10">
@@ -59,11 +90,11 @@
 		                    </span>
 	                		<div class="row-fluid" data-bind="if: xyIsSetUp">
 			                    <h1 data-bind="text: title"></h1>
-			                    <h4>Narrowed by:
+			                    <h4 data-bind="visible: chosenFilters > 0">Narrowed by:
 				                    <span data-bind="foreach: chosenFilters">
 				                    	 <span class='label label-success' data-bind="text: $data"></span>
 				                    </span>
-				                </h3>
+				                </h4>
 			                </div>
 		                    <canvas id='x-by-yChart' height="550" width="900"></canvas>
 	                	</div>
@@ -79,51 +110,6 @@
 
 	        </div>
 
-	    </div>
-	</div>
-</div>
-
-<div class="modal fade" id="XYfilterModal">
-	<div class="modal-dialog">
-	    <div class="modal-content">
-	        <div class="modal-header">
-	            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	            <h4 class="modal-title">Set up the chart!</h4>
-	        </div>
-	        <div class="modal-body">
-
-                <div class="row-fluid">
-		        	<label for="startingTimeRange">Starting time range:</label><br>
-					<select id="startingTimeRange" class="well" placeholder="Range..." data-bind="options: timeChoices"></select>
-                </div>
-
-		        <div class="row-fluid">
-		        	<label for="selectXYFilters">Additional filters to show:</label><br>
-		        	<span data-bind="foreach: groupChoices">
-		        		<div class="panel panel-default xyGroupOption">
-		        			<div class="panel-heading">
-								<span data-bind="text: $data.name" class="pull-left"></span>
-								<span class="pull-right" data-bind="if: $data.choices"><i class="fa fa-caret-down" data-bind="click: $parent.showPanelBody($data.name)"></i></span>
-								<span class="pull-right" data-bind="if: !$data.choices"><input type="checkbox" data-bind="value: 'group='+$data.name, checked: $parent.chosenFilters"></i></span>
-							</div>
-							<div class="panel-body hide" data-bind="if: $data.choices, visible: $data.choices, attr: { id: $data.name + 'body' }">
-								<ul data-bind="foreach: $data.choices" class="filterPickerList">
-									<li class="subFilterPickerList">
-										<span class="label label-info">
-											<input type="checkbox" data-bind="value: $parent.name + ' eq \'' + $data + '\'', checked: $parents[1].chosenFilters"><span data-bind="text: $data"></span>
-										</span>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</span>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-success pull-right" data-dismiss="modal" data-bind="click: submitXY">Submit</button>
-            </div>
 	    </div>
 	</div>
 </div>
