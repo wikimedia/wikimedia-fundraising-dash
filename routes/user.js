@@ -1,3 +1,5 @@
+var persistence = require( '../persistence.js' );
+
 module.exports = {
 	info: function( req, res ) {
 		if ( !req.session || !req.session.passport || !req.session.passport.user ) {
@@ -12,5 +14,17 @@ module.exports = {
 			id: user.localId,
 			defaultBoard: user.defaultBoard
 		} );
+	},
+	boards: function( req, res ) {
+		if ( !req.session || !req.session.passport || !req.session.passport.user ) {
+			res.json( { error: 'Error: Not logged in' } );
+			return;
+		}
+
+		persistence.listBoards( req.session.passport.user.localId ).then( function( boards ) {
+			res.json( boards );
+		}, function( error ) {
+			res.json( { error: error } );
+		});
 	}
 };

@@ -39,6 +39,7 @@ if ( config.providerBackendIP ) {
 		config.providerBackendIP
 	);
 }
+app.use( express.json() );
 
 app.use( express.session( { secret: config.sessionSecret } ) );
 
@@ -72,6 +73,14 @@ app.set( 'view options', { pretty: true } );
 app.get( '/data/:widget', routes.data );
 app.get( '/metadata/:widget', routes.metadata );
 app.get( '/user/info', routes.user.info );
+app.get( '/user/boards', routes.user.boards );
+app.get( '/widget', routes.widget.list );
+app.post( '/widget-instance', routes.widget.saveInstance );
+app.put( '/widget-instance/:id', routes.widget.saveInstance );
+app.get( '/widget-instance/:id', routes.widget.getInstance );
+app.post( '/board', routes.board.save );
+app.put( '/board/:id', routes.board.save );
+app.get( '/board/:id', routes.board.get );
 
 /*jslint -W024*/
 app.use( express.static( __dirname + ( config.debug ? '/src' : '/dist' ) ) );
