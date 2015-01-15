@@ -119,6 +119,36 @@ module.exports = {
 		});
 	},
 	/**
+	 * List all widget instances available to a user
+	 * @param number userId local ID of user
+	 * @returns Promise that resolves with a JSON representation of all
+	 * widget instances owned by or shared with the user, or rejects with error
+	 */
+	listWidgetInstances: function( userId ) {
+		var connection = getConnection(),
+			select = 'SELECT id, widget_id, owner_id, display_name, description, is_shared, configuration FROM dash_widget_instance WHERE is_shared OR owner_id = ?';
+
+		return connection.query( select, [ userId ] ).then( function( dbResults ) {
+			var rows = dbResults[0],
+				count = rows.length,
+				i,
+				result = [];
+
+			for ( i = 0; i < count; i++ ) {
+				result[i] = {
+					id: rows[i].id,
+					widgetId: rows[i].widget_id,
+					ownerId: rows[i].owner_id,
+					displayName: rows[i].display_name,
+					description: rows[i].description,
+					isShared: rows[i].is_shared === 1,
+					configuration: JSON.parse( rows[i].configuration )
+				};
+			}
+			return result;
+		});
+	},
+	/**
 	 * Saves a board
 	 * @param Object instance should have ownerId, displayName, description,
 	 * isShared, and widgets (an ordered array of widget instance ids) set.
