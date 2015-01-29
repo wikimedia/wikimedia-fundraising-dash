@@ -11,7 +11,7 @@ body {
 }
 
 .container-fluid {
-    padding: 15px 65px;
+    padding: 15px 85px;
 }
 
 #dashApp {
@@ -67,6 +67,10 @@ select {
 
 .mainNavButton i {
     margin-right: 8px;
+}
+
+.mainNavButton:hover {
+    cursor: pointer;
 }
 
 .sidebar-nav a {

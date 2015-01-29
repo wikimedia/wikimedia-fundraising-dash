@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS dash_widget(
 	display_name VARCHAR(255),
 	description TEXT,
 	preview_path VARCHAR(255), /* preview image */
-	UNIQUE (code) 
+	UNIQUE (code)
 );
 /* Saved widget configurations */
 CREATE TABLE IF NOT EXISTS dash_widget_instance(
@@ -55,9 +55,11 @@ CREATE TABLE IF NOT EXISTS dash_widget_instance_board(
 );
 
 /* Add definitions for existing widgets */
-INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'fraud', 'Fraud Gauge', 'Shows the percentage of transactions rejected by fraud filters', 'images/fraud.png' );
-INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'big-english', 'Big English', 'Shows a set of graphs relating to the big English fundraiser', 'images/big-english.png' );
+INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'fraud-gauge', 'Fraud Gauge', 'Shows the percentage of transactions rejected by fraud filters', 'images/fraud.png' );
 INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'x-by-y', 'X by Y', 'A highly configurable chart allowing grouping by many measures', 'images/x-by-y.png' );
+INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'amt-per-second-chart', 'Amount Per Second', 'Shows USD per second required to reach Big English goal', 'images/amt-per-sec.png');
+INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'distance-to-goal-chart', 'Distance to Goal', 'Line chart showing USD needed to reach overall Big English goal', 'images/distance-to-goal.png');
+INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'totals-earned-chart', 'Totals Earned', 'Main Big English bar chart showing daily and hourly donation totals and counts', 'images/totals-earned.png');
 
 /* Tailor these to your liking
 GRANT INSERT, SELECT, UPDATE, DELETE ON dash_widget_instance_board TO 'testuser'@'localhost';

@@ -8,30 +8,26 @@ define(
         var self = this;
 
         self.url = params.url || 'hi';
-        self.name = ko.observable();
-        self.content = ko.observable('this is the content');
-        self.description = ko.observable();
-        self.graphs = ko.observableArray([]);
-
-        //set this based on user settings.
-        self.userDefaultBoard = ko.observable('bigEnglishBoard');
-
-        //for now make this dummy - it should come from params/global user settings
-        self.userBoards = ko.observableArray([
-            { name: 'Big English', component: 'bigEnglishBoard' },
-            { name: 'A/B Testing', component: 'bigEnglishBoard' },
-            { name: 'Fraud Monitoring', component: 'bigEnglishBoard' },
-            { name: 'Times Honey is Cute', component: 'bigEnglishBoard' }
-        ]);
+        self.userDefaultBoard = ko.observable();
+        self.userBoards = ko.observableArray();
+        self.userdata = ko.observableArray();
 
         self.loggedIn = ko.observable(false);
         self.welcome = ko.observable('');
+
+        //Get user info and configs like default board
         $.get('/user/info', function(userInfo) {
             if (userInfo) {
-                self.welcome(userInfo.name.charAt(0).toUpperCase() + userInfo.name.slice(1));
-                self.loggedIn(true);
+                self.userdata( userInfo );
+                self.welcome( userInfo.name.charAt(0).toUpperCase() + userInfo.name.slice(1) );
+                self.loggedIn( true );
+
+                $.get('board/' + self.userdata().defaultBoard, function( moredata ){
+                    self.userDefaultBoard( moredata );
+                });
             }
         });
+
     }
 
     return { viewModel: AppContent, template: templateMarkup };

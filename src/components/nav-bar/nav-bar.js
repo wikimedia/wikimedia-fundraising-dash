@@ -14,7 +14,7 @@ define( [
         	//make the nav menu fold out of view.
             $('#navContainer .navWrapper').toggleClass('hide');
             $('#showNavMenu').css('display', 'inline');
-            $('#dashApp').css('padding', '0 0 0 80px');
+            $('#dashApp').css('padding', '0 0 0 10px');
         };
 
         self.showNav = function(){
