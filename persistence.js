@@ -99,7 +99,7 @@ module.exports = {
 	 */
 	getWidgetInstance: function( instanceId, userId ) {
 		var connection = getConnection(),
-			select = 'SELECT widget_id, owner_id, display_name, description, is_shared, configuration FROM dash_widget_instance WHERE id = ? and ( is_shared OR owner_id = ? )';
+			select = 'SELECT wi.widget_id, w.code, wi.owner_id, wi.display_name, wi.description, wi.is_shared, wi.configuration FROM dash_widget_instance wi INNER JOIN dash_widget w ON w.id = wi.widget_id WHERE wi.id = ? AND ( wi.is_shared OR wi.owner_id = ? )';
 
 		return connection.query( select, [ instanceId, userId ] ).then( function( dbResults ) {
 			var result = dbResults[0][0];
@@ -107,6 +107,7 @@ module.exports = {
 				return {
 					id: instanceId,
 					widgetId: result.widget_id,
+					widgetCode: result.code,
 					ownerId: result.owner_id,
 					displayName: result.display_name,
 					description: result.description,
@@ -126,7 +127,7 @@ module.exports = {
 	 */
 	listWidgetInstances: function( userId ) {
 		var connection = getConnection(),
-			select = 'SELECT id, widget_id, owner_id, display_name, description, is_shared, configuration FROM dash_widget_instance WHERE is_shared OR owner_id = ?';
+			select = 'SELECT wi.id, wi.widget_id, w.code, wi.owner_id, wi.display_name, wi.description, wi.is_shared, wi.configuration FROM dash_widget_instance wi INNER JOIN dash_widget w on w.id = wi.widget_id WHERE wi.is_shared OR wi.owner_id = ?';
 
 		return connection.query( select, [ userId ] ).then( function( dbResults ) {
 			var rows = dbResults[0],
@@ -138,6 +139,7 @@ module.exports = {
 				result[i] = {
 					id: rows[i].id,
 					widgetId: rows[i].widget_id,
+					widgetCode: rows[i].code,
 					ownerId: rows[i].owner_id,
 					displayName: rows[i].display_name,
 					description: rows[i].description,
@@ -193,7 +195,7 @@ module.exports = {
 		return connection.query( select, [ boardId, userId ] ).then( function( dbResults ) {
 			var result = dbResults[0][0],
 				board,
-				widgetSelect = 'SELECT wi.id, widget_id, owner_id, display_name, description, is_shared, configuration FROM dash_widget_instance wi INNER JOIN dash_widget_instance_board dwib ON wi.id = dwib.instance_id WHERE board_id = ? ORDER BY dwib.widget_position';
+				widgetSelect = 'SELECT wi.id, wi.widget_id, w.code, wi.owner_id, wi.display_name, wi.description, wi.is_shared, wi.configuration FROM dash_widget_instance wi INNER JOIN dash_widget w on w.id = wi.widget_id INNER JOIN dash_widget_instance_board wib ON wi.id = wib.instance_id WHERE wib.board_id = ? ORDER BY wib.widget_position';
 
 			if ( !result.owner_id ) {
 				throw new Error('Board ' + boardId  + ' with owner ' + userId + ' not found' );
@@ -215,6 +217,7 @@ module.exports = {
 					board.widgets[i] = {
 						id: rows[i].id,
 						widgetId: rows[i].widget_id,
+						widgetCode: rows[i].code,
 						ownerId: rows[i].owner_id,
 						displayName: rows[i].display_name,
 						description: rows[i].description,
