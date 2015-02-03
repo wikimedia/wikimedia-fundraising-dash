@@ -12,7 +12,10 @@ module.exports = {
 		res.json( {
 			name: user.displayName,
 			id: user.localId,
-			defaultBoard: user.defaultBoard
+			defaultBoard: user.defaultBoard,
+			avatar: user.avatar,
+			title: user.title,
+			email: user.email
 		} );
 	},
 	boards: function( req, res ) {

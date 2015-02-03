@@ -11,8 +11,7 @@ define( [
         var self = this,
             timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
 
-        self.userDefaultBoard = ko.observable(params.userDefaultBoard());
-        console.log(self.userDefaultBoard());
+        self.displayedBoard = params.displayedBoard;
 
         //make this false until data loading has been written
         self.dataLoading = ko.observable(false);

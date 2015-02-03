@@ -1,129 +1,131 @@
-<div class="panel panel-purple" id="fraudGaugeWidget">
-    <div class="panel-heading">
-        <span data-bind='text: title'></span>
-        <div class="btn-group btn-group-xs pull-right">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#sqlModal"><i class="fa fa-database"></i></button>
-            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modifyModal"><i class="fa fa-edit"></i></button>
+<div class="row">
+    <div class="panel panel-purple" id="fraudGaugeWidget">
+        <div class="panel-heading">
+            <span data-bind='text: title'></span>
+            <div class="btn-group btn-group-xs pull-right">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#sqlModal"><i class="fa fa-database"></i></button>
+                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modifyModal"><i class="fa fa-edit"></i></button>
+            </div>
         </div>
-    </div>
-    <div class="panel-body">
+        <div class="panel-body">
 
-        <div class="row">
-            <div class="col-md-12 gauge">
+            <div class="row">
+                <div class="col-md-12 gauge">
 
-                <div class="row">
-                    <h3 class="text-center" data-bind="visible: gaugeIsSetUp(), text: selectedTimePeriod"></h3>
-                </div>
+                    <div class="row">
+                        <h3 class="text-center" data-bind="visible: gaugeIsSetUp(), text: selectedTimePeriod"></h3>
+                    </div>
 
-                <div class="row" id="specifiedFraudGauge" data-bind="visible: gaugeIsSetUp">
-                    <div id="FraudRiskScoreGauge"></div>
-                </div>
+                    <div class="row" id="specifiedFraudGauge" data-bind="visible: gaugeIsSetUp">
+                        <div id="FraudRiskScoreGauge"></div>
+                    </div>
 
-                <div class="row" id="unspecifiedFraudGauge" data-bind="visible: !gaugeIsSetUp()">
-                    <div class="col-md-12">
-                        <div class="setupAsk">
-                            <h3>This widget hasn't been set up yet.</h3>
-                            <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modifyModal">Set it up</button>
+                    <div class="row" id="unspecifiedFraudGauge" data-bind="visible: !gaugeIsSetUp()">
+                        <div class="col-md-12">
+                            <div class="setupAsk">
+                                <h3>This widget hasn't been set up yet.</h3>
+                                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modifyModal">Set it up</button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="row" id="fraudGaugeMeta" data-bind="visible: gaugeIsSetUp()">
-                    <p class="text-center"><span data-bind="visible: filtersSelected()">By: </span><span class="label label-info" data-bind="text: selectedFilters"></span></p>
-                </div>
+                    <div class="row" id="fraudGaugeMeta" data-bind="visible: gaugeIsSetUp()">
+                        <p class="text-center"><span data-bind="visible: filtersSelected()">By: </span><span class="label label-info" data-bind="text: selectedFilters"></span></p>
+                    </div>
 
-                <div class="modal fade" id="modifyModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                <h4 class="modal-title">Modify Gauge Settings</h4>
-                            </div>
-                            <div class="modal-body">
+                    <div class="modal fade" id="modifyModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title">Modify Gauge Settings</h4>
+                                </div>
+                                <div class="modal-body">
 
-                                    <form role="form" class="fraudForm">
-                                        <div class="form-group">
-                                            <div class="well">
-                                                <label for="fraudPercentSlider">Fraud Percent Ranges</label>
-                                                <p>set up the colors as they'll appear in the gauge.</p>
-                                                <canvas id="fraudPercentSlider" width="200" height="120"></canvas>
-                                                <div class="row">
-                                                    <div class="col-md-4 col-sm-4 col-lg-4">
-                                                        <label>low fraud score: up to</label>
-                                                        <div class="input-group">
-                                                          <input type="text" class="form-control" data-bind="textInput: greenHighRange, event: { mouseout: renderGaugeChart }">
-                                                          <span class="input-group-btn">
-                                                            <button class="btn btn-success percentBtn" type="button"><i class="fa fa-refresh"></i></button>
-                                                          </span>
+                                        <form role="form" class="fraudForm">
+                                            <div class="form-group">
+                                                <div class="well">
+                                                    <label for="fraudPercentSlider">Fraud Percent Ranges</label>
+                                                    <p>set up the colors as they'll appear in the gauge.</p>
+                                                    <canvas id="fraudPercentSlider" width="200" height="120"></canvas>
+                                                    <div class="row">
+                                                        <div class="col-md-4 col-sm-4 col-lg-4">
+                                                            <label>low fraud score: up to</label>
+                                                            <div class="input-group">
+                                                              <input type="text" class="form-control" data-bind="textInput: greenHighRange, event: { mouseout: renderGaugeChart }">
+                                                              <span class="input-group-btn">
+                                                                <button class="btn btn-success percentBtn" type="button"><i class="fa fa-refresh"></i></button>
+                                                              </span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-4 col-sm-4 col-lg-4">
-                                                        <label>mid-level score:</label>
-                                                        <div class="input-group">
-                                                          <span class="input-group-btn">
-                                                            <button class="btn btn-warning percentBtn" type="button"><span data-bind="text:greenHighRange() + '% to ' + redLowRange() + '%'"></button>
-                                                          </span>
+                                                        <div class="col-md-4 col-sm-4 col-lg-4">
+                                                            <label>mid-level score:</label>
+                                                            <div class="input-group">
+                                                              <span class="input-group-btn">
+                                                                <button class="btn btn-warning percentBtn" type="button"><span data-bind="text:greenHighRange() + '% to ' + redLowRange() + '%'"></button>
+                                                              </span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-4 col-sm-4 col-lg-4">
-                                                        <label>high fraud score: from</label>
-                                                        <div class="input-group">
-                                                        <input type="text" class="form-control" data-bind="textInput: redLowRange, event: { mouseout: renderGaugeChart }">
-                                                          <span class="input-group-btn">
-                                                            <button class="btn btn-danger percentBtn" type="button"><i class="fa fa-refresh"></i></button>
-                                                          </span>
+                                                        <div class="col-md-4 col-sm-4 col-lg-4">
+                                                            <label>high fraud score: from</label>
+                                                            <div class="input-group">
+                                                            <input type="text" class="form-control" data-bind="textInput: redLowRange, event: { mouseout: renderGaugeChart }">
+                                                              <span class="input-group-btn">
+                                                                <button class="btn btn-danger percentBtn" type="button"><i class="fa fa-refresh"></i></button>
+                                                              </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <!--Call Date Pickers Component to handle date range-->
-                                        <date-pickers params="selectedTimePeriod: selectedTimePeriod"></date-pickers>
+                                            <!--Call Date Pickers Component to handle date range-->
+                                            <date-pickers params="selectedTimePeriod: selectedTimePeriod"></date-pickers>
 
-                                        <div class="form-group filterPickerForm">
-                                            <label>Filter By:</label><br>
-                                            <p class="small text-warning" style="display: inline"><i class="fa fa-lightbulb-o"></i> by default, the result will be "all of the above."</p>
-                                               <ul class="filterPickerList nav nav-tabs" id="filterNav" role="tablist" data-bind="foreach: filters">
-                                                    <li data-bind="visible: $data.values">
-                                                        <input type="checkbox" data-bind="checkedValue: display, checked: $parent.selectedFilters, click: $parent.showSubfilters(display)"><span data-bind="text: display"></span>
-                                                        <ul class="hide filterPickerList subfilterSubnav" data-bind="attr: {'id': display}, foreach: $data.values">
-                                                            <li>
-                                                                <input type="checkbox" class="filterChoices" data-bind="value: ($parentContext.$data.display + ' eq \'' + $data + '\''), checked: $parents[1].selectedSubFilters"><span data-bind="text: $data"></span>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                               </ul>
-                                        </div>
+                                            <div class="form-group filterPickerForm">
+                                                <label>Filter By:</label><br>
+                                                <p class="small text-warning" style="display: inline"><i class="fa fa-lightbulb-o"></i> by default, the result will be "all of the above."</p>
+                                                   <ul class="filterPickerList nav nav-tabs" id="filterNav" role="tablist" data-bind="foreach: filters">
+                                                        <li data-bind="visible: $data.values">
+                                                            <input type="checkbox" data-bind="checkedValue: display, checked: $parent.selectedFilters, click: $parent.showSubfilters(display)"><span data-bind="text: display"></span>
+                                                            <ul class="hide filterPickerList subfilterSubnav" data-bind="attr: {'id': display}, foreach: $data.values">
+                                                                <li>
+                                                                    <input type="checkbox" class="filterChoices" data-bind="value: ($parentContext.$data.display + ' eq \'' + $data + '\''), checked: $parents[1].selectedSubFilters"><span data-bind="text: $data"></span>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                   </ul>
+                                            </div>
 
-                                    </form>
-                            </div>
-                            <div class="modal-footer">
-                                <div class="alert alert-danger hide" id="fraudSubmissionErrors">
-                                    <p class="text-danger .errors"></p>
+                                        </form>
                                 </div>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-success" data-dismiss="modal" data-bind="click: submitGaugeModifications">Submit</button>
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
+                                <div class="modal-footer">
+                                    <div class="alert alert-danger hide" id="fraudSubmissionErrors">
+                                        <p class="text-danger .errors"></p>
+                                    </div>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-success" data-dismiss="modal" data-bind="click: submitGaugeModifications">Submit</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
 
-                <div class="modal fade" id="sqlModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                <h4 class="modal-title">Fraud Gauge SQL:</h4>
-                            </div>
-                            <div class="modal-body" data-bind="text: queryStringSQL"></div>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal-dialog -->
-                </div><!-- /.modal -->
+                    <div class="modal fade" id="sqlModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title">Fraud Gauge SQL:</h4>
+                                </div>
+                                <div class="modal-body" data-bind="text: queryStringSQL"></div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
 
+                </div>
             </div>
         </div>
+
+
     </div>
-
-
 </div>

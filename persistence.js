@@ -45,15 +45,22 @@ module.exports = {
 	loginUser: function( user ) {
 		var params = [ user.id, user.provider, user.displayName ],
 			insertUser = 'INSERT IGNORE INTO dash_user ( oauth_id, oauth_provider, display_name ) VALUES ( ?, ?, ? )',
-			getInfo = 'SELECT id, default_board from dash_user where oauth_id = ? and oauth_provider = ?',
+			getInfo = 'SELECT id, default_board, avatar, title, email from dash_user where oauth_id = ? and oauth_provider = ?',
 			insertBoard = 'INSERT INTO dash_board ( display_name, description, owner_id ) VALUES ( ?, \'\', ? ); UPDATE dash_user SET default_board = LAST_INSERT_ID() WHERE id = ?; SELECT LAST_INSERT_ID() AS id',
 			connection = getConnection();
 
 		return connection.query( insertUser, params ).then( function() {
 			return connection.query( getInfo, params ).then( function( dbResults ) {
-				var userId = dbResults[0][0].id,
-					defaultBoard = dbResults[0][0].default_board;
+				var userId 			= dbResults[0][0].id,
+					defaultBoard 	= dbResults[0][0].default_board,
+					avatar 			= dbResults[0][0].avatar,
+					title 			= dbResults[0][0].title,
+					email 			= dbResults[0][0].email;
 				user.localId = userId;
+				user.avatar = avatar;
+				user.title = title;
+				user.email = email;
+
 				if ( defaultBoard ) {
 					user.defaultBoard = defaultBoard;
 					return;
@@ -127,7 +134,7 @@ module.exports = {
 	 */
 	listWidgetInstances: function( userId ) {
 		var connection = getConnection(),
-			select = 'SELECT wi.id, wi.widget_id, w.code, wi.owner_id, wi.display_name, wi.description, wi.is_shared, wi.configuration FROM dash_widget_instance wi INNER JOIN dash_widget w on w.id = wi.widget_id WHERE wi.is_shared OR wi.owner_id = ?';
+			select = 'SELECT wi.id, wi.widget_id, w.code, wi.owner_id, wi.display_name, wi.description, wi.is_shared, wi.configuration, w.preview_path FROM dash_widget_instance wi INNER JOIN dash_widget w on w.id = wi.widget_id WHERE wi.is_shared OR wi.owner_id = ?';
 
 		return connection.query( select, [ userId ] ).then( function( dbResults ) {
 			var rows = dbResults[0],
@@ -144,7 +151,8 @@ module.exports = {
 					displayName: rows[i].display_name,
 					description: rows[i].description,
 					isShared: rows[i].is_shared === 1,
-					configuration: JSON.parse( rows[i].configuration )
+					configuration: JSON.parse( rows[i].configuration ),
+					previewPath: rows[i].preview_path
 				};
 			}
 			return result;

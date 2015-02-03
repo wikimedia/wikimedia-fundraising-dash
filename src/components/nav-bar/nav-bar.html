@@ -2,7 +2,7 @@
 	<div class="boxedIcon" id="showNavMenu" data-bind="click: showNav"><i class="fa fa-th-list"></i></div>
 	<div class="navWrapper">
 		<div class="row text-center navRow">
-			<h2 class='titlebrand'>Dash</h2>
+			<h2 class='titlebrand' id="Home" data-bind="click: $parent.setDisplayPage">Dash</h2>
 		</div>
 
 		<div class="row sidebar-nav navRow">
@@ -27,7 +27,7 @@
 					<div class="hide subNavBoardOpts subNavButton" id="profileLinks">
 						<ul>
 							<li><a href="/logout">Log out</a></li>
-							<li><a href="/profile">Profile</a></li>
+							<li id="Profile" data-bind="click: $parent.setDisplayPage">Profile</li>
 						</ul>
 					</div>
 				</span>
@@ -39,11 +39,11 @@
 
 					<div class="hide subNavBoardOpts subNavButton" id="boards">
 						<ul data-bind="foreach: userBoards">
-							<li><span data-bind="text: name"></span></li>
+							<li data-bind="attr: {id: $data['id']}, click: $parents[1].setDisplayPage, text: displayName"></li>
 						</ul>
 					</div>
 
-					<div class="mainNavButton"><i class="fa fa-plug"></i><span> Library</span>
+					<div class="mainNavButton" id="Library" data-bind="click: $parent.setDisplayPage"><i class="fa fa-plug"></i><span> Library</span>
 					</div>
 				</span>
 

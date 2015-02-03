@@ -9,6 +9,7 @@ define( [
         self.loggedIn = params.loggedIn;
         self.welcome = params.welcome;
         self.userBoards = params.userBoards;
+        self.displayPage = ko.observable('filler');
 
         self.hideNav = function(){
         	//make the nav menu fold out of view.
@@ -33,7 +34,7 @@ define( [
             }
         });
 
-        self.toggleBoardList = function(){
+        self.toggleBoardList = function(e, data){
             $('#boards.subNavBoardOpts').slideDown(200, 'swing', function(){
                 $('#boards.subNavBoardOpts').toggleClass('hide');
             });

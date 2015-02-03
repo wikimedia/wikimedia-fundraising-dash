@@ -189,6 +189,13 @@ select {
 
 /* MAIN BASE QUALITY STYLEINGS */
 
+.avatar {
+    height: 70px;
+    width: 70px;
+    border-radius: 35px;
+    margin: 18px 10px;
+}
+
 .boxedIcon {
     color: #333;
     font-size: 18px;
@@ -205,6 +212,10 @@ select {
 
 .lightWell {
     background-color: rgba(0,0,0,0.009);
+}
+
+.whiteWell {
+    background-color: #fff;
 }
 
 .noUi-base {
@@ -527,6 +538,10 @@ input {
     margin-left:30px;
 }
 
+.row-top {
+    margin: 0 -30px;
+}
+
 #savedChartsMenu {
     padding: 5px;
     color: #555;
@@ -543,6 +558,34 @@ input {
     min-height: 36px;
     min-width: 200px;
     margin-left: 1px;
+}
+
+.widgetLibrary {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.widgetLibraryTitle {
+    margin-left: 10px;
+}
+
+.widgetLibrary li {
+    display: inline-block;
+    padding: 20px;
+    margin: 10px;
+    background-color: rgba(49,176,213,0.6);
+    color: #f5f5f5;
+    width: 250px;
+    height: 300px;
+    overflow: hidden;
+    border-bottom: 7px solid rgb(49,176,213);
+    border-radius: 4px 4px 0 0;
+}
+
+.widgetLibrary img {
+    width: 210px;
+    height: 100px;
 }
 
 .xyGroupOption {

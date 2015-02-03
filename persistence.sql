@@ -12,6 +12,9 @@ CREATE TABLE IF NOT EXISTS dash_user(
 	oauth_provider VARCHAR(255), /* service that gave us the remote id */
 	display_name VARCHAR(255), /* display name provided by oauth */
 	default_board INT,
+	avatar VARCHAR(255), /* avatar image */
+	title VARCHAR(255),
+	email VARCHAR(255),
 	UNIQUE (oauth_id, oauth_provider)
 );
 /* List of available widgets */
@@ -55,7 +58,7 @@ CREATE TABLE IF NOT EXISTS dash_widget_instance_board(
 );
 
 /* Add definitions for existing widgets */
-INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'fraud-gauge', 'Fraud Gauge', 'Shows the percentage of transactions rejected by fraud filters', 'images/fraud.png' );
+INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'fraud-gauge', 'Fraud Gauge', 'Shows the percentage of transactions rejected by fraud filters', 'images/fraud-gauge.png' );
 INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'x-by-y', 'X by Y', 'A highly configurable chart allowing grouping by many measures', 'images/x-by-y.png' );
 INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'amt-per-second-chart', 'Amount Per Second', 'Shows USD per second required to reach Big English goal', 'images/amt-per-sec.png');
 INSERT IGNORE INTO dash_widget ( code, display_name, description, preview_path ) VALUES ( 'distance-to-goal-chart', 'Distance to Goal', 'Line chart showing USD needed to reach overall Big English goal', 'images/distance-to-goal.png');
