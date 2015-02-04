@@ -38,7 +38,8 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
             'components/widgets/totals-earned-chart/totals-earned-chart',
             'components/widgets/amt-per-second-chart/amt-per-second-chart',
             'components/boards/bigEnglish/bigEnglishBoard',
-            'components/widgets/x-by-y-chart/x-by-y-chart'
+            'components/boards/generic-board/generic-board',
+            'components/widgets/x-by-y/x-by-y'
         ],
         insertRequire: ['app/startup'],
         bundles: {

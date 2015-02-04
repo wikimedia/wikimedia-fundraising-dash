@@ -1,6 +1,6 @@
 define( [
     'knockout',
-    'text!components/widgets/x-by-y-chart/x-by-y-chart.html',
+    'text!components/widgets/x-by-y/x-by-y.html',
     'momentjs',
     'numeraljs',
     'chartjs',

@@ -82,6 +82,7 @@ app.get( '/board', routes.user.boards );
 app.post( '/board', routes.board.save );
 app.put( '/board/:id', routes.board.save );
 app.get( '/board/:id', routes.board.get );
+app.get( '/library', routes.library.get );
 
 /*jslint -W024*/
 app.use( express.static( __dirname + ( config.debug ? '/src' : '/dist' ) ) );

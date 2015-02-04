@@ -1,0 +1,26 @@
+<div class="col-md-12">
+
+    <div class="row">
+        <div class="col-md-4 titleCol">
+            <h2 style="display:inline" data-bind="text: userDefaultBoard().displayName"></h2>
+            <p data-bind="text: displayDate"></p>
+        </div>
+        <div class="col-md-8 titleCol">
+            <div class="btn-group btn-group-xs pull-right">
+                <button type="button" class="btn btn-default" data-bind="click: reloadBoard"><i class="fa fa-refresh" style="padding-right:5px"></i> Refresh</button>
+            </div>
+        </div>
+    </div>
+
+    <span data-bind="if: dataLoading">
+        <div class="loading">
+            <img src="/images/catloader.gif" />
+            <div>Loading Dash<span class="ellipsis" data-bind="text: ellipsis"></span></div>
+        </div>
+    </span>
+
+    <div class="row" data-bind="foreach: userDefaultBoard().widgets">
+        <div data-bind="component: { name: widgetCode, params: { title: displayName, description: description, configuration: configuration } }"><span data-bind="text: display_name"></span></div>
+    </div>
+
+</div>

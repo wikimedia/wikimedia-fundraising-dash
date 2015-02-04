@@ -32,8 +32,9 @@ function( ko, template, c3, Chart ){
 
     var self = this;
     self.filters = ko.observableArray();
+    self.title = ko.observable(params.title);
 
-    $.get( 'metadata/fraud', function(reqData){
+    $.get( 'metadata/fraud-gauge', function(reqData){
       self.data = reqData;
       //broken down data from above
       self.filters($.map(self.data.filters, function(val, i){return [val];}));
@@ -46,7 +47,6 @@ function( ko, template, c3, Chart ){
       });
     });
 
-    self.title = 'Fraud Rejections';
     self.selectedTimePeriod = ko.observable('Last 15 Minutes');
     self.selectedFilters = ko.observableArray([]);
     self.selectedSubFilters = ko.observableArray([]);
@@ -257,6 +257,9 @@ function( ko, template, c3, Chart ){
         //this will be a function call - TODO: make parsing function
         var queryString = self.convertToQuery(self.queryRequest);
 
+
+        //Todo: if this is already set up in configs, take that data.
+        //otherwise do this.
         $.get( '/data/fraud?' + $.param({ '$filter': queryString }).replace(
           /\+/g, '%20' ), function ( dataget ) {
           self.gaugeIsSetUp(true);

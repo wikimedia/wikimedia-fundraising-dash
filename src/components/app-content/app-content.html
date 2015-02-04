@@ -4,7 +4,7 @@
 
 <div class="container-fluid" data-bind='if: loggedIn'>
 	<div class="row">
-		<div data-bind="component: userDefaultBoard" class="col-md-12"></div>
+		<generic-board params="userDefaultBoard: userDefaultBoard"></generic-board>
 	</div>
 </div>
 
