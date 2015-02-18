@@ -4,7 +4,7 @@ module.exports = {
 	mainTableAlias: 'pf',
 	optionalJoins: {
 		pi: {
-			text: 'LEFT JOIN payments_initial pi ON pi.contribution_tracking_id = pf.contribution_tracking_id'
+			text: 'LEFT JOIN payments_initial pi ON pi.contribution_tracking_id = pf.contribution_tracking_id AND pi.order_id = pf.order_id'
 		},
 		ct: {
 			text: 'LEFT JOIN drupal.contribution_tracking ct ON ct.id = pf.contribution_tracking_id'

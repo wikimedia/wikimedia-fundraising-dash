@@ -13,8 +13,8 @@ module.exports = {
 			requires: [ 'ct' ]
 		},
 		pf: {
-			text: 'LEFT JOIN payments_fraud pf ON pf.contribution_tracking_id = ct.id',
-			requires: [ 'ct' ]
+			text: 'LEFT JOIN payments_fraud pf ON pf.contribution_tracking_id = ct.id AND pf.order_id = pi.order_id',
+			requires: [ 'ct', 'pi' ]
 		}
 	},
 	filters: {
