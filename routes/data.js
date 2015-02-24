@@ -113,7 +113,7 @@ function getColumnText( column ) {
  * @returns {String} WHERE clause with '?' placeholders for values
  */
 function buildWhere( filterNode, widget, values, joins ) {
-	var col, colText, op, rightClause, leftClause, val, i, pattern, ops = {
+	var col, colText, op, rightClause, leftClause, val, i, pattern, partial, ops = {
 		'and': 'AND',
 		'or': 'OR',
 		'eq': '=',
@@ -131,12 +131,23 @@ function buildWhere( filterNode, widget, values, joins ) {
 
 	// Work around busted odata-parser nested condtion parsing
 	if ( filterNode instanceof Array ) {
+		console.log( 'filterNode is an array of length ' + filterNode.length );
+		partial = '';
 		for ( i = 0; i < filterNode.length; i++ ) {
 			if ( filterNode[i].type ) {
-				filterNode = filterNode[i];
-				break;
+				console.log( 'Found array component at index ' + i + ' with type ' + filterNode[i].type );
+				partial = buildWhere( filterNode[i], widget, values, joins );
+			}
+			if ( filterNode[i] instanceof Array && filterNode[i].length > 3 ) {
+				op = ops[filterNode[i][1]];
+				if ( !op ) {
+					throw new Error( 'Illegal filter type ' + filterNode.type );
+				}
+				rightClause = buildWhere( filterNode[i][3], widget, values, joins );
+				partial = '(' + partial + ' ' + op + ' ' + rightClause + ')';
 			}
 		}
+		return partial;
 	}
 
 	op = ops[filterNode.type];
@@ -147,7 +158,9 @@ function buildWhere( filterNode, widget, values, joins ) {
 	switch (op) {
 		case 'AND':
 		case 'OR':
+			console.log( 'Building left clause' );
 			leftClause = buildWhere( filterNode.left, widget, values, joins );
+			console.log( 'Building right clause' );
 			rightClause = buildWhere( filterNode.right, widget, values, joins );
 			return '(' + leftClause + ' ' + op + ' ' + rightClause + ')';
 		case '=':
@@ -156,6 +169,7 @@ function buildWhere( filterNode, widget, values, joins ) {
 		case '>':
 		case '>=':
 		case '!=':
+			console.log( 'Comparison with column ' + filterNode.left.name );
 			if ( filterNode.left.type !== 'property' ) {
 				throw new Error( 'Only property comparisons are currently allowed' );
 			}
@@ -172,6 +186,7 @@ function buildWhere( filterNode, widget, values, joins ) {
 
 			return colText + ' ' + op + ' ?';
 		case 'fn':
+			console.log( 'Function on column ' + filterNode.args[1].name );
 			pattern = patterns[filterNode.func];
 			if ( !pattern ) {
 				throw new Error( 'Unsupported function ' + filterNode.func );
