@@ -145,28 +145,33 @@ module.exports = {
 			values: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
 			labels: [ 'Completed', 'Pending', 'Cancelled', 'Failed', 'In Progress', 'Overdue', 'Settled', 'Paid', 'Refunded' ],
 			canGroup: true
-		}
-	},
-	defaultFilter: {
-		type: 'and',
-		left: {
-			type: 'eq',
-			left: { type: 'property', name: 'Year' },
-			right: { type: 'literal', value: '2014' }
 		},
-		right: {
-			type: 'and',
-			left: {
-				type: 'eq',
-				left: { type: 'property', name: 'Month' },
-				right: { type: 'literal', value: '12' }
-			},
-			right: {
-				type: 'lt',
-				left: { type: 'property', name: 'Amount' },
-				right: { type: 'literal', value: '5000' }
-			}
+		YearsAgo: {
+			table: 'cc',
+			column : 'receive_date',
+			func: 'timestampdiff(YEAR, [[COL]], utc_timestamp())',
+			display: 'Years ago',
+			type: 'number',
+			min: 0,
+			max: 12
+		},
+		MonthsAgo: {
+			table: 'cc',
+			column : 'receive_date',
+			func: 'timestampdiff(MONTH, [[COL]], utc_timestamp())',
+			display: 'Months ago',
+			type: 'number',
+			min: 0,
+			max: 10000
+		},
+		DaysAgo: {
+			table: 'cc',
+			column : 'receive_date',
+			func: 'timestampdiff(DAY, [[COL]], utc_timestamp())',
+			display: 'Days ago',
+			type: 'number',
+			min: 0,
+			max: 10000
 		}
-	},
-	defaultGroup: ['Day']
+	}
 };

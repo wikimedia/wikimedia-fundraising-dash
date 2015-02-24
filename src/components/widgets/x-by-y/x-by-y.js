@@ -3,194 +3,369 @@ define( [
     'text!components/widgets/x-by-y/x-by-y.html',
     'momentjs',
     'numeraljs',
-    'chartjs',
-    'select2'
-], function( ko, template, moment, numeral, Chart, select2 ){
-
+    'c3',
+    'select2',
+    'WidgetBase'
+], function( ko, template, moment, numeral, c3, select2, WidgetBase ){
 
     function XByYChartViewModel( params ){
 
+        WidgetBase.call( this, params );
         var self = this;
 
-        self.xyIsSetUp = ko.observable(false);
-        self.chartWidth = ko.observable('900');
-        self.chartHeight = ko.observable('550');
-        self.showSlice = ko.observable();
-        self.bySlice = ko.observable();
-        self.timeChoice = ko.observable();
+        var chartDataCall = self.getChartData(params.configuration.queryString);
 
-        self.queryStringXYsql = ko.observable('This widget hasn\'t been set up yet!');
-        self.queryRequest = {};
-        self.chosenFilters = ko.observableArray();
-        self.subChoices = ko.observableArray();
+        $.when( chartDataCall ).then( function( dataArray ){
+            self.retrievedResults(dataArray.results);
+            self.dataLoading(false);
+            self.preDataLoading(false);
 
-        self.chartSaved = ko.observable(false);
-        self.optionStateChanged = ko.observable(false);
-        self.logStateChange = function(n){
-            self.optionStateChanged(n);
-            self.chartSaved(false);
-        };
+            self.chartData = self.processData(self.retrievedResults(), params.configuration.timeBreakout);
 
-        self.title = ko.computed(function(){
-        	return self.showSlice() + ' by ' + self.bySlice();
+            self.makeChart(self.chartData);
         });
 
-        self.showPanelBody = function(area){
-            $('#'+area+'body').toggleClass('hide');
-        };
+            self.showSlice = ko.observable();
+            self.bySlice = ko.observable();
+            self.timeChoice = ko.observable();
+            self.queryRequest = {};
+            self.queryString = '';
+            self.chosenFilters = ko.observableArray();
+            self.subChoices = ko.observableArray();
+            self.chartWidth(950);
 
-        //saved charts
-        //TODO: these will trigger a saved set of parameters to draw the chart with.
-        self.presetTitles = ko.observableArray([
-        	'Donations During Big English 2014',
-        	'Donations for Fiscal Year 2014'
-        ]);
-        ///////
+            self.title = ko.computed(function(){
+            	return self.showSlice(); //+ ' by ' + self.bySlice();
+            });
 
-        self.ySlices = ko.observableArray([
-        	'Donations',
-        	'Failed Donations'
-        ]);
+            self.makeChart = function(data){
 
-        self.xSlices = ko.observableArray();
+                self.chartLoaded(true);
 
-        self.timeChoices = ko.observableArray();
+                self.monthlyChart = function(d,i){
 
-        self.groupChoices = ko.observableArray();
+                    var monthNamesArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-        //populate user choices dynamically
-        self.populateChoices = (function(){
-            //populate y slices
-            //TODO: this one will be user-defined, and developed in full later
-            //since right now the specifics are a bit obscured.
-            $.get( 'metadata/x-by-y', function(reqData){
-              self.metadata = reqData;
+                    return {
+                        bindto: '#x-by-yChart',
+                        size: {
+                            height: 450,
+                            width: window.width
+                        },
+                        zoom: { enabled: true },
+                        data: {
+                            columns: [ data.monthlyCountArray, data.monthlyDataArray ],
+                            type: 'bar',
+                            colors: { 'Monthly Total': 'rgb(92,184,92)', 'Monthly Count': '#f0ad4e' },
+                            axes: {
+                                'Monthly Total': 'y',
+                                'Monthly Count': 'y2'
+                            }
+                        },
+                        grid: {
+                            x: {
+                                show: true
+                            },
+                            y: {
+                                show: true
+                            }
+                        },
+                        axis: {
+                            x: {
+                                tick: {
+                                    format: function(x){ return monthNamesArray[x]; }
+                                }
+                            },
+                            y: {
+                                tick: {
+                                    format: function(x){ return numeral(x).format('$0,0'); }
+                                }
+                            },
+                            y2: {
+                                tick: {
+                                    format: function(x){ return numeral(x).format('0,0'); }
+                                },
+                                show: true
+                            }
+                        },
+                        tooltip: {
+                            format: {
+                                title: function (d) {
+                                    return monthNamesArray[d];
+                                },
+                                value: function (value, ratio, id) {
+                                    var display;
+                                    if(id === 'Monthly Total'){
+                                        display = numeral(value).format('$0,0');
+                                    } else {
+                                        display = numeral(value).format('0,0');
+                                    }
+                                    return display;
+                                }
+                            }
+                        },
+                        bar: {
+                            width: {
+                                ratio: 0.5
+                            }
+                        }
+                    };
+                };
+
+                self.hourlyChart = function(d,i){
+                    var hourlyData = data.dayObj[d.x + 1 ],
+                        hourlyCountArray = ['Hourly Count'],
+                        hourlyTotalArray = ['Hourly Total'];
+                    for(var j=1; j<25; j++){
+                        hourlyCountArray.push(hourlyData[j].count);
+                        hourlyTotalArray.push(hourlyData[j].total);
+                    }
+                    return {
+                        bindto: '#x-by-yChart',
+                        size: {
+                            height: 450,
+                            width: window.width
+                        },
+                        zoom: { enabled: true },
+                        data: {
+                            columns: [ hourlyTotalArray, hourlyCountArray ],
+                            type: 'bar',
+                            colors: { 'Hourly Total': 'rgb(92,184,92)', 'Hourly Count': '#f0ad4e' },
+                            onclick: function (d, i) { c3.generate(self.dailyChart()); },
+                            axes: {
+                                'Hourly Total': 'y',
+                                'Hourly Count': 'y2'
+                            }
+                        },
+                        grid: {
+                            x: {
+                                show: true
+                            },
+                            y: {
+                                show: true
+                            }
+                        },
+                        axis: {
+                            x: {
+                                label: {
+                                    text: 'December ' + ( d.x + 1 ),
+                                    position: 'outer-left'
+                                },
+                                tick: {
+                                    format: function(x){ return x + ':00'; }
+                                }
+                            },
+                            y: {
+                                tick: {
+                                    format: function(x){ return numeral(x).format('$0,0'); }
+                                }
+                            },
+                            y2: {
+                                tick: {
+                                    format: function(x){ return numeral(x).format('0,0'); }
+                                },
+                                show: true
+                            }
+                        },
+                        tooltip: {
+                            format: {
+                                title: function (d) { return 'Hour ' + d; },
+                                value: function (value, ratio, id) {
+                                    var display;
+                                    if(id === 'Hourly Total'){
+                                        display = numeral(value).format('$0,0');
+                                    } else {
+                                        display = numeral(value).format('0,0');
+                                    }
+                                    return display;
+                                }
+                            }
+                        },
+                        bar: {
+                            width: {
+                                ratio: 0.5
+                            }
+                        }
+                    };
+                };
+
+                self.dailyChart = function(d,i){
+                    return {
+                        bindto: '#x-by-yChart',
+                        size: {
+                            height: 450,
+                            width: window.width
+                        },
+                        zoom: { enabled: true },
+                        data: {
+                            columns: [ data.dailyDataArray, data.dailyCountArray ],
+                            type: 'bar',
+                            colors: { 'Daily Total': 'rgb(49,176,213)', 'Daily Count': '#f0ad4e' },
+                            onclick: function (d, i) {
+                                self.xByYChart = c3.generate(self.hourlyChart(d,i));
+                            },
+                            axes: {
+                                'Daily Total': 'y',
+                                'Daily Count': 'y2'
+                            }
+                        },
+                        grid: {
+                            x: {
+                                show: true
+                            },
+                            y: {
+                                show: true
+                            }
+                        },
+                        axis: {
+                            x: {
+                                tick: {
+                                    format: function(x){ return 'Dec ' + (x+1); }
+                                }
+                            },
+                            y: {
+                                tick: {
+                                    format: function(x){ return numeral(x).format('$0,0'); }
+                                }
+                            },
+                            y2: {
+                                tick: {
+                                    format: function(x){ return numeral(x).format('0,0'); }
+                                },
+                                show: true
+                            }
+                        },
+                        tooltip: {
+                            format: {
+                                title: function (d) { return 'Day ' + (d+1); },
+                                value: function (value, ratio, id) {
+                                    var display;
+                                    if(id === 'Daily Total'){
+                                        display = numeral(value).format('$0,0');
+                                    } else {
+                                        display = numeral(value).format('0,0');
+                                    }
+                                    return display;
+                                }
+                            }
+                        },
+                        bar: {
+                            width: {
+                                ratio: 0.5
+                            }
+                        }
+                    };
+            };
 
 
-                var xArray = [], timeArray = [], groupArray = [];
-                $.each(self.metadata.filters, function(prop, obj){
+                switch(data.timescale){
+                    case 'Year':
+                    case 'Month':
+                        self.xByYChart = c3.generate(self.monthlyChart());
+                        break;
+                    case 'Day':
+                        self.xByYChart = c3.generate(self.dailyChart());
+                        break;
+                    case 'Hour':
+                        self.xByYChart = c3.generate(self.hourlyChart());
+                        break;
+                }
+            };
 
-                    if(obj.type !== 'number' || prop === 'Amount'){
+            if(params.configuration){
+                self.chartSaved(true);
+                //self.makeChart(self.retrievedResults());
 
-                        if(obj.canGroup){
-                            if(obj.values){
-                                groupArray.push({ 'name': prop, 'choices': obj.values });
+            } else {
+                self.chartSaved(false);
+            }
+
+            self.showPanelBody = function(area){
+                $('#'+area+'body').toggleClass('hide');
+            };
+
+            //saved charts
+            //TODO: these will trigger a saved set of parameters to draw the chart with.
+            self.presetTitles = ko.observableArray([
+                'This does not work yet.',
+            	'Donations During Big English 2014',
+            	'Donations for Fiscal Year 2014'
+            ]);
+            ///////
+
+            self.ySlices = ko.observableArray([
+            	'Donations'
+            	//'Failed Donations'
+            ]);
+
+            self.xSlices = ko.observableArray();
+            self.timeChoices = ko.observableArray();
+            self.groupChoices = ko.observableArray();
+
+            //populate user choices dynamically
+            self.populateChoices = (function(){
+                //populate y slices
+                $.get( 'metadata/x-by-y', function(reqData){
+                    self.metadata = reqData;
+
+                    var xArray = [], timeArray = ['Year', 'Month', 'Day'], groupArray = [];
+
+                    $.each(self.metadata.filters, function(prop, obj){
+
+                        if(obj.type !== 'number' || prop === 'Amount'){
+
+                            if(obj.canGroup){
+                                if(obj.values){
+                                    groupArray.push({ 'name': prop, 'choices': obj.values });
+                                }
+
+                                $('select #'+prop).select2();
+
+                                //TODO: later this will do something different/more specific.
+                                xArray.push(prop);
                             }
 
-                            $('select #'+prop).select2();
-
-                            //TODO: later this will do something different/more specific.
-                            xArray.push(prop);
                         }
+                    });
+                    self.xSlices(xArray);
+                    self.timeChoices(timeArray);
+                    self.groupChoices(groupArray);
 
-
-                    } else {
-                        timeArray.push(prop);
-                    }
-                });
-                self.xSlices(xArray);
-                self.timeChoices(timeArray);
-                self.groupChoices(groupArray);
-
-            });
-
-        })();
-
-        self.convertToQuery = function( userChoices ){
-            //y slice
-            //right now this doesn't matter because it's always 'donations'
-
-            var groupStr = 'group=' + userChoices.xSlice;
-
-            //additional filters:
-            if( userChoices.additionalFilters.length > 0 ){
-
-                var filterStr = '$filter=';
-
-                var filterObj = {}, haveMultipleSubfilters = [];
-                $.each( userChoices.additionalFilters, function(el, subfilter){
-                    var filter = subfilter.substr(0, subfilter.indexOf(' '));
-                    if(!filterObj[filter]){
-                      filterObj[filter] = subfilter;
-                    } else {
-                      filterObj[filter] += ' or ' + subfilter;
-                      haveMultipleSubfilters.push(filter);
-                    }
                 });
 
-                $.each( filterObj, function(el, s){
-                    if( haveMultipleSubfilters.indexOf(el) > -1){
-                      filterStr += '(' + filterObj[el] + ')';
-                    } else {
-                      filterStr += filterObj[el];
-                    }
-                    filterStr += ' and ';
+            })();
+
+            self.submitXY = function(){
+
+                $('#loadingModal').modal('show');
+                self.queryRequest.ySlice = self.showSlice();
+                //self.queryRequest.xSlice = self.bySlice();
+                //self.queryRequest.additionalFilters = self.chosenFilters();
+                self.queryRequest.timeBreakout = self.timeChoice();
+
+                self.queryString         = self.convertToQuery(self.queryRequest);
+                self.config.queryString  = self.queryString;
+                self.config.timeBreakout = self.queryRequest.timeBreakout;
+                self.config.chartData    = self.chartData;
+
+                var chartDataCall = self.getChartData(self.queryString);
+
+                $.when( chartDataCall ).then( function( dataArray ){
+                    self.retrievedResults(dataArray.results);
+                    self.dataLoading(false);
+
+                    self.chartData = self.processData(self.retrievedResults(), self.timeChoice());
+
+                    self.makeChart(self.chartData);
+                    $('#loadingModal').modal('hide');
+
+                    self.chartSaved(false);
                 });
 
-                //cut off last AND
-                if( filterStr !== '$filter=' ){
-                    return groupStr + '&' + (filterStr.slice(0, -5));
-                } else {
-                    return groupStr;
-                }
-            } else {
-                return groupStr;
-            }
-        };
 
-        self.saveXY = function(){
-            //TODO: save it in the user profile
-            self.chartSaved(true);
-        };
+            };
 
-        self.submitXY = function(){
-
-            //here is an example query string for grabbing Big English countries by day for Dec:
-            // http://localhost:8080/data/x-by-y?group=Day&group=Country&$filter=DT gt
-            //'2014-12-01T00:00:00Z' and Country eq 'US' or Country eq 'CA' or Country eq 'NZ'
-            //or Country eq 'AU' or Country eq 'GB'
-
-            //get all the choices into a queryRequest object
-            self.queryRequest.ySlice = self.showSlice();
-            self.queryRequest.xSlice = self.bySlice();
-            self.queryRequest.additionalFilters = self.chosenFilters();
-            var queryString = self.convertToQuery(self.queryRequest);
-
-            $.get( '/data/x-by-y?' + (queryString).replace(
-          /\+/g, '%20' ), function ( dataget ) {
-                console.log('dataget: ', dataget);
-            });
-
-        	self.fakeData = {
-		    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-		    datasets: [
-		        {
-		            label: 'My First dataset',
-		            fillColor: 'rgba(220,220,220,0.2)',
-		            strokeColor: 'rgba(220,220,220,1)',
-		            pointColor: 'rgba(220,220,220,1)',
-		            pointStrokeColor: '#fff',
-		            pointHighlightFill: '#fff',
-		            pointHighlightStroke: 'rgba(220,220,220,1)',
-		            data: [65, 59, 80, 81, 56, 55, 40]
-		        },
-		        {
-		            label: 'My Second dataset',
-		            fillColor: 'rgba(151,187,205,0.2)',
-		            strokeColor: 'rgba(151,187,205,1)',
-		            pointColor: 'rgba(151,187,205,1)',
-		            pointStrokeColor: '#fff',
-		            pointHighlightFill: '#fff',
-		            pointHighlightStroke: 'rgba(151,187,205,1)',
-		            data: [28, 48, 40, 19, 86, 27, 90]
-		        }
-		    ]
-		};
-    		var ctx = $('#x-by-yChart').get(0).getContext('2d');
-    		self.fakeChart = new Chart(ctx).Line(self.fakeData);
-
-	        self.xyIsSetUp(true);
-        };
+            return(this);
 
     }
 

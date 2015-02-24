@@ -20,7 +20,7 @@
     </span>
 
     <div class="row" data-bind="foreach: displayedBoard().widgets">
-        <div data-bind="component: { name: widgetCode, params: { title: displayName, description: description, configuration: configuration } }"><span data-bind="text: display_name"></span></div>
+        <div data-bind="component: { name: widgetCode, params: { title: displayName, description: description, configuration: configuration, widgetInstance: id, widgetCode: widgetCode } }"><span data-bind="text: display_name"></span></div>
     </div>
 
 </div>
