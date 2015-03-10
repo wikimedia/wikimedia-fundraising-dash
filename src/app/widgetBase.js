@@ -140,7 +140,16 @@ define([
 
 		self.convertToQuery = function( userChoices ){
 
-			var timeBreakout = 'group=' + userChoices.timeBreakout;
+			var timeArray = ['Year', 'Month', 'Day', 'Hour'],
+				index = timeArray.indexOf( userChoices.timeBreakout ),
+				query = 'group=' + userChoices.timeBreakout;
+
+			// If we're grouping by anything finer than year, add a filter and
+			// also group by the next level up.
+			if ( index > 0 ) {
+				query = query + '&group=' + timeArray[index - 1];
+				query = query + '&$filter=' + timeArray[index - 1] + 'sAgo lt \'1\'';
+			}
 			//groupStr = timeBreakout + '&group=' + userChoices.xSlice;
 
 			// if( userChoices.additionalFilters.length > 0 ){
@@ -174,7 +183,7 @@ define([
 			// } else {
 			//	 return groupStr;
 			// }
-			return timeBreakout;
+			return query;
 		};
 
 		// Generate chart label arrays for time increment types
