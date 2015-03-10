@@ -85,9 +85,9 @@ define([
 					});
 
 					returnObj = {
-										timescale: timescale,
-										monthlyDataArray: monthlyDataArray,
-										monthlyCountArray: monthlyCountArray
+						timescale: timescale,
+						monthlyDataArray: monthlyDataArray,
+						monthlyCountArray: monthlyCountArray
 					};
 					return returnObj;
 				case 'Day':
@@ -109,10 +109,10 @@ define([
 					for (var i = 0; i < dataCount; i++ ) {
 
 						var el = rawdata[i],
-								day = el.Day,
-								hour = el.hour,
-								total = el.usd_total,
-								runningTotal = 0;
+							day = el.Day,
+							hour = el.hour,
+							total = el.usd_total,
+							runningTotal = 0;
 
 						if(!hour){
 							dayObj[day+1] = { total: total, count: el.donations };
@@ -127,11 +127,11 @@ define([
 					}
 
 					returnObj = {
-										timescale: timescale,
-										dailyDataArray: dailyDataArray,
-										dailyCountArray: dailyCountArray,
-										secondsByHourDonationData: secondsByHourDonationData,
-										dayObj: dayObj
+						timescale: timescale,
+						dailyDataArray: dailyDataArray,
+						dailyCountArray: dailyCountArray,
+						secondsByHourDonationData: secondsByHourDonationData,
+						dayObj: dayObj
 					};
 
 					return returnObj;
