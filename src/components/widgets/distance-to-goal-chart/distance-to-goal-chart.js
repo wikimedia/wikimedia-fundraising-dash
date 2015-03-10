@@ -1,21 +1,21 @@
 define( [
-    'knockout',
-    'text!components/widgets/distance-to-goal-chart/distance-to-goal-chart.html',
-    'c3',
-    'momentjs'
+	'knockout',
+	'text!components/widgets/distance-to-goal-chart/distance-to-goal-chart.html',
+	'c3',
+	'momentjs'
 ], function( ko, template, c3, moment ){
 
 
-    function DistanceToGoalChartViewModel( params ){
+	function DistanceToGoalChartViewModel( params ){
 
-        var self = this;
-        self.goal = ko.observable('20,000,000');
-        self.dailyDataArray = [ 'Daily Total' ];
+		var self = this;
+		self.goal = ko.observable('20,000,000');
+		self.dailyDataArray = [ 'Daily Total' ];
 
-        self.loadData = function ( decemberData, timestamp ) {
+		self.loadData = function ( decemberData, timestamp ) {
 			var runningTotal = 0,
 				currentDate = new Date(),
-	        	timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
+				timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
 			currentDate.setTime( timestamp );
 			self.displayDate( moment( currentDate ).format( timeFormat ) );
 			self.lastDataPoint.day = currentDate.getUTCDate();
@@ -54,16 +54,16 @@ define( [
 			self.raised(runningTotal);
 		};
 
-        // $.get('data/big-english', function(dtgData){
+		// $.get('data/big-english', function(dtgData){
 
-        // 	console.log('dtgData', dtgData);
+		// 	console.log('dtgData', dtgData);
 
-        // 	self.dailyDataArray;
+		// 	self.dailyDataArray;
 
 
-        // });
+		// });
 
-        self.title = ko.observable(params.title);
+		self.title = ko.observable(params.title);
 		self.makeCharts = function() {
 			if ( self.dailyDataArray.length < 2 ) {
 				return;
@@ -117,6 +117,6 @@ define( [
 
 		//self.makeCharts();
 	}
-    return { viewModel: DistanceToGoalChartViewModel, template: template };
+	return { viewModel: DistanceToGoalChartViewModel, template: template };
 
 });

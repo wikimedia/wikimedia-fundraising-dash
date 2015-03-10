@@ -1,20 +1,20 @@
 define( [
-    'knockout',
-    'text!components/widgets/amt-per-second-chart/amt-per-second-chart.html',
-    'c3',
-    'numeraljs',
-    'momentjs'
+	'knockout',
+	'text!components/widgets/amt-per-second-chart/amt-per-second-chart.html',
+	'c3',
+	'numeraljs',
+	'momentjs'
 ], function( ko, template, c3, numeral, moment ){
 
 
-    function AmtPerSecondChartViewModel( params ){
+	function AmtPerSecondChartViewModel( params ){
 
-        var self = this;
+		var self = this;
 
-        //TODO: make dayObj (and other params) come from data
-        self.dayObj = [];
+		//TODO: make dayObj (and other params) come from data
+		self.dayObj = [];
 
-        self.loadData = function ( decemberData, timestamp ) {
+		self.loadData = function ( decemberData, timestamp ) {
 			var runningTotal = 0,
 				currentDate = new Date(),
 				timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
@@ -142,8 +142,8 @@ define( [
 			} );
 		};
 		self.makeChart();
-    }
+	}
 
-    return { viewModel: AmtPerSecondChartViewModel, template: template };
+	return { viewModel: AmtPerSecondChartViewModel, template: template };
 
 });

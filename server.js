@@ -1,15 +1,15 @@
-var express           = require( 'express' ),
-    app               = express(),
-    routes            = require( './routes'),
-    passport          = require( 'passport' ),
-    DrupalStrategy    = require( 'passport-drupal' ).DrupalStrategy,
-    evilDns			  = require( 'evil-dns' ),
-    url               = require( 'url' ),
-    logger            = require( './logger.js' ),
-    config            = require( './config.js' ),
-    persistence       = require( './persistence.js' ),
-    server,
-    serverConfig;
+var express			= require( 'express' ),
+	app				= express(),
+	routes			= require( './routes'),
+	passport		= require( 'passport' ),
+	DrupalStrategy	= require( 'passport-drupal' ).DrupalStrategy,
+	evilDns			= require( 'evil-dns' ),
+	url				= require( 'url' ),
+	logger			= require( './logger.js' ),
+	config			= require( './config.js' ),
+	persistence		= require( './persistence.js' ),
+	server,
+	serverConfig;
 
 logger.debug( 'Dash starting up' );
 
@@ -20,8 +20,8 @@ process.on( 'uncaughtException', function( err ) {
 
 serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec(config.listen);
 if (!serverConfig) {
-    logger.error( 'Server cannot listen on "' + config.listen + '", invalid format.' );
-    process.exit(1);
+	logger.error( 'Server cannot listen on "' + config.listen + '", invalid format.' );
+	process.exit(1);
 }
 
 logger.debug( 'Will try to listen on IP address: ' + serverConfig[2] );
@@ -121,9 +121,9 @@ app.get( '/logout', function( req, res ) {
 });
 
 server = app.listen(
-		serverConfig[3],
-		serverConfig[2],
-		function() {
-			logger.info( 'Dash listening on port ' + server.address().port );
-		}
+	serverConfig[3],
+	serverConfig[2],
+	function() {
+		logger.info( 'Dash listening on port ' + server.address().port );
+	}
 );
