@@ -232,6 +232,10 @@ select {
 
 /* WIDGET BASE STYLINGS */
 
+.alert {
+    overflow: hidden;
+}
+
 .factbox {
     width: 100%;
     padding: 7px;
@@ -276,6 +280,10 @@ select {
 }
 
 /* Gauges */
+
+.fraudGauge {
+    padding: 0;
+}
 
 #fraudGaugeWidget .panel-body {
     padding: 0;
@@ -403,6 +411,10 @@ input {
     overflow: hidden;
 }
 
+#loadingModal .modal-content {
+    padding: 10px;
+}
+
 .navbar-fixed-top {
     height: 70px;
 }
@@ -513,21 +525,30 @@ input {
     padding: 0 9px 0 0;
 }
 
+.loading, .loadingWidget {
+    background-color: #5bc0de;
+    opacity: .85;
+    border-radius: 25px;
+    padding: 37px;
+    color: #ffffff;
+    z-index: 99999;
+    font-size: 110%;
+    height: 192px;
+    width: 192px;
+}
+
 .loading {
     position: fixed;
     top: 360px;
     left: 50%;
     margin-top: -96px;
     margin-left: -96px;
-    background-color: #5bc0de;
-    opacity: .85;
-    border-radius: 25px;
-    width: 192px;
-    height: 192px;
-    padding: 37px;
-    color: #ffffff;
-    z-index: 99999;
-    font-size: 110%;
+}
+
+.loadingWidget {
+    position: absolute;
+    display: block;
+    margin: 10% 43%;
 }
 
 .loading div {
