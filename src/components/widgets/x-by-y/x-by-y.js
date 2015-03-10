@@ -13,17 +13,19 @@ define( [
 		WidgetBase.call( this, params );
 		var self = this;
 
-		var chartDataCall = self.getChartData(params.configuration.queryString);
+		if ( self.chartSaved() ) {
+			var chartDataCall = self.getChartData(self.config.queryString);
 
-		$.when( chartDataCall ).then( function( dataArray ){
-			self.retrievedResults(dataArray.results);
-			self.dataLoading(false);
-			self.preDataLoading(false);
+			$.when( chartDataCall ).then( function( dataArray ){
+				self.retrievedResults(dataArray.results);
+				self.dataLoading(false);
+				self.preDataLoading(false);
 
-			self.chartData = self.processData(self.retrievedResults(), params.configuration.timeBreakout);
+				self.chartData = self.processData(self.retrievedResults(), params.configuration.timeBreakout);
 
-			self.makeChart(self.chartData);
-		});
+				self.makeChart(self.chartData);
+			});
+		}
 
 		self.showSlice = ko.observable();
 		self.bySlice = ko.observable();
@@ -271,14 +273,6 @@ define( [
 					break;
 			}
 		};
-
-		if(params.configuration){
-			self.chartSaved(true);
-			//self.makeChart(self.retrievedResults());
-
-		} else {
-			self.chartSaved(false);
-		}
 
 		self.showPanelBody = function(area){
 			$('#'+area+'body').toggleClass('hide');

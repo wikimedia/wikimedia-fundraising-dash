@@ -10,12 +10,12 @@ define([
 
 		self.retrievedResults 	= ko.observable();
 		self.queryStringSQL 	= ko.observable('This widget hasn\'t been set up yet!');
-		self.config 			= params.configuration;
+		self.config 			= params.configuration || {};
 		self.instanceID 		= params.widgetInstance;
 		self.widgetCode			= params.widgetCode;
 		self.preDataLoading		= ko.observable(true);
-		self.dataLoading 		= ko.observable(!!self.config);
-		self.chartSaved 		= ko.observable(!!self.config);
+		self.dataLoading 		= ko.observable(!!params.configuration);
+		self.chartSaved 		= ko.observable(!!params.configuration);
 		self.optionStateChanged = ko.observable(false);
 		self.chartWidth 		= ko.observable('900');
 		self.chartHeight 		= ko.observable('550');
