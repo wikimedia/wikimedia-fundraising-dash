@@ -11,22 +11,8 @@ define( [
 	function XByYChartViewModel( params ){
 
 		WidgetBase.call( this, params );
-		var self = this;
-
-		if ( self.chartSaved() ) {
-			var chartDataCall = self.getChartData(self.config.queryString);
-
-			$.when( chartDataCall ).then( function( dataArray ){
-				self.retrievedResults(dataArray.results);
-				self.dataLoading(false);
-				self.preDataLoading(false);
-
-				self.chartData = self.processData(self.retrievedResults(), params.configuration.timeBreakout);
-
-				self.makeChart(self.chartData);
-			});
-		}
-
+		var self = this,
+			wasSaved = self.chartSaved(); //populateChoices() may overwrite
 		self.showSlice = ko.observable();
 		self.bySlice = ko.observable();
 		self.timeChoice = ko.observable();
@@ -297,9 +283,9 @@ define( [
 		self.groupChoices = ko.observableArray();
 
 		//populate user choices dynamically
-		self.populateChoices = (function(){
+		self.populateChoices = function(){
 			//populate y slices
-			$.get( 'metadata/x-by-y', function(reqData){
+			return $.get( 'metadata/x-by-y', function(reqData){
 				self.metadata = reqData;
 
 				var xArray = [], timeArray = ['Year', 'Month', 'Day'], groupArray = [];
@@ -324,10 +310,9 @@ define( [
 				self.xSlices(xArray);
 				self.timeChoices(timeArray);
 				self.groupChoices(groupArray);
-
 			});
 
-		})();
+		};
 
 		self.submitXY = function(){
 
@@ -338,6 +323,7 @@ define( [
 			self.queryRequest.timeBreakout = self.timeChoice();
 
 			self.queryString		 = self.convertToQuery(self.queryRequest);
+			self.config.showSlice	 = self.showSlice();
 			self.config.queryString  = self.queryString;
 			self.config.timeBreakout = self.queryRequest.timeBreakout;
 			self.config.chartData	= self.chartData;
@@ -353,13 +339,23 @@ define( [
 				self.makeChart(self.chartData);
 				$('#loadingModal').modal('hide');
 
-				self.chartSaved(false);
 			});
 
 
 		};
 
-		return(this);
+		self.populateChoices().then(function() {
+			self.preDataLoading(false);
+			if ( wasSaved ) {
+				// restore choices and show the chart
+				self.showSlice( self.config.showSlice );
+				self.timeChoice( self.config.timeBreakout );
+				self.chartSaved( true );
+				self.submitXY();
+			}
+		});
+
+		return this;
 
 	}
 

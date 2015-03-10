@@ -33,7 +33,6 @@ define([
 		};
 
 		self.saveWidgetConfig = function(){
-
 			if( self.instanceID ){
 				$.ajax({
 					method: 'PUT',
@@ -207,7 +206,7 @@ define([
 			self.chartSaved(false);
 		};
 
-		return(this);
+		return this;
 	}
 
 	return( WidgetBase );
