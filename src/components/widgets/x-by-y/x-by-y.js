@@ -11,19 +11,41 @@ define( [
 	function XByYChartViewModel( params ){
 
 		WidgetBase.call( this, params );
-		var self = this,
-			wasSaved = self.chartSaved(); //populateChoices() may overwrite
-		self.showSlice = ko.observable();
-		self.bySlice = ko.observable();
-		self.timeChoice = ko.observable();
-		self.queryRequest = {};
-		self.queryString = '';
-		self.chosenFilters = ko.observableArray();
-		self.subChoices = ko.observableArray();
+		var self      = this,
+			wasSaved  = self.chartSaved(); //populateChoices() may overwrite
+
+		self.showSlice                = ko.observable();
+		self.bySlice                  = ko.observable();
+		self.timeChoice               = ko.observable();
+		self.displayedTimeChoice      = ko.observable('');
+		self.queryRequest             = {};
+		self.queryString              = '';
+		self.chosenFilters            = ko.observableArray();
+		self.subChoices               = ko.observableArray();
 		self.chartWidth(950);
 
-		self.title = ko.computed(function(){
-			return self.showSlice(); //+ ' by ' + self.bySlice();
+		self.title = ko.computed( function(){
+			if( self.displayedTimeChoice()==='Year' ){
+				return self.showSlice() + ' Over All Time';
+			} else {
+				return self.showSlice() + ' by ' + self.displayedTimeChoice();
+			}
+		});
+
+		self.subtitle = ko.computed( function(){
+			var from = '';
+			switch(self.displayedTimeChoice()){
+				case 'Year':
+					return;
+				case 'Month':
+					from = moment().subtract(1, 'year').format('MMMM Do, YYYY');
+					break;
+				case 'Day':
+					from = moment().subtract(1, 'month').format('MMMM Do, YYYY');
+					break;
+			}
+
+			return from + ' to ' + moment().format('MMMM Do, YYYY');
 		});
 
 		self.makeChart = function(data){
@@ -317,6 +339,7 @@ define( [
 		self.submitXY = function(){
 
 			$('#loadingModal').modal('show');
+
 			self.queryRequest.ySlice = self.showSlice();
 			//self.queryRequest.xSlice = self.bySlice();
 			//self.queryRequest.additionalFilters = self.chosenFilters();
@@ -326,11 +349,12 @@ define( [
 			self.config.showSlice	 = self.showSlice();
 			self.config.queryString  = self.queryString;
 			self.config.timeBreakout = self.queryRequest.timeBreakout;
-			self.config.chartData	= self.chartData;
+			self.config.chartData	 = self.chartData;
 
 			var chartDataCall = self.getChartData(self.queryString);
 
 			$.when( chartDataCall ).then( function( dataArray ){
+				self.displayedTimeChoice(self.timeChoice());
 				self.retrievedResults(dataArray.results);
 				self.dataLoading(false);
 
