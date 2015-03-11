@@ -42,7 +42,7 @@ define(
             var pages = ['Library', 'Profile', 'Home'], view = data.target.id;
             if( pages.indexOf(data.target.id) > -1 ){
                 self.displayPage(view);
-            } else if( typeof view !== 'number' ) {
+            } else if( isNaN( parseInt( view, 10 ) ) ) {
                 self.displayPage($.trim($(data.target).text()));
             } else {
                 $.get('board/' + view, function( bdata ){
