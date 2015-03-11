@@ -49,237 +49,61 @@ define( [
 		});
 
 		self.makeChart = function(data){
+			var colors = {}, axes = {};
+			colors[data.totals[0]] = 'rgb(92,184,92)';
+			colors[data.counts[0]] = '#f0ad4e';
+			axes[data.totals[0]] = 'y';
+			axes[data.counts[0]] = 'y2';
 
-			self.chartLoaded(true);
-
-			self.monthlyChart = function(d,i){
-
-				var monthNamesArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-				return {
-					bindto: '#x-by-yChart',
-					size: {
-						height: 450,
-						width: window.width
+			self.xByYChart = c3.generate( {
+				bindto: '#x-by-yChart', //need to update this to allow multiples
+				size: {
+					height: 450,
+					width: window.width
+				},
+				zoom: { enabled: true },
+				data: {
+					x: 'x',
+					columns: [ data.xs, data.totals, data.counts ],
+					type: 'bar',
+					colors: colors,
+					axes: axes,
+					xFormat: '%Y-%m-%d %H'
+				},
+				grid: {
+					x: {
+						show: true
 					},
-					zoom: { enabled: true },
-					data: {
-						columns: [ data.monthlyCountArray, data.monthlyDataArray ],
-						type: 'bar',
-						colors: { 'Monthly Total': 'rgb(92,184,92)', 'Monthly Count': '#f0ad4e' },
-						axes: {
-							'Monthly Total': 'y',
-							'Monthly Count': 'y2'
-						}
-					},
-					grid: {
-						x: {
-							show: true
-						},
-						y: {
-							show: true
-						}
-					},
-					axis: {
-						x: {
-							tick: {
-								format: function(x){ return monthNamesArray[x]; }
-							}
-						},
-						y: {
-							tick: {
-								format: function(x){ return numeral(x).format('$0,0'); }
-							}
-						},
-						y2: {
-							tick: {
-								format: function(x){ return numeral(x).format('0,0'); }
-							},
-							show: true
-						}
-					},
-					tooltip: {
-						format: {
-							title: function (d) {
-								return monthNamesArray[d];
-							},
-							value: function (value, ratio, id) {
-								var display;
-								if(id === 'Monthly Total'){
-									display = numeral(value).format('$0,0');
-								} else {
-									display = numeral(value).format('0,0');
-								}
-								return display;
-							}
-						}
-					},
-					bar: {
-						width: {
-							ratio: 0.5
-						}
+					y: {
+						show: true
 					}
-				};
-			};
-
-			self.hourlyChart = function(d,i){
-				var hourlyData = data.dayObj[d.x + 1 ],
-					hourlyCountArray = ['Hourly Count'],
-					hourlyTotalArray = ['Hourly Total'];
-				for(var j=1; j<25; j++){
-					hourlyCountArray.push(hourlyData[j].count);
-					hourlyTotalArray.push(hourlyData[j].total);
+				},
+				axis: {
+					x: {
+						type: 'timeseries',
+						tick: {
+							format: data.timeFormat
+						}
+					},
+					y: {
+						tick: {
+							format: function(x){ return numeral(x).format('$0,0'); }
+						}
+					},
+					y2: {
+						tick: {
+							format: function(x){ return numeral(x).format('0,0'); }
+						},
+						show: true
+					}
+				},
+				bar: {
+					width: {
+						ratio: 0.4
+					}
 				}
-				return {
-					bindto: '#x-by-yChart',
-					size: {
-						height: 450,
-						width: window.width
-					},
-					zoom: { enabled: true },
-					data: {
-						columns: [ hourlyTotalArray, hourlyCountArray ],
-						type: 'bar',
-						colors: { 'Hourly Total': 'rgb(92,184,92)', 'Hourly Count': '#f0ad4e' },
-						onclick: function (d, i) { c3.generate(self.dailyChart()); },
-						axes: {
-							'Hourly Total': 'y',
-							'Hourly Count': 'y2'
-						}
-					},
-					grid: {
-						x: {
-							show: true
-						},
-						y: {
-							show: true
-						}
-					},
-					axis: {
-						x: {
-							label: {
-								text: 'December ' + ( d.x + 1 ),
-								position: 'outer-left'
-							},
-							tick: {
-								format: function(x){ return x + ':00'; }
-							}
-						},
-						y: {
-							tick: {
-								format: function(x){ return numeral(x).format('$0,0'); }
-							}
-						},
-						y2: {
-							tick: {
-								format: function(x){ return numeral(x).format('0,0'); }
-							},
-							show: true
-						}
-					},
-					tooltip: {
-						format: {
-							title: function (d) { return 'Hour ' + d; },
-							value: function (value, ratio, id) {
-								var display;
-								if(id === 'Hourly Total'){
-									display = numeral(value).format('$0,0');
-								} else {
-									display = numeral(value).format('0,0');
-								}
-								return display;
-							}
-						}
-					},
-					bar: {
-						width: {
-							ratio: 0.5
-						}
-					}
-				};
-			};
-
-			self.dailyChart = function(d,i){
-				return {
-					bindto: '#x-by-yChart',
-					size: {
-						height: 450,
-						width: window.width
-					},
-					zoom: { enabled: true },
-					data: {
-						columns: [ data.dailyDataArray, data.dailyCountArray ],
-						type: 'bar',
-						colors: { 'Daily Total': 'rgb(49,176,213)', 'Daily Count': '#f0ad4e' },
-						onclick: function (d, i) {
-							self.xByYChart = c3.generate(self.hourlyChart(d,i));
-						},
-						axes: {
-							'Daily Total': 'y',
-							'Daily Count': 'y2'
-						}
-					},
-					grid: {
-						x: {
-							show: true
-						},
-						y: {
-							show: true
-						}
-					},
-					axis: {
-						x: {
-							tick: {
-								format: function(x){ return 'Dec ' + (x+1); }
-							}
-						},
-						y: {
-							tick: {
-								format: function(x){ return numeral(x).format('$0,0'); }
-							}
-						},
-						y2: {
-							tick: {
-								format: function(x){ return numeral(x).format('0,0'); }
-							},
-							show: true
-						}
-					},
-					tooltip: {
-						format: {
-							title: function (d) { return 'Day ' + (d+1); },
-							value: function (value, ratio, id) {
-								var display;
-								if(id === 'Daily Total'){
-									display = numeral(value).format('$0,0');
-								} else {
-									display = numeral(value).format('0,0');
-								}
-								return display;
-							}
-						}
-					},
-					bar: {
-						width: {
-							ratio: 0.5
-						}
-					}
-				};
-			};
-
-
-			switch(data.timescale){
-				case 'Year':
-				case 'Month':
-					self.xByYChart = c3.generate(self.monthlyChart());
-					break;
-				case 'Day':
-					self.xByYChart = c3.generate(self.dailyChart());
-					break;
-				case 'Hour':
-					self.xByYChart = c3.generate(self.hourlyChart());
-					break;
-			}
+			} );
+			self.chartLoaded(true);
 		};
 
 		self.showPanelBody = function(area){
@@ -310,7 +134,7 @@ define( [
 			return $.get( 'metadata/x-by-y', function(reqData){
 				self.metadata = reqData;
 
-				var xArray = [], timeArray = ['Year', 'Month', 'Day'], groupArray = [];
+				var xArray = [], timeArray = ['Year', 'Month', 'Day', 'Hour'], groupArray = [];
 
 				$.each(self.metadata.filters, function(prop, obj){
 

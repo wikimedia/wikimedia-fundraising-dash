@@ -4,6 +4,12 @@ define([
 	'momentjs'
 ], function( $, ko, moment ){
 
+	function zeroPad( number ) {
+		if ( number < 10 ) {
+			return '0' + number;
+		}
+		return number;
+	}
 	function WidgetBase( params ){
 
 		var self = this;
@@ -66,76 +72,47 @@ define([
 
 		self.processData = function(rawdata, timescale){
 
-			var dailyDataArray 				= ['Daily Total'],
-				dailyCountArray 			= ['Daily Count'],
-				secondsByHourDonationData 	= ['Donations Per Second'],
-				dayObj 						= {}, returnObj;
+			var timeWord = ( timescale === 'Day' ? 'Dai' : timescale ) + 'ly',
+				totals = [ timeWord + ' Total'],
+				counts = [ timeWord + ' Count'],
+				xs = [ 'x' ],
+				defaultYear = new Date().getFullYear(),
+				defaultMonth = new Date().getMonth() + 1,
+				tempDate, timeFormat;
+
+			$.each( rawdata, function( index, dataPoint ) {
+				totals.push( dataPoint.usd_total );
+				counts.push( dataPoint.donations );
+
+				tempDate = ( dataPoint.Year || defaultYear ) + '-';
+				tempDate += zeroPad( dataPoint.Month || defaultMonth ) + '-';
+				tempDate += zeroPad( dataPoint.Day || 1 );
+				tempDate += ' ' + zeroPad( dataPoint.Hour || 0 );
+
+				xs.push( tempDate );
+			} );
 
 			switch(timescale){
 				case 'Year':
+					timeFormat = '%Y';
+					break;
 				case 'Month':
-					var monthlyDataArray = ['Monthly Total'],
-					monthlyCountArray = ['Monthly Count'],
-					months = rawdata;
-
-					$.each(months, function(i, el){
-						monthlyDataArray.push(el.usd_total);
-						monthlyCountArray.push(el.donations);
-					});
-
-					returnObj = {
-						timescale: timescale,
-						monthlyDataArray: monthlyDataArray,
-						monthlyCountArray: monthlyCountArray
-					};
-					return returnObj;
+					timeFormat = '%b \'%y';
+					break;
 				case 'Day':
+					timeFormat = '%b %e';
+					break;
 				case 'Hour':
-					for (var d = 1; d < 32; d++) {
-						dailyDataArray[d] = 0;
-						dailyCountArray[d] = 0;
-						if (!dayObj[d]) {
-							dayObj[d] = new Array(25);
-							dayObj[d][0] = 'Hourly Totals';
-							for (var h = 0; h < 24; h++) {
-								dayObj[d][h + 1] = { total: 0, count: 0 };
-								secondsByHourDonationData[(d - 1) * 24 + h + 1] = 0;
-							}
-						}
-					}
-
-					var dataCount = rawdata.length;
-					for (var i = 0; i < dataCount; i++ ) {
-
-						var el = rawdata[i],
-							day = el.Day,
-							hour = el.hour,
-							total = el.usd_total,
-							runningTotal = 0;
-
-						if(!hour){
-							dayObj[day+1] = { total: total, count: el.donations };
-						} else {
-							dayObj[day][hour + 1] = { total: total, count: el.donations };
-						}
-
-						secondsByHourDonationData[(day - 1) * 24 + hour + 1] = el.usd_per_second;
-						runningTotal += total;
-						dailyDataArray[day] += total;
-						dailyCountArray[day] += el.donations;
-					}
-
-					returnObj = {
-						timescale: timescale,
-						dailyDataArray: dailyDataArray,
-						dailyCountArray: dailyCountArray,
-						secondsByHourDonationData: secondsByHourDonationData,
-						dayObj: dayObj
-					};
-
-					return returnObj;
+					timeFormat = '%H:00';
+					break;
 			}
-
+			return {
+				timescale: timescale,
+				totals: totals,
+				counts: counts,
+				xs: xs,
+				timeFormat: timeFormat
+			};
 		};
 
 		self.convertToQuery = function( userChoices ){
@@ -184,30 +161,6 @@ define([
 			//	 return groupStr;
 			// }
 			return query;
-		};
-
-		// Generate chart label arrays for time increment types
-		self.chartLabels = function(type){
-			var chartLabels;
-			switch(type){
-				case 'Year':
-					chartLabels = ['Year'];
-					break;
-				case 'Month':
-					chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-					break;
-				case 'Day':
-					chartLabels = [ '01', '02', '03', '04', '05', '06', '07', '08', '09', '10',
-									'11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
-									'21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'];
-					break;
-				case 'Hour':
-					chartLabels = [ '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00',
-									'11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00',
-									'22:00', '23:00'];
-					break;
-			}
-			return chartLabels;
 		};
 
 		self.logStateChange = function(n){

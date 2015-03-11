@@ -46,7 +46,7 @@ module.exports = {
 			table: 'cc',
 			func: 'HOUR',
 			column: 'receive_date',
-			display: 'Month',
+			display: 'Hour',
 			type: 'number',
 			canGroup: true
 		},
