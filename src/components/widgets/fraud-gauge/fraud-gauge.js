@@ -33,7 +33,7 @@ function( ko, template, c3, Chart ){
     var self = this;
     self.filters = ko.observableArray();
     self.title = ko.observable(params.title);
-    console.log('fraud widget params: ', params);
+
     self.columnSize = 'col-md-' + params.configuration.width + ' fraudGauge';
 
     $.get( 'metadata/fraud-gauge', function(reqData){

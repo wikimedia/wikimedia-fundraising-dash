@@ -17,6 +17,8 @@ define(
         self.widgetTemplates = ko.observableArray();
         self.widgetInstances = ko.observableArray();
 
+
+
         //Get user info and configs like default board
         $.get('/user/info', function(userInfo) {
             if (userInfo) {
@@ -37,6 +39,42 @@ define(
                 });
             }
         });
+
+        self.addWidgetToBoard = function( event, data ){
+            var widgetIDToAdd;
+            console.log('event: ', event);
+            console.log('data', data.target.id);
+
+            //create an instance of the widget
+            $.ajax({
+                method: 'POST',
+                url: '/widget-instance',
+                contentType: 'application/json; charset=UTF-8',
+                data: JSON.stringify({
+                    widgetId: event.id,
+                    displayName: 'My ' + event.displayName,
+                    configuration: {},
+                    isShared: false
+                }),
+                success: function( data ) {
+                    widgetIDToAdd = data.id;
+                    self.displayedBoard().widgets.push(data.id);
+
+                    $.ajax({
+                        method: 'PUT',
+                        url: '/board/' + self.userdata().defaultBoard,
+                        contentType: 'application/json; charset=UTF-8',
+                        data: JSON.stringify(self.displayedBoard()),
+                        success: function(stuff) {
+                            //change the look of the add widget button
+                            $('#add-widget-'+event.id).hide();
+                            $('#saved-widget-'+event.id).removeClass('hide');
+                        }
+                    });
+                }
+            });
+
+        };
 
         self.setDisplayPage = function(e, data){
             var pages = ['Library', 'Profile', 'Home'], view = data.target.id;
