@@ -16,6 +16,7 @@ define([
 
 		self.retrievedResults 	= ko.observable();
 		self.queryStringSQL 	= ko.observable('This widget hasn\'t been set up yet!');
+		self.tempConfig			= ko.observable();
 		self.config 			= params.configuration || {};
 		self.instanceID 		= params.widgetInstance;
 		self.widgetCode			= params.widgetCode;
@@ -39,6 +40,7 @@ define([
 		};
 
 		self.saveWidgetConfig = function(){
+
 			if( self.instanceID ){
 				$.ajax({
 					method: 'PUT',
@@ -50,6 +52,7 @@ define([
 					}),
 					success: function( data ) {
 						self.chartSaved(true);
+						self.logStateChange(false);
 					}
 				});
 			} else {
@@ -64,6 +67,7 @@ define([
 					success: function( data ) {
 						self.instanceID = data.id;
 						self.chartSaved(true);
+						self.logStateChange(false);
 					}
 				});
 			}
