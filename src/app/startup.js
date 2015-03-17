@@ -3,10 +3,9 @@ define(
        'knockout',
        './router',
        'bootstrap',
-       'knockout-projections'
-       //'./bindings'
+       'knockout-projections',
+       './bindings'
     ], function( $, ko, router ){
-
         ko.components.register( 'dashboard',                  { require: 'components/dashboard/dashboard' });
         ko.components.register( 'home',                       { require: 'components/home/home' });
         ko.components.register( 'nav-bar',                    { require: 'components/nav-bar/nav-bar' });
