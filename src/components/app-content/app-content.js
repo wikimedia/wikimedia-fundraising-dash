@@ -47,7 +47,6 @@ define(
                 data: JSON.stringify({
                     widgetId: event.id,
                     displayName: 'My ' + event.displayName,
-                    configuration: {},
                     isShared: false
                 }),
                 success: function( data ) {
