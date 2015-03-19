@@ -1,308 +1,311 @@
 define([
-    'knockout',
-    'text!components/widgets/fraud-gauge/fraud-gauge.html',
-    'c3',
-    'chartjs'
-    ],
-function( ko, template, c3, Chart ){
-  //extend the chart so we can flip the circle
-  Chart.types.Doughnut.extend({
-    addData: function(segment, atIndex, silent){
-    var index = atIndex || this.segments.length;
-    this.segments.splice(index, 0, new this.SegmentArc({
-      value : segment.value,
-      outerRadius : (this.options.animateScale) ? 0 : this.outerRadius,
-      innerRadius : (this.options.animateScale) ? 0 : (this.outerRadius/100) * this.options.percentageInnerCutout,
-      fillColor : segment.color,
-      highlightColor : segment.highlight || segment.color,
-      showStroke : this.options.segmentShowStroke,
-      strokeWidth : this.options.segmentStrokeWidth,
-      strokeColor : this.options.segmentStrokeColor,
-      startAngle : Math.PI * 2.5,
-      circumference : (this.options.animateRotate) ? 0 : this.calculateCircumference(segment.value),
-      label : segment.label
-    }));
-    if (!silent){
-      this.reflow();
-      this.update();
-    }
-  }});
+	'knockout',
+	'text!components/widgets/fraud-gauge/fraud-gauge.html',
+	'c3',
+	'chartjs',
+	'WidgetBase'
+	],
+function( ko, template, c3, Chart, WidgetBase ){
 
-  function FraudGaugeViewModel( params ){
+	//extend the chart so we can flip the circle
+	Chart.types.Doughnut.extend({
+		addData: function(segment, atIndex, silent){
+			var index = atIndex || this.segments.length;
+			this.segments.splice(index, 0, new this.SegmentArc({
+				value : segment.value,
+				outerRadius : (this.options.animateScale) ? 0 : this.outerRadius,
+				innerRadius : (this.options.animateScale) ? 0 : (this.outerRadius/100) * this.options.percentageInnerCutout,
+				fillColor : segment.color,
+				highlightColor : segment.highlight || segment.color,
+				showStroke : this.options.segmentShowStroke,
+				strokeWidth : this.options.segmentStrokeWidth,
+				strokeColor : this.options.segmentStrokeColor,
+				startAngle : Math.PI * 2.5,
+				circumference : (this.options.animateRotate) ? 0 : this.calculateCircumference(segment.value),
+				label : segment.label
+			}));
 
-    var self = this;
-    self.filters = ko.observableArray();
-    self.title = ko.observable(params.title);
+			if (!silent){
+				this.reflow();
+				this.update();
+			}
+		}
+	});
 
-    self.columnSize = 'col-md-' + params.configuration.width + ' fraudGauge';
+	function FraudGaugeViewModel( params ){
 
-    $.get( 'metadata/fraud-gauge', function(reqData){
-      self.data = reqData;
-      //broken down data from above
-      self.filters($.map(self.data.filters, function(val, i){return [val];}));
-      self.filterNames = ko.computed( function(){
-        var names = [];
-        $.each(self.filters(), function(el, i){
-          names.push(i.display);
-        });
-        return names;
-      });
-    });
+		WidgetBase.call( this, params );
 
-    self.selectedTimePeriod = ko.observable('Last 15 Minutes');
-    self.selectedFilters = ko.observableArray([]);
-    self.selectedSubFilters = ko.observableArray([]);
-    self.queryRequest = [];
-    self.gaugeValue = ko.observable(0);
-    self.filtersSelected = ko.observable(false);
-    self.gaugeIsSetUp = ko.observable(false);
-    self.queryStringSQL = ko.observable('This widget hasn\'t been set up yet!');
+		var self 		= this,
+			wasSaved  	= self.chartSaved();
 
+		self.filters 				= ko.observableArray();
+		self.title 					= ko.observable(params.title);
+		self.queryString			= '';
+		self.columnSize 			= ko.observable('col-md-' + ( self.config.width || 6 ) + ' fraudGauge');
+		self.selectedTimePeriod 	= ko.observable( self.config.timeBreakout || 'Last 15 Minutes');
+		self.selectedFilters 		= ko.observableArray([]);
+		self.selectedSubFilters 	= ko.observableArray([]);
+		self.queryRequest 			= [];
+		self.gaugeValue 			= ko.observable(0);
+		self.filtersSelected 		= ko.observable(false);
+		self.queryStringSQL 		= ko.observable('This widget hasn\'t been set up yet!');
+		self.greenHighRange 		= ko.observable(17);
+		self.redLowRange 			= ko.observable(68);
+		self.configSet				= ko.observable(self.config);
 
+		self.populateChoices = function(){
+			return $.get( 'metadata/fraud-gauge', function(reqData){
+				self.data = reqData;
 
-    //default range slider settings
-    self.greenHighRange = ko.observable(17);
-    self.redLowRange = ko.observable(68);
+				self.filters($.map(self.data.filters, function(val, i){return [val];}));
+				self.filterNames = ko.computed( function(){
+					var names = [];
 
-    self.renderGaugeChart = function(){
+					$.each(self.filters(), function(el, i){
+					  names.push(i.display);
+					});
 
-      //color selection inside modal
-      var canvas = $('#fraudPercentSlider')[0];
-      var ctx = canvas.getContext('2d');
+					return names;
+				});
+			});
+		};
 
-      var placeholder = document.createElement('canvas');
-      placeholder.width = 200;
-      placeholder.height = placeholder.width;
-      var placeholderctx = placeholder.getContext('2d');
+		self.renderPercentRangeChart = function(){
 
-      var ddata = [{
-          value: 90,
-          color: '#000000'
-      },{
-          value: 1.8 * (self.greenHighRange()),
-          color: '#4cae4c'
-      },{
-          value: 1.8 * (self.redLowRange() - self.greenHighRange()),
-          color: '#eea236'
-      }, {
-          value: 1.8 * (100 - self.redLowRange()),
-          color: '#c9302c'
-      },{
-          value: 90,
-          color: '#000000'
-      }];
+			var canvas 		= $('#fraudPercentRanges')[0],
+				ctx 		= canvas.getContext('2d');
 
-      //draw chart
-      self.gaugeChart = new Chart(placeholderctx).Doughnut(ddata, {
-          animation: false,
-          segmentShowStroke: false,
+			var placeholder 		= document.createElement('canvas');
+			placeholder.width	 	= 200;
+			placeholder.height 		= placeholder.width;
+			var placeholderctx 		= placeholder.getContext('2d');
 
-          onAnimationComplete: function() {
+			var ddata = [{
+				value: 90,
+				color: '#000000'
+			},{
+				value: 1.8 * (self.greenHighRange()),
+				color: '#4cae4c'
+			},{
+				value: 1.8 * (self.redLowRange() - self.greenHighRange()),
+				color: '#eea236'
+			}, {
+				value: 1.8 * (100 - self.redLowRange()),
+				color: '#c9302c'
+			},{
+				value: 90,
+				color: '#000000'
+			}];
 
-            var cropHeight = Math.round(placeholder.height/2);
+			self.gaugeChart = new Chart( placeholderctx ).Doughnut( ddata, {
+				animation: false,
+				segmentShowStroke: false,
+				onAnimationComplete: function() {
+					var cropHeight = Math.round(placeholder.height/2);
+					ctx.clearRect(0,0,canvas.width,canvas.height);
+					ctx.drawImage(
+						placeholder,
+						0,
+						0,
+						placeholder.width,
+						cropHeight,
+						0,
+						0,
+						placeholder.width,
+						cropHeight
+					);
+				}
+			});
+		};
 
-            ctx.clearRect(0,0,canvas.width,canvas.height);
+		self.makeChart = function(){
+			self.gauge = c3.generate({
+				bindto: '#FraudRiskScoreGauge',
+				size: {
+					height: 300,
+					width: 390
+				},
+				data: {
+					columns: [
+						['failure', self.gaugeValue()]
+					],
+					type: 'gauge',
+					onclick: function (d, i) { console.log('onclick', d, i); }, //TODO: make these better
+					onmouseover: function (d, i) { console.log('onmouseover', d, i); },
+					onmouseout: function (d, i) { console.log('onmouseout', d, i); }
+				},
+				gauge: {
+					min: 0,
+					max: 100,
+					units: 'failure rate'
+				},
+				color: {
+					pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+					threshold: {
+						values: [ 0, self.greenHighRange, self.redLowRange, 100]
+					}
+				}
+			});
+		};
 
-            ctx.drawImage(
-              placeholder,
-              0,
-              0,
-              placeholder.width,
-              cropHeight,
-              0,
-              0,
-              placeholder.width,
-              cropHeight
-            );
+		self.validateSubmission = function( times, filters ){
+			var validation = {
+				validated: '',
+				errors: []
+			};
 
-          }
-      });
+			if( !times ){
+				validation.errors.push('You must submit a valid time.');
+				validation.validated = false;
+			} else {
+				validation.validated = true;
+			}
 
-    };
+			return validation;
+		};
 
-    self.renderGaugeChart();
+		self.convertToQueryString = function( userChoices ){
+			var qs            	= '',
+				ds            	= '',
+				timePresets		= [ 'Last 15 Minutes',
+									'Last Hour',
+									'Last 24 Hours',
+									'Last 5 Minutes'];
 
-    self.validateSubmission = function( times, filters ){
+			var filterObj = {};
+			var haveMultipleSubfilters = [];
+			$.each( userChoices.selectedSubFilters, function(el, subfilter){
+				var filter = subfilter.substr(0, subfilter.indexOf(' '));
 
-      var validation = {
-         validated: '',
-         errors: []
-       };
+				if(!filterObj[filter]){
+					filterObj[filter] = subfilter;
+				} else {
+					filterObj[filter] += ' or ' + subfilter;
+					haveMultipleSubfilters.push(filter);
+				}
+			});
 
-      //there must be a chosen timeframe
-       if(!times){
-         validation.errors.push('You must submit a valid time.');
-         validation.validated = false;
-       } else {
-         validation.validated = true;
-      }
+			$.each( filterObj, function(el, s){
+				if( haveMultipleSubfilters.indexOf(el) > -1){
+					qs += '(' + filterObj[el] + ')';
+				} else {
+					qs += filterObj[el];
+				}
+				qs += ' and ';
+			});
 
-      return validation;
-    };
+			var currentDate = new Date();
+			switch( userChoices.timespan[0] ){
+				case timePresets[0]:
+					var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
+					ds += 'DT gt \'' + lfm.toISOString() + '\'';
+					break;
+				case timePresets[1]:
+					var lh = new Date(currentDate.getTime() - (60 * 60 * 1000));
+					ds += 'DT gt \'' + lh.toISOString() + '\'';
+					break;
+				case timePresets[2]:
+					var ltfh = new Date(currentDate.getTime() - (24 * 60 * 60 * 1000));
+					ds += 'DT gt \'' + ltfh.toISOString() + '\'';
+					break;
+				case timePresets[3]:
+					var lfvm = new Date(currentDate.getTime() - (5 * 60 * 1000));
+					ds += 'DT gt \'' + lfvm.toISOString() + '\'';
+					break;
+				default:
+					var lfm2 = new Date(currentDate.getTime() - (15 * 60 * 1000));
+					ds += 'DT gt \'' + lfm2.toISOString() + '\'';
+					break;
 
-    self.convertToQuery = function( userChoices ){
+			}
 
-      var qs            = '',
-          ds            = '',
-          timePresets   = [ 'Last 15 Minutes',
-                            'Last Hour',
-                            'Last 24 Hours',
-                            'Last 5 Minutes'];
+			var postQS = '';
+			if(qs.length > 0){
+				postQS = qs + ds;
+			} else {
+				postQS = ds;
+			}
 
-      //match subfilters to filters
-      //TODO: this is terrible and needs to be refactored when this piece gets modularized.
-      var filterObj = {};
-      var haveMultipleSubfilters = [];
-      $.each( userChoices.selectedSubFilters, function(el, subfilter){
-        var filter = subfilter.substr(0, subfilter.indexOf(' '));
+			return '$filter=' + postQS;
+		};
 
-        if(!filterObj[filter]){
-          filterObj[filter] = subfilter;
-        } else {
-          filterObj[filter] += ' or ' + subfilter;
-          haveMultipleSubfilters.push(filter);
-        }
-      });
+		self.showSubfilters = function( stuff ){
+			$('#'+stuff).toggleClass('hide');
+		};
 
-      $.each( filterObj, function(el, s){
-        if( haveMultipleSubfilters.indexOf(el) > -1){
-          qs += '(' + filterObj[el] + ')';
-        } else {
-          qs += filterObj[el];
-        }
-        qs += ' and ';
-      });
+		self.resetGaugeSettings = function(){
+			self.greenHighRange(33);
+			self.redLowRange(66);
+			self.renderPercentRangeChart();
 
-      //convert time constraints
-      var currentDate = new Date();
-      switch( userChoices.timespan[0] ){
-        case timePresets[0]:
-          var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
-          ds += 'DT gt \'' + lfm.toISOString() + '\'';
-          break;
-        case timePresets[1]:
-          var lh = new Date(currentDate.getTime() - (60 * 60 * 1000));
-          ds += 'DT gt \'' + lh.toISOString() + '\'';
-          break;
-        case timePresets[2]:
-          var ltfh = new Date(currentDate.getTime() - (24 * 60 * 60 * 1000));
-          ds += 'DT gt \'' + ltfh.toISOString() + '\'';
-          break;
-        case timePresets[3]:
-          var lfvm = new Date(currentDate.getTime() - (5 * 60 * 1000));
-          ds += 'DT gt \'' + lfvm.toISOString() + '\'';
-          break;
-        default:
-          var lfm2 = new Date(currentDate.getTime() - (15 * 60 * 1000));
-          ds += 'DT gt \'' + lfm2.toISOString() + '\'';
-          break;
+			$('#timePeriodDropdown option:eq(0)').prop('selected', true);
+			$('.subfilterSubnav').addClass('hide');
+			$('input:checkbox').removeAttr('checked');
+		};
 
-      }
+		self.submitGaugeModifications = function(btn){
 
-      //if there's already something in the qs, precede new string with 'and'
-      var postQS = '';
-      if(qs.length > 0){
-        postQS = qs + ds;
-      } else {
-        postQS = ds;
-      }
+			if(btn){self.logStateChange(true);}
 
-      return postQS;
-    };
+			var validation = self.validateSubmission( self.selectedTimePeriod(), self.selectedFilters() );
+			if( !validation.validated ){
 
-    self.showSubfilters = function(stuff){
-      $('#'+stuff).toggleClass('hide');
-    };
+				$('#fraudSubmissionErrors').html('<p class="text-danger">you have errors in your submission:</p><ul></ul>' ).addClass('show');
+				$.each( validation.errors, function(el, i){
+					$('#fraudSubmissionErrors ul').append('<li>' + i + '</li>');
+				});
 
-    self.resetGaugeSettings = function(){
+			} else{
+				//gauge time period
+				self.queryRequest.timespan = self.selectedTimePeriod();
 
-      //reset gauge settings to defaults
-      self.greenHighRange(33);
-      self.redLowRange(66);
-      self.renderGaugeChart();
+				//gauge filters
+				self.queryRequest.selectedFilters = self.selectedFilters();
+				if(self.selectedFilters().length > 0){
+				  self.filtersSelected(true);
+				}
 
-      //reset datepicker
-      $('#timePeriodDropdown option:eq(0)').prop('selected', true);
+				//gauge subfilters
+				self.queryRequest.selectedSubFilters = self.selectedSubFilters().sort();
+				self.queryString = self.convertToQueryString(self.queryRequest);
 
-      //reset filters
-      $('.subfilterSubnav').addClass('hide');
-      $('input:checkbox').removeAttr('checked');
+				//put gauge mods into temp config to be pushed if/when saved
+				//width, queryString, timeBreakout, showSlice
+				self.config = {
+					width: self.config.width,
+					queryString: self.queryString,
+					timeBreakout: self.selectedTimePeriod().toString(),
+					selectedFilters: self.queryRequest.selectedFilters,
+					selectedSubFilters: self.queryRequest.selectedSubFilters
+				};
 
-    };
+				var chartDataCall = self.getChartData( self.queryString );
+				$.when( chartDataCall ).then( function( dataget ){
+					self.gaugeValue(parseFloat(dataget.results[0].fraud_percent).toFixed(2) );
+					self.queryStringSQL(dataget.sqlQuery);
+					self.makeChart();
+				});
+			}
+		};
 
-    self.submitGaugeModifications = function(){
+		self.populateChoices().then(function() {
+			self.preDataLoading(false);
 
-      //validate values first.
-      var validation = self.validateSubmission( self.selectedTimePeriod(), self.selectedFilters() );
-      if( !validation.validated ){
+			if ( wasSaved ) {
+				// restore choices and show the chart
+				if(self.config !== 'NULL') {
+					self.selectedTimePeriod(self.config.timeBreakout);
+					self.selectedFilters(self.config.selectedFilters);
+					self.selectedSubFilters(self.config.selectedSubFilters);
+				}
+				self.chartSaved( true );
+				self.submitGaugeModifications();
+			}
+		});
 
-        $('#fraudSubmissionErrors').html('<p class="text-danger">you have errors in your submission:</p><ul></ul>' ).addClass('show');
-        $.each( validation.errors, function(el, i){
-          $('#fraudSubmissionErrors ul').append('<li>' + i + '</li>');
-        });
+		return this;
+	}
 
-      } else{
-
-        //gauge time period
-        self.queryRequest.timespan = self.selectedTimePeriod();
-
-        //gauge filters
-        self.queryRequest.selectedFilters = self.selectedFilters();
-        if(self.selectedFilters().length > 0){
-          self.filtersSelected(true);
-        }
-
-        //gauge subfilters
-        self.queryRequest.selectedSubFilters = self.selectedSubFilters().sort();
-
-        //put it all into a real query
-        //this will be a function call - TODO: make parsing function
-        var queryString = self.convertToQuery(self.queryRequest);
-
-
-        //Todo: if this is already set up in configs, take that data.
-        //otherwise do this.
-        $.get( '/data/fraud?' + $.param({ '$filter': queryString }).replace(
-          /\+/g, '%20' ), function ( dataget ) {
-          self.gaugeIsSetUp(true);
-          self.gaugeValue(parseFloat(dataget.results[0].fraud_percent).toFixed(2) );
-          self.queryStringSQL(dataget.sqlQuery);
-
-          self.gauge = c3.generate({
-              bindto: '#FraudRiskScoreGauge',
-              size: {
-                height: 300,
-                width: 390
-              },
-              data: {
-                  columns: [
-                      ['failure', self.gaugeValue()]
-                  ],
-                  type: 'gauge',
-                  onclick: function (d, i) { console.log('onclick', d, i); }, //TODO: make these better
-                  onmouseover: function (d, i) { console.log('onmouseover', d, i); },
-                  onmouseout: function (d, i) { console.log('onmouseout', d, i); }
-              },
-              gauge: {
-                  min: 0,
-                  max: 100,
-                  units: 'failure rate'
-              },
-              color: {
-                  pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
-                  threshold: {
-                      values: [ 0, self.greenHighRange, self.redLowRange, 100]
-                  }
-              }
-          });
-        });
-      }
-
-    };
-
-
-  }
-
-  return { viewModel: FraudGaugeViewModel, template: template };
-
+	return { viewModel: FraudGaugeViewModel, template: template };
 });
