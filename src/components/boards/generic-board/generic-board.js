@@ -14,9 +14,24 @@ define( [
         self.sharedContext = {};
 
         self.displayedBoard = params.displayedBoard;
+        self.widgetLoads = [];
+        $.each( self.displayedBoard().widgets, function( i, widget ) {
+            widget.dataLoading = ko.observable( false );
+            self.widgetLoads.push( widget.dataLoading );
+        } );
 
-        //make this false until data loading has been written
-        self.dataLoading = ko.observable(false);
+        //This will return true if any child widget is loading
+        self.dataLoading = ko.computed( function() {
+            var i, widgetCount = self.widgetLoads.length;
+            for ( i = 0; i < widgetCount; i++ ) {
+                if ( self.widgetLoads[i]() === true ) {
+                    $('#loadingModal').modal('show'); //todo: knockout-style!
+                    return true;
+                }
+            }
+            $('#loadingModal').modal('hide'); //todo: knockout-style!
+            return false;
+        } );
 
         // Get the date
         self.displayDate = ko.observable( moment().format( timeFormat ) );
