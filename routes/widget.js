@@ -7,10 +7,6 @@ module.exports = {
 		});
 	},
 	saveInstance: function( req, res ) {
-		if ( !req.session || !req.session.passport || !req.session.passport.user ) {
-			res.json( { error: 'Error: Not logged in' } );
-			return;
-		}
 		var instance = {
 			widgetId: req.body.widgetId,
 			ownerId: req.session.passport.user.localId,
@@ -29,10 +25,6 @@ module.exports = {
 		});
 	},
 	getInstance: function( req, res ) {
-		if ( !req.session || !req.session.passport || !req.session.passport.user ) {
-			res.json( { error: 'Error: Not logged in' } );
-			return;
-		}
 		persistence.getWidgetInstance( req.params.id, req.session.passport.user.localId ).then( function( instance ) {
 			res.json( instance );
 		}, function( error ) {

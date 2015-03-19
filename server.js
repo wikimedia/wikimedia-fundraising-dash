@@ -9,7 +9,8 @@ var express			= require( 'express' ),
 	config			= require( './config.js' ),
 	persistence		= require( './persistence.js' ),
 	server,
-	serverConfig;
+	serverConfig,
+	loginCheck;
 
 logger.debug( 'Dash starting up' );
 
@@ -67,21 +68,29 @@ passport.deserializeUser( function( user, done ) {
 app.use( passport.initialize() );
 app.use( passport.session() );
 
+loginCheck = function( req, res, next ) {
+	if ( !req.session || !req.session.passport || !req.session.passport.user ) {
+		res.json( { error: 'Error: Not logged in' } );
+		return;
+	}
+	return next();
+};
+
 app.set( 'views', __dirname + '/src/components' );
 app.set( 'view options', { pretty: true } );
 
-app.get( '/data/:widget', routes.data );
-app.get( '/metadata/:widget', routes.metadata );
-app.get( '/user/info', routes.user.info );
-app.get( '/widget', routes.widget.list );
-app.get( '/widget-instance', routes.user.widgetInstances );
-app.post( '/widget-instance', routes.widget.saveInstance );
-app.put( '/widget-instance/:id', routes.widget.saveInstance );
-app.get( '/widget-instance/:id', routes.widget.getInstance );
-app.get( '/board', routes.user.boards );
-app.post( '/board', routes.board.save );
-app.put( '/board/:id', routes.board.save );
-app.get( '/board/:id', routes.board.get );
+app.get( '/data/:widget', loginCheck, routes.data );
+app.get( '/metadata/:widget', loginCheck, routes.metadata );
+app.get( '/user/info', loginCheck, routes.user.info );
+app.get( '/widget', loginCheck, routes.widget.list );
+app.get( '/widget-instance', loginCheck, routes.user.widgetInstances );
+app.post( '/widget-instance', loginCheck, routes.widget.saveInstance );
+app.put( '/widget-instance/:id', loginCheck, routes.widget.saveInstance );
+app.get( '/widget-instance/:id', loginCheck, routes.widget.getInstance );
+app.get( '/board', loginCheck, routes.user.boards );
+app.post( '/board', loginCheck, routes.board.save );
+app.put( '/board/:id', loginCheck, routes.board.save );
+app.get( '/board/:id', loginCheck, routes.board.get );
 
 /*jslint -W024*/
 app.use( express.static( __dirname + ( config.debug ? '/src' : '/dist' ) ) );

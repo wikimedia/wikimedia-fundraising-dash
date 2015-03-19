@@ -2,10 +2,6 @@ var persistence = require( '../persistence.js' );
 
 module.exports = {
 	save: function( req, res ) {
-		if ( !req.session || !req.session.passport || !req.session.passport.user ) {
-			res.json( { error: 'Error: Not logged in' } );
-			return;
-		}
 		var board = {
 			ownerId: req.session.passport.user.localId,
 			displayName: req.body.displayName,
@@ -23,10 +19,6 @@ module.exports = {
 		});
 	},
 	get: function( req, res ) {
-		if ( !req.session || !req.session.passport || !req.session.passport.user ) {
-			res.json( { error: 'Error: Not logged in' } );
-			return;
-		}
 		persistence.getBoard( req.params.id, req.session.passport.user.localId ).then( function( board ) {
 			res.json( board );
 		}, function( error ) {
