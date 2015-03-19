@@ -4,6 +4,7 @@
 			<p data-bind="text: title"></p>
 		</div>
 		<div class="panel-body">
+			<p data-bind="visible: !hasData()">No data available.  This widget requires a widget like Totals Earned to provide data.</p>
 			<div class="row-fluid">
 				<div class="col-md-12">
 					<div id="distanceToGoalChart" width='1000' height='450'></div>
