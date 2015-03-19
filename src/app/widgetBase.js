@@ -21,7 +21,7 @@ define([
 		self.instanceID 		= params.widgetInstance;
 		self.widgetCode			= params.widgetCode;
 		self.preDataLoading		= ko.observable(true);
-		self.dataLoading 		= ko.observable(!!params.configuration);
+		self.dataLoading 		= params.dataLoading;
 		self.chartSaved 		= ko.observable(!!params.configuration);
 		self.optionStateChanged = ko.observable(false);
 		self.chartWidth 		= ko.observable('900');
@@ -34,6 +34,7 @@ define([
 			return $.ajax({
 				url: '/data/' + self.widgetCode + '?' + ( qs ).replace( /\+/g, '%20' ),
 				success: function ( dataget ) {
+					self.dataLoading(false);
 					self.retrievedResults( dataget.results );
 					self.queryStringSQL( dataget.sqlQuery );
 				}

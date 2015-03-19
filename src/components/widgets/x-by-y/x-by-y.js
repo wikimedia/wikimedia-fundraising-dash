@@ -162,8 +162,6 @@ define( [
 
 		self.submitXY = function(){
 
-			$('#loadingModal').modal('show');
-
 			self.queryRequest.ySlice = self.showSlice();
 			//self.queryRequest.xSlice = self.bySlice();
 			//self.queryRequest.additionalFilters = self.chosenFilters();
@@ -180,12 +178,10 @@ define( [
 			$.when( chartDataCall ).then( function( dataArray ){
 				self.displayedTimeChoice(self.timeChoice());
 				self.retrievedResults(dataArray.results);
-				self.dataLoading(false);
 
 				self.chartData = self.processData(self.retrievedResults(), self.timeChoice());
 
 				self.makeChart(self.chartData);
-				$('#loadingModal').modal('hide');
 
 			});
 
