@@ -2,8 +2,9 @@ define( [
 	'knockout',
 	'text!components/widgets/distance-to-goal-chart/distance-to-goal-chart.html',
 	'c3',
+	'numeraljs',
 	'WidgetBase'
-], function( ko, template, c3, WidgetBase ){
+], function( ko, template, c3, numeral, WidgetBase ){
 
 	function DistanceToGoalChartViewModel( params ){
 
@@ -62,7 +63,7 @@ define( [
 							position: 'outer-middle'
 						},
 						tick: {
-							format: function(x){ return '$' + x/1000000 + 'm'; }
+							format: function(x){ return numeral(x).format( '$0.[00]a' ); }
 						}
 					}
 				}
