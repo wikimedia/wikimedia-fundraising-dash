@@ -1,9 +1,10 @@
 <div class="col-md-6 lastWidget">
 	<div class="panel panel-purple">
 		<div class="panel-heading">
-			<p>USD/Second Required (Average)</p>
+			<p data-bind="text:title"></p>
 		</div>
 		<div class="panel-body">
+			<p data-bind="visible: !hasData()">No data available.  This widget requires a widget like Totals Earned to provide data.</p>
 			<div class="col-md-12">
 				<div id="avgUSDperSecond"></div>
 			</div>
