@@ -27,6 +27,7 @@ define([
 		self.chartWidth 		= ko.observable('900');
 		self.chartHeight 		= ko.observable('550');
 		self.chartLoaded		= ko.observable(false);
+		self.title				= ko.observable(params.title);
 
 		self.getChartData = function( qs ){
 			self.dataLoading(true);
@@ -40,16 +41,18 @@ define([
 		};
 
 		self.saveWidgetConfig = function(){
+			var data = JSON.stringify( {
+				configuration: self.config,
+				isShared: false,
+				displayName: self.title()
+			} );
 
 			if( self.instanceID ){
 				$.ajax({
 					method: 'PUT',
 					url: '/widget-instance/' + self.instanceID,
 					contentType: 'application/json; charset=UTF-8',
-					data: JSON.stringify({
-						configuration: self.config,
-						isShared: false
-					}),
+					data: data,
 					success: function( data ) {
 						self.chartSaved(true);
 						self.logStateChange(false);
@@ -60,10 +63,7 @@ define([
 					method: 'POST',
 					url: '/widget-instance/',
 					contentType: 'application/json; charset=UTF-8',
-					data: JSON.stringify({
-						configuration: self.config,
-						isShared: false
-					}),
+					data: data,
 					success: function( data ) {
 						self.instanceID = data.id;
 						self.chartSaved(true);
@@ -169,7 +169,9 @@ define([
 
 		self.logStateChange = function(n){
 			self.optionStateChanged(n);
-			self.chartSaved(false);
+			if ( n !== false ) {
+				self.chartSaved(false);
+			}
 		};
 
 		return this;

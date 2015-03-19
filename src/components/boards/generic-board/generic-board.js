@@ -11,6 +11,8 @@ define( [
         var self = this,
             timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
 
+        self.sharedContext = {};
+
         self.displayedBoard = params.displayedBoard;
 
         //make this false until data loading has been written
