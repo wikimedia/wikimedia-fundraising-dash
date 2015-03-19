@@ -174,6 +174,17 @@ define([
 			}
 		};
 
+		self.subscribe = function( parent, member, callback ) {
+			if ( !parent[member] ) {
+				window.setTimeout( function () {
+					self.subscribe( parent, member, callback );
+				}, 50 );
+				return;
+			}
+			parent[member].subscribe( callback );
+			callback();
+		};
+
 		return this;
 	}
 
