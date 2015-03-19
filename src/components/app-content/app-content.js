@@ -81,6 +81,7 @@ define(
                 self.displayPage($.trim($(data.target).text()));
             } else {
                 $.get( 'board/' + view, function( bdata ){
+					self.displayPage('Home');
                     self.displayedBoard( bdata );
                 });
             }
