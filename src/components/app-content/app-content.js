@@ -38,52 +38,37 @@ define(
         });
 
         self.addWidgetToBoard = function( event, data ){
-            var widgetIDToAdd;
-
-            $.ajax({
+            $.ajax( {
                 method: 'POST',
                 url: '/widget-instance',
                 contentType: 'application/json; charset=UTF-8',
-                data: JSON.stringify({
+                data: JSON.stringify( {
                     widgetId: event.id,
                     displayName: 'My ' + event.displayName,
                     isShared: false
-                }),
+                } ),
                 success: function( data ) {
-                    widgetIDToAdd = data.id; var gettingBoard, defaultBoardConfig;
-
-                    if( self.userdata().defaultBoard !== parseInt( self.displayedBoard().id, 10) ){
-                        gettingBoard = $.ajax({
-                                url: '/board/' + self.userdata().defaultBoard,
-                                success: function( stuff ) {
-                                    defaultBoardConfig = stuff;
-                                }
-                            });
-                    } else {
-                        defaultBoardConfig = self.displayedBoard();
-                        gettingBoard = $.Deferred().resolve(defaultBoardConfig).promise();
-                    }
-
-                    $.when( gettingBoard ).then( function( returnedData ){
-                        defaultBoardConfig = returnedData;
-                        defaultBoardConfig.widgets.push(data.id);
-
-                        $.ajax({
-                            method: 'PUT',
-                            url: '/board/' + self.userdata().defaultBoard,
-                            contentType: 'application/json; charset=UTF-8',
-                            data: JSON.stringify( defaultBoardConfig ),
-                            success: function( stuff ) {
-                                //change the look of the add widget button
-                                $( '#add-widget-' + event.id ).hide();
-                                $( '#saved-widget-' + event.id ).removeClass( 'hide' );
-                            }
-                        });
-                    });
-
-
+					$.ajax( {
+						method: 'POST',
+						url: '/board/' + self.userdata().defaultBoard + '/widgets',
+						contentType: 'application/json; charset=UTF-8',
+						data: JSON.stringify( {
+							instanceId: data.id
+						} ),
+						success: function( stuff ) {
+							//change the look of the add widget button
+							$( '#add-widget-' + event.id ).hide();
+							$( '#saved-widget-' + event.id ).removeClass( 'hide' );
+							//refresh the displayed board
+							if ( parseInt( self.displayedBoard().id, 10 ) === self.userdata().defaultBoard ) {
+								$.get( 'board/' + self.userdata().defaultBoard, function( moredata ){
+									self.displayedBoard( moredata );
+								});
+							}
+						}
+					} );
                 }
-            });
+            } );
 
         };
 

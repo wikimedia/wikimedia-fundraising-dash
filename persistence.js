@@ -169,12 +169,22 @@ module.exports = {
 	saveBoard: function( board ) {
 		var connection = getConnection(),
 			insert = 'INSERT INTO dash_board ( owner_id, display_name, description, is_shared ) VALUES ( ?, ?, ?, ? )',
+			addWidget = 'INSERT INTO dash_widget_instance_board ( instance_id, board_id, widget_position ) SELECT ?, b.id, COALESCE( MAX( widget_position ), 0 ) + 1 FROM dash_board b LEFT JOIN dash_widget_instance_board i ON b.id = i.board_id WHERE b.id = ? AND b.owner_id = ?',
+			addWidgetParams = [ board.addWidget, board.id, board.ownerId ],
+			deleteWidget = 'DELETE FROM dash_widget_instance_board WHERE instance_id = ? AND board_id = ? AND EXISTS( SELECT 1 FROM dash_board WHERE id = ? AND owner_id = ? )',
+			deleteWidgetParams = [ board.deleteWidget, board.id, board.id, board.ownerId ],
 			insertParams = [ board.ownerId, board.displayName, board.description, board.isShared ? 1 : 0 ],
 			update = 'UPDATE dash_board set display_name = ?, description = ?, is_shared = ? WHERE id = ? AND owner_id = ?',
 			updateParams = [ board.displayName, board.description, board.isShared ? 1 : 0, board.id, board.ownerId ],
 			deleteWidgets = 'DELETE FROM dash_widget_instance_board WHERE board_id = ?';
 
 		if ( board.id ) {
+			if ( board.addWidget ) {
+				return connection.query( addWidget, addWidgetParams );
+			}
+			if ( board.deleteWidget ) {
+				return connection.query( deleteWidget, deleteWidgetParams );
+			}
 			return connection.query( update, updateParams ).then( function( dbResults ) {
 				if ( dbResults[0].affectedRows !== 1 ) {
 					// Either the board doesn't exist or it's not ours

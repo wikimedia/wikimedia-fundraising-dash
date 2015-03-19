@@ -91,8 +91,9 @@ app.get( '/board', loginCheck, routes.user.boards );
 app.post( '/board', loginCheck, routes.board.save );
 app.put( '/board/:id', loginCheck, routes.board.save );
 app.get( '/board/:id', loginCheck, routes.board.get );
-
+app.post( '/board/:id/widgets', loginCheck, routes.board.addWidget );
 /*jslint -W024*/
+app.delete( '/board/:id/widgets/:instanceId', loginCheck, routes.board.deleteWidget );
 app.use( express.static( __dirname + ( config.debug ? '/src' : '/dist' ) ) );
 /*jslint +W024*/
 

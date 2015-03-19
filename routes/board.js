@@ -24,5 +24,25 @@ module.exports = {
 		}, function( error ) {
 			res.json( { error: error } );
 		});
+	},
+	addWidget: function( req, res ) {
+		var board = {
+			ownerId: req.session.passport.user.localId,
+			id: req.params.id,
+			addWidget: req.body.instanceId
+		};
+		persistence.saveBoard( board ).then( function() {
+			res.json( { success: true, id: board.id } );
+		} );
+	},
+	deleteWidget: function( req, res ) {
+		var board = {
+			ownerId: req.session.passport.user.localId,
+			id: req.params.id,
+			deleteWidget: req.params.instanceId
+		};
+		persistence.saveBoard( board ).then( function() {
+			res.json( { success: true, id: board.id } );
+		} );
 	}
 };
