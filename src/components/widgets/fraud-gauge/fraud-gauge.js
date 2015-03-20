@@ -52,7 +52,7 @@ function( ko, template, c3, Chart, WidgetBase ){
 		self.queryStringSQL 		= ko.observable('This widget hasn\'t been set up yet!');
 		self.greenHighRange 		= ko.observable(17);
 		self.redLowRange 			= ko.observable(68);
-		self.configSet				= ko.observable(self.config);
+		self.configSet				= ko.observable(Object.keys(self.config).length > 0);
 
 		self.populateChoices = function(){
 			return $.get( 'metadata/fraud-gauge', function(reqData){
