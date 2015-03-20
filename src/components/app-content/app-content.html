@@ -5,7 +5,7 @@
 <section id="appContent" data-bind="if: displayPage() === 'Home'">
 
 	<div class="container-fluid" data-bind='if: loggedIn'>
-		<div class="row">
+		<div class="row" data-bind='if:displayedBoard'>
 			<generic-board params="displayedBoard: displayedBoard"></generic-board>
 		</div>
 	</div>
