@@ -14,25 +14,38 @@ define( [
         self.sharedContext = {};
 
         self.displayedBoard = params.displayedBoard;
-        self.widgetLoads = [];
-        $.each( self.displayedBoard().widgets, function( i, widget ) {
-            widget.dataLoading = ko.observable( false );
-            self.widgetLoads.push( widget.dataLoading );
-        } );
+        self.widgetLoads = ko.observableArray([]);
+		function setWidgetLoads() {
+			self.widgetLoads.removeAll();
+			$.each( self.displayedBoard().widgets, function( i, widget ) {
+				widget.dataLoading = ko.observable( false );
+				self.widgetLoads.push( widget.dataLoading );
+			} );
+		}
+		setWidgetLoads();
+		self.displayedBoard.subscribe( setWidgetLoads );
 
         //This will return true if any child widget is loading
         self.dataLoading = ko.computed( function() {
-            var i, widgetCount = self.widgetLoads.length;
+            var i,
+				loads = self.widgetLoads(),
+				widgetCount = loads.length;
+
             for ( i = 0; i < widgetCount; i++ ) {
-                if ( self.widgetLoads[i]() === true ) {
-                    $('#loadingModal').modal('show'); //todo: knockout-style!
+                if ( loads[i]() === true ) {
                     return true;
                 }
             }
-            $('#loadingModal').modal('hide'); //todo: knockout-style!
             return false;
-        } );
+        } ).extend( { throttle: 10 } ); // don't flip too often
 
+        self.dataLoading.subscribe( function( value ) {
+            if ( value ) {
+                $('#loadingModal').modal('show'); //todo: knockout-style!
+            } else {
+                $('#loadingModal').modal('hide'); //todo: knockout-style!
+            }
+        } );
         // Get the date
         self.displayDate = ko.observable( moment().format( timeFormat ) );
 
