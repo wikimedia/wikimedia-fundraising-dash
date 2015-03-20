@@ -67,7 +67,7 @@ module.exports = {
 				}
 				// If user doesn't have a default board, insert one now
 				return connection.query( insertBoard, [ 'Default dashboard for ' + user.displayName, userId, userId ] ).then( function( dbResults ) {
-					user.defaultBoard = dbResults[0].id;
+					user.defaultBoard = dbResults[0][2][0].id;
 				});
 			});
 		});
