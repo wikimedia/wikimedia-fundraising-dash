@@ -15,6 +15,7 @@
 				<ul class="dropdown-menu" role="menu" aria-labelledby="savedCharts" id="savedChartsMenu" data-bind="foreach: presetTitles, style: { width: '300px'}">
 					<li data-bind="text: $data"></li>
 				</ul> -->
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#removeModal"><i class="fa fa-times"></i></button>
 			</div>
 		</div>
 
@@ -156,6 +157,20 @@
 				<h4 class="modal-title">Chart SQL:</h4>
 			</div>
 			<div class="modal-body" data-bind="text: queryStringSQL"></div>
+		</div><!-- /.modal-content -->
+	</div>
+</div>
+
+<div class="modal fade" id="removeModal">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>Remove this widget from the board?</h2>
+			</div>
+			<div class="modal-body">
+				<button class="btn btn-lg btn-success pull-right" data-dismiss="modal" data-bind="click: $parents[2].removeWidgetFromBoard"> OK</button>
+				<button class="btn btn-lg btn-danger pull-right" data-dismiss="modal"> Cancel</button>
+			</div>
 		</div><!-- /.modal-content -->
 	</div>
 </div>
