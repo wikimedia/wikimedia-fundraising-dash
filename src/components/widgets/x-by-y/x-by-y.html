@@ -15,7 +15,7 @@
 				<ul class="dropdown-menu" role="menu" aria-labelledby="savedCharts" id="savedChartsMenu" data-bind="foreach: presetTitles, style: { width: '300px'}">
 					<li data-bind="text: $data"></li>
 				</ul> -->
-				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#removeModal"><i class="fa fa-times"></i></button>
+				<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="modal" data-bind="attr: { 'data-target': '#remove'+instanceID }"><i class="fa fa-times"></i></button>
 			</div>
 		</div>
 
@@ -161,7 +161,7 @@
 	</div>
 </div>
 
-<div class="modal fade" id="removeModal">
+<div class="modal fade" data-bind="attr: { id: 'remove'+instanceID } ">
 	<div class="modal-dialog modal-sm">
 		<div class="modal-content">
 			<div class="modal-header">

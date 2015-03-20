@@ -74,13 +74,14 @@ define(
 
         self.removeWidgetFromBoard = function( event, data ){
             var removingBoard = self.displayedBoard().id;
+            console.log('data: ', data);
             $.ajax({
                 method: 'DELETE',
                 url: '/board/' + removingBoard + '/widgets/' + event.instanceID,
                 success: function( ) {
                     $.get( 'board/' + removingBoard, function( moredata ){
-                        console.log(moredata);
                         self.displayedBoard( moredata );
+                        $('.modal-backdrop').remove();
                     });
                 }
             });
