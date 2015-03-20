@@ -10,6 +10,7 @@
 			<button type="button" class="btn btn-default" data-bind="click: reloadData"><i class="fa fa-refresh"></i></button>
                 <button type="button" class="btn btn-danger" data-bind="visible: !chartSaved(), click: saveWidgetConfig"><i class="fa fa-save"></i></button>
                 <button type="button" class="btn btn-success" data-bind="visible: chartSaved"><i class="fa fa-save"></i> Saved</button>
+                <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="modal" data-bind="attr: { 'data-target': '#remove'+instanceID }"><i class="fa fa-times"></i></button>
 		</div>
 	</div>
 </div>
@@ -110,3 +111,16 @@
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<div class="modal fade" data-bind="attr: { id: 'remove'+instanceID } ">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Remove this widget from the board?</h2>
+            </div>
+            <div class="modal-body">
+                <button class="btn btn-lg btn-success pull-right" data-dismiss="modal" data-bind="click: $parents[2].removeWidgetFromBoard"> OK</button>
+                <button class="btn btn-lg btn-danger pull-right" data-dismiss="modal"> Cancel</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>
