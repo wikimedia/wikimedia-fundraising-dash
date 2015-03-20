@@ -5,7 +5,6 @@ define( [
     'numeraljs'
 ], function( ko, template, moment, numeral ){
 
-
     function GenericBoardViewModel( params ){
 
         var self = this,
@@ -52,26 +51,6 @@ define( [
         } );
         // Get the date
         self.displayDate = ko.observable( moment().format( timeFormat ) );
-
-        // Reload the data.  For the automatic reload, we're fine getting
-        // something from the cache.
-        self.reloadBoard = function( automatic ){
-   //          self.dataLoading(true);
-            // var url = '/data/' + self.widgetize(self.boardName());
-            // if ( automatic !== true ) {
-            //  url += '/?cache=false';
-            // }
-            // $.get( url , function ( dataget ) {
-            //  self.loadData( dataget.results, dataget.timestamp );
-   //              self.dataLoading(false);
-            // });
-            // // Do it every 5 minutes as well
-            // setTimeout( function () {
-            //  self.reloadBoard( true );
-            // }, 300000 );
-        };
-
-        self.reloadBoard( true );
     }
 
     return { viewModel: GenericBoardViewModel, template: template };

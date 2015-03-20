@@ -16,7 +16,6 @@ define(
 
         //register boards
         ko.components.register( 'generic-board',               { require: 'components/boards/generic-board/generic-board' });
-        ko.components.register( 'bigEnglishBoard',            { require: 'components/boards/bigEnglish/bigEnglishBoard' });
 
         //register individual widgets
         ko.components.register( 'fraud-gauge',                { require: 'components/widgets/fraud-gauge/fraud-gauge' });
