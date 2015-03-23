@@ -25,6 +25,9 @@ define( [
 
 		// Get the date
 		self.displayDate = ko.observable( moment().format( timeFormat ) );
+		self.showChart = ko.observable( '' );
+		self.hourlyChart = ko.observable( false );
+		self.dailyChart = ko.observable( false );
 
 		self.goal = params.sharedContext.goal = ko.observable( self.config.goal || 20000000 );
 		params.sharedContext.goal.subscribe( function() {
@@ -119,155 +122,158 @@ define( [
 			if (params.sharedContext.dailyDataArray.length < 2) {
 				return;
 			}
-			self.hourlyChart = function(d,i){
-				var hourlyData = params.sharedContext.dayObj[d.x + 1 ],
-					hourlyCountArray = ['Hourly Count'],
-					hourlyTotalArray = ['Hourly Total'];
-				for(var j=1; j<25; j++){
-					hourlyCountArray.push(hourlyData[j].count);
-					hourlyTotalArray.push(hourlyData[j].total);
-				}
-				return {
-					bindto: '#totalsEarnedChart',
-					size: {
-						height: 450,
-						width: window.width
-					},
-					zoom: { enabled: true },
-					data: {
-						columns: [ hourlyTotalArray, hourlyCountArray ],
-						type: 'bar',
-						colors: { 'Hourly Total': 'rgb(92,184,92)', 'Hourly Count': '#f0ad4e' },
-						onclick: function (d, i) {
-							self.totalsEarnedChart.destroy();
-							self.totalsEarnedChart = c3.generate(self.dailyChart());
-						},
-						axes: {
-							'Hourly Total': 'y',
-							'Hourly Count': 'y2'
-						}
-					},
-					grid: {
-						x: {
-							show: true
-						},
-						y: {
-							show: true
-						}
-					},
-					axis: {
-						x: {
-							label: {
-								text: 'December ' + ( d.x + 1 ),
-								position: 'outer-left'
-							},
-							tick: {
-								format: function(x){ return x + ':00'; }
-							}
-						},
-						y: {
-							tick: {
-								format: function(x){ return numeral(x).format('$0,0'); }
-							}
-						},
-						y2: {
-							tick: {
-								format: function(x){ return numeral(x).format('0,0'); }
-							},
-							show: true
-						}
-					},
-					tooltip: {
-						format: {
-							title: function (d) { return 'Hour ' + d; },
-							value: function (value, ratio, id) {
-								var display;
-								if(id === 'Hourly Total'){
-									display = numeral(value).format('$0,0');
-								} else {
-									display = numeral(value).format('0,0');
-								}
-								return display;
-							}
-						}
-					},
-					bar: {
-						width: {
-							ratio: 0.5
-						}
-					}
-				};
-			};
+			self.showChart( '' );
+			self.dailyChart( self.makeDailyChart() );
+			self.showChart( 'daily' );
+		};
 
-			self.dailyChart = function(d,i){
-				return {
-					bindto: '#totalsEarnedChart',
-					size: {
-						height: 450,
-						width: window.width
+		self.makeHourlyChart = function(d,i){
+			var hourlyData = params.sharedContext.dayObj[d.x + 1 ],
+				hourlyCountArray = ['Hourly Count'],
+				hourlyTotalArray = ['Hourly Total'];
+			for(var j=1; j<25; j++){
+				hourlyCountArray.push(hourlyData[j].count);
+				hourlyTotalArray.push(hourlyData[j].total);
+			}
+			return {
+				size: {
+					height: 450,
+					width: window.width
+				},
+				zoom: { enabled: true },
+				data: {
+					columns: [ hourlyTotalArray, hourlyCountArray ],
+					type: 'bar',
+					colors: { 'Hourly Total': 'rgb(92,184,92)', 'Hourly Count': '#f0ad4e' },
+					onclick: function (d, i) {
+						self.showChart( '' );
+						self.dailyChart( self.makeDailyChart() );
+						self.showChart( 'daily' );
 					},
-					zoom: { enabled: true },
-					data: {
-						columns: [ params.sharedContext.dailyDataArray, params.sharedContext.dailyCountArray ],
-						type: 'bar',
-						colors: { 'Daily Total': 'rgb(49,176,213)', 'Daily Count': '#f0ad4e' },
-						onclick: function (d, i) {
-							self.totalsEarnedChart.destroy();
-							self.totalsEarnedChart = c3.generate(self.hourlyChart(d,i));
+					axes: {
+						'Hourly Total': 'y',
+						'Hourly Count': 'y2'
+					}
+				},
+				grid: {
+					x: {
+						show: true
+					},
+					y: {
+						show: true
+					}
+				},
+				axis: {
+					x: {
+						label: {
+							text: 'December ' + ( d.x + 1 ),
+							position: 'outer-left'
 						},
-						axes: {
-							'Daily Total': 'y',
-							'Daily Count': 'y2'
+						tick: {
+							format: function(x){ return x + ':00'; }
 						}
 					},
-					grid: {
-						x: {
-							show: true
-						},
-						y: {
-							show: true
+					y: {
+						tick: {
+							format: function(x){ return numeral(x).format('$0,0'); }
 						}
 					},
-					axis: {
-						x: {
-							tick: {
-								format: function(x){ return 'Dec ' + (x+1); }
+					y2: {
+						tick: {
+							format: function(x){ return numeral(x).format('0,0'); }
+						},
+						show: true
+					}
+				},
+				tooltip: {
+					format: {
+						title: function (d) { return 'Hour ' + d; },
+						value: function (value, ratio, id) {
+							var display;
+							if(id === 'Hourly Total'){
+								display = numeral(value).format('$0,0');
+							} else {
+								display = numeral(value).format('0,0');
 							}
-						},
-						y: {
-							tick: {
-								format: function(x){ return numeral(x).format('$0,0'); }
-							}
-						},
-						y2: {
-							tick: {
-								format: function(x){ return numeral(x).format('0,0'); }
-							},
-							show: true
-						}
-					},
-					tooltip: {
-						format: {
-							title: function (d) { return 'Day ' + (d+1); },
-							value: function (value, ratio, id) {
-								var display;
-								if(id === 'Daily Total'){
-									display = numeral(value).format('$0,0');
-								} else {
-									display = numeral(value).format('0,0');
-								}
-								return display;
-							}
-						}
-					},
-					bar: {
-						width: {
-							ratio: 0.5
+							return display;
 						}
 					}
-				};
+				},
+				bar: {
+					width: {
+						ratio: 0.5
+					}
+				}
 			};
-			self.totalsEarnedChart = c3.generate(self.dailyChart());
+		};
+
+		self.makeDailyChart = function(d,i){
+			return {
+				size: {
+					height: 450,
+					width: window.width
+				},
+				zoom: { enabled: true },
+				data: {
+					columns: [ params.sharedContext.dailyDataArray, params.sharedContext.dailyCountArray ],
+					type: 'bar',
+					colors: { 'Daily Total': 'rgb(49,176,213)', 'Daily Count': '#f0ad4e' },
+					onclick: function ( d, i ) {
+						self.showChart( '' );
+						self.hourlyChart( self.makeHourlyChart( d, i ) );
+						self.showChart( 'hourly' );
+					},
+					axes: {
+						'Daily Total': 'y',
+						'Daily Count': 'y2'
+					}
+				},
+				grid: {
+					x: {
+						show: true
+					},
+					y: {
+						show: true
+					}
+				},
+				axis: {
+					x: {
+						tick: {
+							format: function(x){ return 'Dec ' + (x+1); }
+						}
+					},
+					y: {
+						tick: {
+							format: function(x){ return numeral(x).format('$0,0'); }
+						}
+					},
+					y2: {
+						tick: {
+							format: function(x){ return numeral(x).format('0,0'); }
+						},
+						show: true
+					}
+				},
+				tooltip: {
+					format: {
+						title: function (d) { return 'Day ' + (d+1); },
+						value: function (value, ratio, id) {
+							var display;
+							if(id === 'Daily Total'){
+								display = numeral(value).format('$0,0');
+							} else {
+								display = numeral(value).format('0,0');
+							}
+							return display;
+						}
+					}
+				},
+				bar: {
+					width: {
+						ratio: 0.5
+					}
+				}
+			};
 		};
 		self.makeCharts();
 	}

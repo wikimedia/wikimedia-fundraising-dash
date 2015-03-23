@@ -19,6 +19,12 @@ define( [
 			var chart = ko.utils.domData.get( element, 'chart' ),
 				options = ko.unwrap(valueAccessor());
 			if ( !options ) {
+				// Destroys existing chart if you pass a falsy value
+				// TODO: also reset when options outside of data have changed.
+				if ( chart ) {
+					chart.destroy();
+					ko.utils.domData.set( element, 'chart', undefined );
+				}
 				return;
 			}
 			if ( chart ) {

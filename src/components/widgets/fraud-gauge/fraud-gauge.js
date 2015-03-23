@@ -53,6 +53,7 @@ function( ko, template, c3, Chart, WidgetBase ){
 		self.greenHighRange 		= ko.observable( self.config.greenHighRange || 17 );
 		self.redLowRange 			= ko.observable( self.config.redLowRange || 68 );
 		self.configSet				= ko.observable(Object.keys(self.config).length > 0);
+		self.gauge					= ko.observable(false);
 
 		self.populateChoices = function(){
 			return $.get( 'metadata/fraud-gauge', function(reqData){
@@ -120,8 +121,7 @@ function( ko, template, c3, Chart, WidgetBase ){
 		};
 
 		self.makeChart = function(){
-			self.gauge = c3.generate({
-				bindto: '#FraudRiskScoreGauge',
+			self.gauge({
 				size: {
 					height: 300,
 					width: 390

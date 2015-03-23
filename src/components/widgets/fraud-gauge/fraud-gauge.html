@@ -18,11 +18,11 @@
                     <h3 class="text-center" data-bind="visible: configSet, text: selectedTimePeriod"></h3>
                 </div>
 
-                <div class="row" id="specifiedFraudGauge" data-bind="visible: configSet">
-                    <div id="FraudRiskScoreGauge"></div>
+                <div class="row" id="specifiedFraudGauge" data-bind="if: configSet">
+                    <div id="FraudRiskScoreGauge" data-bind='c3: gauge'></div>
                 </div>
 
-                <div class="row" id="unspecifiedFraudGauge" data-bind="visible: !configSet()">
+                <div class="row" id="unspecifiedFraudGauge" data-bind="if: !configSet()">
                     <div class="col-md-12">
                         <div class="setupAsk">
                             <h3>This widget hasn't been set up yet.</h3>
