@@ -132,7 +132,7 @@ define( [
 		//populate user choices dynamically
 		self.populateChoices = function(){
 			//populate y slices
-			return $.get( 'metadata/x-by-y', function(reqData){
+			return self.metadataRequest.then( function( reqData ) {
 				self.metadata = reqData;
 
 				var xArray = [], timeArray = ['Year', 'Month', 'Day', 'Hour'], groupArray = [];

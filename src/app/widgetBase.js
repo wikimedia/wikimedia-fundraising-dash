@@ -28,6 +28,20 @@ define([
 		self.chartHeight 		= ko.observable('550');
 		self.chartLoaded		= ko.observable(false);
 		self.title				= ko.observable(params.title);
+		self.userChoices		= ko.observable(self.config.userChoices || {});
+		self.filterQueryString	= ko.observable(self.config.filterQueryString || '');
+		self.metadataRequest	= ( function() {
+			var storageKey = 'metadata-' + self.widgetCode,
+				data = localStorage.getItem( storageKey );
+
+			if ( data && data.timestamp + 600000 > new Date().getTime ) {
+				return $.Deferred().resolve( JSON.parse( data ) ).promise();
+			}
+			return $.get( 'metadata/' + self.widgetCode, function( fetchedData ) {
+				fetchedData.timestamp = new Date().getTime();
+				localStorage.setItem( storageKey, JSON.stringify( fetchedData ) );
+			} );
+		} )();
 
 		self.getChartData = function( qs ){
 			self.dataLoading(true);
@@ -42,6 +56,9 @@ define([
 		};
 
 		self.saveWidgetConfig = function(){
+			self.config.userChoices = self.userChoices();
+			self.config.filterQueryString = self.filterQueryString();
+
 			var data = JSON.stringify( {
 				configuration: self.config,
 				isShared: false,
@@ -137,6 +154,8 @@ define([
 			var timeArray = ['Year', 'Month', 'Day', 'Hour'],
 				index = timeArray.indexOf( userChoices.timeBreakout ),
 				query = 'group=' + userChoices.timeBreakout,
+				filterQueryString = self.filterQueryString(),
+				extraFilter,
 				levelDiff;
 
 			// If we're grouping by anything finer than year, add a filter and
@@ -145,7 +164,15 @@ define([
 				query = query + '&group=' + timeArray[index - levelDiff];
 			}
 			if ( index > 0 ) {
-				query = query + '&$filter=' + timeArray[index - 1] + 'sAgo lt \'1\'';
+				extraFilter = timeArray[index - 1] + 'sAgo lt \'1\'';
+				if ( filterQueryString === '' ) {
+					filterQueryString = '$filter=' + extraFilter;
+				} else {
+					filterQueryString = filterQueryString + ' and ' + extraFilter;
+				}
+			}
+			if ( filterQueryString !== '' ) {
+				query = query + '&' + filterQueryString;
 			}
 			//groupStr = timeBreakout + '&group=' + userChoices.xSlice;
 
