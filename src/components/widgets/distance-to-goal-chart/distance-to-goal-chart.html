@@ -1,21 +1,24 @@
-<div class="col-md-6 firstWidget">
-	<div class="panel panel-purple">
-		<div class="panel-heading">
-			<p class="pull-left" data-bind="text: title"></p>
-			<div class="btn-group btn-group-xs pull-right">
-				<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="modal" data-bind="attr: { 'data-target': '#remove'+instanceID }"><i class="fa fa-times"></i></button>
-			</div>
+
+<div class="panel panel-purple widget-6">
+	<div class="panel-heading">
+		<p class="pull-left" data-bind="text: title"></p>
+		<div class="btn-group btn-group-xs pull-right">
+			<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="modal" data-bind="attr: { 'data-target': '#remove'+instanceID }"><i class="fa fa-times"></i></button>
 		</div>
-		<div class="panel-body">
-			<p data-bind="visible: !hasData()">No data available.  This widget requires a widget like Totals Earned to provide data.</p>
-			<div class="row-fluid">
-				<div class="col-md-12">
-					<div id="distanceToGoalChart" width='1000' height='450'></div>
-				</div>
+	</div>
+	<div class="panel-body">
+		<div class="alert alert-warning" style="padding:20px" data-bind="visible: !hasData()">
+			<h3><i class="fa fa-2x fa-puzzle-piece"></i> No data available.</h3>
+			This widget works in tandem with another widget, like <em>Totals Earned</em>. Add the other widget to this board and you'll see the chart.
+		</div>
+		<div class="row-fluid">
+			<div class="col-md-12">
+				<div id="distanceToGoalChart" width='1000' height='450'></div>
 			</div>
 		</div>
 	</div>
 </div>
+
 
 <div class="modal fade" data-bind="attr: { id: 'remove'+instanceID } ">
 	<div class="modal-dialog modal-sm">

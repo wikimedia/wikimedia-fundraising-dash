@@ -1,6 +1,6 @@
 <div class="col-md-12">
 
-    <div class="row row-top">
+    <div class="row">
         <div class="col-md-4 titleCol">
             <h2 style="display:inline" data-bind="text: displayedBoard().displayName"></h2>
             <p data-bind="text: displayDate"></p>
@@ -12,8 +12,10 @@
         </div>
     </div>
 
-    <div class="row" data-bind="foreach: displayedBoard().widgets">
-        <div data-bind="component: { name: widgetCode, params: { title: displayName, description: description, configuration: configuration, widgetInstance: id, widgetCode: widgetCode, dataLoading: dataLoading, sharedContext: $parent.sharedContext } }"><span data-bind="text: display_name"></span></div>
+    <div class="row widgetDisplayRow" data-bind="foreach: displayedBoard().widgets">
+        <div class="col-md-12" style="padding-left:0">
+            <span class="floatingWidget" data-bind="component: { name: widgetCode, params: { title: displayName, description: description, configuration: configuration, widgetInstance: id, widgetCode: widgetCode, dataLoading: dataLoading, sharedContext: $parent.sharedContext } }"><span data-bind="text: display_name"></span></span>
+        </div>
     </div>
 
 </div>

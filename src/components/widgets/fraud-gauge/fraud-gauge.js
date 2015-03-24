@@ -42,7 +42,7 @@ function( ko, template, c3, Chart, WidgetBase ){
 		self.filters 				= ko.observableArray();
 		self.title 					= ko.observable(params.title);
 		self.queryString			= '';
-		self.columnSize 			= ko.observable('col-md-' + ( self.config.width || 6 ) + ' fraudGauge');
+		self.columnSize 			= ko.observable('col-lg-' + ( self.config.width || 6 ) + ' fraudGauge');
 		self.selectedTimePeriod 	= ko.observable( self.config.timeBreakout || 'Last 15 Minutes');
 		self.selectedFilters 		= ko.observableArray([]);
 		self.selectedSubFilters 	= ko.observableArray([]);
@@ -261,13 +261,14 @@ function( ko, template, c3, Chart, WidgetBase ){
 				self.queryRequest.timespan = self.selectedTimePeriod();
 
 				//gauge filters
+				console.log('selected filters? ', self.selectedFilters());
 				self.queryRequest.selectedFilters = self.selectedFilters();
 				if(self.selectedFilters().length > 0){
 				  self.filtersSelected(true);
 				}
 
 				//gauge subfilters
-				self.queryRequest.selectedSubFilters = self.selectedSubFilters().sort();
+				self.queryRequest.selectedSubFilters = self.selectedSubFilters() ? self.selectedSubFilters().sort() : '';
 				self.queryString = self.convertToQueryString(self.queryRequest);
 
 				//put gauge mods into temp config to be pushed if/when saved
@@ -296,8 +297,8 @@ function( ko, template, c3, Chart, WidgetBase ){
 				// restore choices and show the chart
 				if(self.config !== 'NULL') {
 					self.selectedTimePeriod(self.config.timeBreakout);
-					self.selectedFilters(self.config.selectedFilters);
-					self.selectedSubFilters(self.config.selectedSubFilters);
+					self.selectedFilters(self.config.selectedFilters ? self.config.selectedFilters : '');
+					self.selectedSubFilters(self.config.selectedSubFilters ? self.config.selectedSubFilters : '');
 				}
 				self.chartSaved( true );
 				self.submitGaugeModifications();

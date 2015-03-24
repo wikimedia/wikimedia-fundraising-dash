@@ -11,7 +11,7 @@ body {
 }
 
 .container-fluid {
-    padding: 15px 85px;
+    padding: 12px 85px;
 }
 
 #dashApp {
@@ -269,6 +269,14 @@ select {
     margin-bottom: -12px;
 }
 
+/* TODO: finish this schema */
+/* Different widget class sizes */
+
+.widget-6 {
+    width: 45%;
+    display:inline-block;
+}
+
 /* Big English */
 
 #bigEnglishThermometer {
@@ -276,13 +284,16 @@ select {
 }
 
 .bigEnglish-updates .row {
-    margin: 0;
+    margin: 0 0 10px 0;
+    border-bottom: 1px #ccc solid;
 }
 
 /* Gauges */
 
 .fraudGauge {
     padding: 0;
+    display: inline-block;
+    clear:right;
 }
 
 #fraudGaugeWidget .panel-body {
@@ -294,9 +305,8 @@ select {
 }
 
 #FraudRiskScoreGauge {
-    height: 180px;
     width: 390px;
-    margin: 0 auto;
+    margin: -90px auto 0 auto;
 }
 
 #fraudPercentRanges {
@@ -494,33 +504,9 @@ input {
     border-top: none;
 }
 
-/* Thermometer styles */
-
-#thermometer {
-    height: 400px;
-}
-
-#thermometer.goalProgress {
-    background: #f7f7f7;
-    padding: 5px;
-}
-
-#thermometer div.progressBar {
-    background: #ff008c;
-    color: #fff;
-    font-size: 1.5em;
-    font-family: 'helvetica neue', helvetica, arial, sans-serif;
-    letter-spacing: -1px;
-    font-weight: 700;
-    padding: 10px;
-    display: block;
-    overflow: hidden;
-    width: 20px;
-}
-
-#thermometer span.goalAmount {
-    display: none;
-    text-indent: -9999px;
+/* Charts are only so useful when small */
+.widgetDisplayRow {
+    min-width: 875px;
 }
 
 /* C3 Bar Chart Styles */
@@ -531,6 +517,11 @@ input {
 
 #distanceToGoalChart {
     padding: 0 9px 0 0;
+}
+
+.goalText {
+    font-size: 1.5em;
+    margin-top: 1em;
 }
 
 .loading, .loadingWidget {
@@ -565,10 +556,6 @@ input {
 
 #demoChart {
     margin-left:30px;
-}
-
-.row-top {
-    margin: 0 -30px;
 }
 
 #savedChartsMenu {
