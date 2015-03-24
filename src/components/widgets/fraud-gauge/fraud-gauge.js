@@ -257,6 +257,7 @@ function( ko, template, c3, Chart, WidgetBase ){
 				});
 
 			} else{
+				self.configSet( true );
 				//gauge time period
 				self.queryRequest.timespan = self.selectedTimePeriod();
 
