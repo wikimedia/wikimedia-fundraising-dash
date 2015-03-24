@@ -160,7 +160,12 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
-gulp.task('default', ['clean', 'replace', 'lint', 'font', 'fonts'], function (callback) {
+gulp.task('images', function() {
+    return gulp.src('./src/images/**/*')
+           .pipe(gulp.dest('./dist/images/'));
+});
+
+gulp.task('default', ['clean', 'replace', 'lint', 'font', 'fonts', 'images'], function (callback) {
     callback();
     console.log('\nPlaced optimized files in ' + chalk.magenta('dist/\n'));
     console.log('\nPlaced font files in ' + chalk.magenta('font/\n'));
