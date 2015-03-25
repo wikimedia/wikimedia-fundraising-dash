@@ -4,9 +4,9 @@ var config = require( './config.js' ),
 function getConnection() {
 	var promiseDb = promiseDbLib();
 	promiseDb.configure({
-		host: config.dbserver,
-		user: config.dblogin,
-		password: config.dbpwd,
+		host: config.userDbServer,
+		user: config.userDbLogin,
+		password: config.userDbPwd,
 		database: config.userDb,
 		multipleStatements: true
 	});

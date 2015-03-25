@@ -3,9 +3,12 @@ module.exports = {
 	dbserver: 'localhost',
 	db: 'fredge',
 	civicrmDb: 'civicrm',
-	userDb: 'fredge',
 	dblogin: 'testuser',
 	dbpwd: 'testpassword',
+	userDbServer: 'localhost',
+	userDb: 'fredge',
+	userDbLogin: 'testuser',
+	userDbPwd: 'testpassword',
 	// URL to redirect the user's browser to
 	providerURL: 'https://civi.dev/civi',
 	// BackendURL will be used for direct Dash->Drupal requests
