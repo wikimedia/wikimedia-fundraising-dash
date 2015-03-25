@@ -74,7 +74,6 @@ define(
 
         self.removeWidgetFromBoard = function( event, data ){
             var removingBoard = self.displayedBoard().id;
-            console.log('data: ', data);
             $.ajax({
                 method: 'DELETE',
                 url: '/board/' + removingBoard + '/widgets/' + event.instanceID,
