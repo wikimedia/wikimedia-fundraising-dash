@@ -46,7 +46,20 @@ module.exports = {
 		var params = [ user.id, user.provider, user.displayName ],
 			insertUser = 'INSERT IGNORE INTO dash_user ( oauth_id, oauth_provider, display_name ) VALUES ( ?, ?, ? )',
 			getInfo = 'SELECT id, default_board, avatar, title, email from dash_user where oauth_id = ? and oauth_provider = ?',
-			insertBoard = 'INSERT INTO dash_board ( display_name, description, owner_id ) VALUES ( ?, \'\', ? ); UPDATE dash_user SET default_board = LAST_INSERT_ID() WHERE id = ?; SELECT LAST_INSERT_ID() AS id',
+			insertBoard = 'INSERT INTO dash_board ( display_name, description, owner_id ) VALUES ( ?, \'\', ? );' +
+				'UPDATE dash_user SET default_board = LAST_INSERT_ID() WHERE id = ?;' +
+				'SELECT LAST_INSERT_ID() AS id',
+			insertBigEnglish = 'SET @uid = ?;\n' +
+				'INSERT INTO dash_board ( display_name, description, owner_id ) VALUES ( \'Big English\', \'\', @uid );\n' +
+				'SET @beboard = LAST_INSERT_ID();\n' +
+				'INSERT INTO dash_widget_instance ( widget_id, owner_id, display_name, description )\n' +
+				'SELECT id, @uid, display_name, description FROM dash_widget WHERE code IN ( \'totals-earned-chart\', \'distance-to-goal-chart\', \'amt-per-second-chart\' );\n' +
+				'INSERT INTO dash_widget_instance_board ( instance_id, board_id, widget_position )\n' +
+				'SELECT dwi.id, @beboard, 1 FROM dash_widget_instance dwi JOIN dash_widget dw ON dwi.widget_id = dw.id WHERE owner_id = @uid AND code = \'totals-earned-chart\';\n' +
+				'INSERT INTO dash_widget_instance_board ( instance_id, board_id, widget_position )\n' +
+				'SELECT dwi.id, @beboard, 2 FROM dash_widget_instance dwi JOIN dash_widget dw ON dwi.widget_id = dw.id WHERE owner_id = @uid AND code = \'distance-to-goal-chart\';\n' +
+				'INSERT INTO dash_widget_instance_board ( instance_id, board_id, widget_position )\n' +
+				'SELECT dwi.id, @beboard, 3 FROM dash_widget_instance dwi JOIN dash_widget dw ON dwi.widget_id = dw.id WHERE owner_id = @uid AND code = \'amt-per-second-chart\';',
 			connection = getConnection();
 
 		return connection.query( insertUser, params ).then( function() {
@@ -68,6 +81,7 @@ module.exports = {
 				// If user doesn't have a default board, insert one now
 				return connection.query( insertBoard, [ 'Default dashboard for ' + user.displayName, userId, userId ] ).then( function( dbResults ) {
 					user.defaultBoard = dbResults[0][2][0].id;
+					return connection.query( insertBigEnglish, [ userId ] );
 				});
 			});
 		});
