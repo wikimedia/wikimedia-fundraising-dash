@@ -457,6 +457,10 @@ input {
   padding:5px 5px 0 10px;
 }
 
+.panel-heading button {
+	z-index:10;
+}
+
 .panel-purple > .panel-heading + .panel-collapse .panel-body {
   border-top-color: #5e668a;
 }

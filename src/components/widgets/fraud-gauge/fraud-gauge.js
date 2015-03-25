@@ -50,8 +50,8 @@ function( ko, template, c3, Chart, WidgetBase ){
 		self.gaugeValue 			= ko.observable(0);
 		self.filtersSelected 		= ko.observable(false);
 		self.queryStringSQL 		= ko.observable('This widget hasn\'t been set up yet!');
-		self.greenHighRange 		= ko.observable(17);
-		self.redLowRange 			= ko.observable(68);
+		self.greenHighRange 		= ko.observable( self.config.greenHighRange || 17 );
+		self.redLowRange 			= ko.observable( self.config.redLowRange || 68 );
 		self.configSet				= ko.observable(Object.keys(self.config).length > 0);
 
 		self.populateChoices = function(){
@@ -279,7 +279,9 @@ function( ko, template, c3, Chart, WidgetBase ){
 					queryString: self.queryString,
 					timeBreakout: self.selectedTimePeriod().toString(),
 					selectedFilters: self.queryRequest.selectedFilters,
-					selectedSubFilters: self.queryRequest.selectedSubFilters
+					selectedSubFilters: self.queryRequest.selectedSubFilters,
+					greenHighRange: self.greenHighRange(),
+					redLowRange: self.redLowRange()
 				};
 
 				var chartDataCall = self.getChartData( self.queryString );
