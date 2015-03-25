@@ -60,31 +60,39 @@ module.exports = {
 				'SELECT dwi.id, @beboard, 2 FROM dash_widget_instance dwi JOIN dash_widget dw ON dwi.widget_id = dw.id WHERE owner_id = @uid AND code = \'distance-to-goal-chart\';\n' +
 				'INSERT INTO dash_widget_instance_board ( instance_id, board_id, widget_position )\n' +
 				'SELECT dwi.id, @beboard, 3 FROM dash_widget_instance dwi JOIN dash_widget dw ON dwi.widget_id = dw.id WHERE owner_id = @uid AND code = \'amt-per-second-chart\';',
-			connection = getConnection();
+			connection = getConnection(),
+			defaultBoard,
+			userId;
 
-		return connection.query( insertUser, params ).then( function() {
-			return connection.query( getInfo, params ).then( function( dbResults ) {
-				var userId 			= dbResults[0][0].id,
-					defaultBoard 	= dbResults[0][0].default_board,
-					avatar 			= dbResults[0][0].avatar,
-					title 			= dbResults[0][0].title,
-					email 			= dbResults[0][0].email;
-				user.localId = userId;
-				user.avatar = avatar;
-				user.title = title;
-				user.email = email;
+		return connection.query( insertUser, params )
+		.then( function() {
+			return connection.query( getInfo, params );
+		} )
+		.then( function( dbResults ) {
+			var avatar 			= dbResults[0][0].avatar,
+				title 			= dbResults[0][0].title,
+				email 			= dbResults[0][0].email;
 
-				if ( defaultBoard ) {
-					user.defaultBoard = defaultBoard;
-					return;
-				}
-				// If user doesn't have a default board, insert one now
-				return connection.query( insertBoard, [ 'Default dashboard for ' + user.displayName, userId, userId ] ).then( function( dbResults ) {
-					user.defaultBoard = dbResults[0][2][0].id;
-					return connection.query( insertBigEnglish, [ userId ] );
-				});
-			});
-		});
+			userId = dbResults[0][0].id;
+			defaultBoard = dbResults[0][0].default_board;
+			user.localId = userId;
+			user.avatar = avatar;
+			user.title = title;
+			user.email = email;
+			if ( defaultBoard ) {
+				user.defaultBoard = defaultBoard;
+				return;
+			}
+			// If user doesn't have a default board, insert one now
+			return connection.query( insertBoard, [ 'Default dashboard for ' + user.displayName, userId, userId ] );
+		} )
+		.then( function( dbResults ) {
+			if ( !dbResults ) {
+				return;
+			}
+			user.defaultBoard = dbResults[0][2][0].id;
+			return connection.query( insertBigEnglish, [ userId ] );
+		} );
 	},
 	/**
 	 * Saves a widget configuration
@@ -101,12 +109,13 @@ module.exports = {
 			connection = getConnection();
 
 		if ( instance.id ) {
-			return connection.query( update, updateParams ).then( function( dbResults ) {
+			return connection.query( update, updateParams )
+			.then( function( dbResults ) {
 				if ( dbResults[0].affectedRows !== 1 ) {
 					// Either the instance doesn't exist or it's not ours
 					throw new Error('Instance ' + instance.id  + ' with owner ' + instance.ownerId + ' not found' );
 				}
-			});
+			} );
 		}
 		return connection.query( insert, insertParams ).then( function( dbResults ) {
 			instance.id = dbResults[0].insertId;
@@ -122,7 +131,8 @@ module.exports = {
 		var connection = getConnection(),
 			select = 'SELECT wi.widget_id, w.code, wi.owner_id, wi.display_name, wi.description, wi.is_shared, wi.configuration FROM dash_widget_instance wi INNER JOIN dash_widget w ON w.id = wi.widget_id WHERE wi.id = ? AND ( wi.is_shared OR wi.owner_id = ? )';
 
-		return connection.query( select, [ instanceId, userId ] ).then( function( dbResults ) {
+		return connection.query( select, [ instanceId, userId ] )
+		.then( function( dbResults ) {
 			var result = dbResults[0][0];
 			if ( result.owner_id ) {
 				return {
@@ -138,7 +148,7 @@ module.exports = {
 			} else {
 				throw new Error( 'Instance ' + instanceId  + ' for user ' + userId + ' not found' );
 			}
-		});
+		} );
 	},
 	/**
 	 * List all widget instances available to a user
@@ -150,7 +160,8 @@ module.exports = {
 		var connection = getConnection(),
 			select = 'SELECT wi.id, wi.widget_id, w.code, wi.owner_id, wi.display_name, wi.description, wi.is_shared, wi.configuration, w.preview_path FROM dash_widget_instance wi INNER JOIN dash_widget w on w.id = wi.widget_id WHERE wi.is_shared OR wi.owner_id = ?';
 
-		return connection.query( select, [ userId ] ).then( function( dbResults ) {
+		return connection.query( select, [ userId ] )
+		.then( function( dbResults ) {
 			var rows = dbResults[0],
 				count = rows.length,
 				i,
@@ -170,7 +181,7 @@ module.exports = {
 				};
 			}
 			return result;
-		});
+		} );
 	},
 	/**
 	 * Saves a board
@@ -199,20 +210,27 @@ module.exports = {
 			if ( board.deleteWidget ) {
 				return connection.query( deleteWidget, deleteWidgetParams );
 			}
-			return connection.query( update, updateParams ).then( function( dbResults ) {
+			return connection.query( update, updateParams )
+			.then( function( dbResults ) {
 				if ( dbResults[0].affectedRows !== 1 ) {
 					// Either the board doesn't exist or it's not ours
 					throw new Error( 'Board ' + board.id  + ' with owner ' + board.ownerId + ' not found' );
 				}
-				return connection.query( deleteWidgets, [ board.id ] ).then( function() {
-					return insertWidgetList( board, connection );
-				});
-			});
+			} )
+			.then( function() {
+				return connection.query( deleteWidgets, [ board.id ] );
+			} )
+			.then( function() {
+				return insertWidgetList( board, connection );
+			} );
 		}
-		return connection.query( insert, insertParams ).then( function( dbResults ) {
-			board.id = dbResults[0].insertId;
-			return insertWidgetList( board, connection );
-		});
+		return connection.query( insert, insertParams )
+			.then( function( dbResults ) {
+				board.id = dbResults[0].insertId;
+			} )
+			.then( function() {
+				return insertWidgetList( board, connection );
+			} );
 	},
 	/**
 	 * @param number boardId ID of board to fetch
@@ -221,12 +239,13 @@ module.exports = {
 	 * board widgets or rejects with error
 	 */
 	getBoard: function( boardId, userId ) {
-		var connection = getConnection(),
+		var board,
+			connection = getConnection(),
 			select = 'SELECT owner_id, display_name, description, is_shared FROM dash_board WHERE id = ? AND ( is_shared OR owner_id = ? )';
 
-		return connection.query( select, [ boardId, userId ] ).then( function( dbResults ) {
+		return connection.query( select, [ boardId, userId ] )
+		.then( function( dbResults ) {
 			var result = dbResults[0][0],
-				board,
 				widgetSelect = 'SELECT wi.id, wi.widget_id, w.code, wi.owner_id, wi.display_name, wi.description, wi.is_shared, wi.configuration FROM dash_widget_instance wi INNER JOIN dash_widget w on w.id = wi.widget_id INNER JOIN dash_widget_instance_board wib ON wi.id = wib.instance_id WHERE wib.board_id = ? ORDER BY wib.widget_position';
 
 			if ( !result.owner_id ) {
@@ -240,26 +259,27 @@ module.exports = {
 				isShared: result.is_shared === 1,
 				widgets: []
 			};
-			return connection.query( widgetSelect, [ boardId ] ).then( function( dbResults ) {
-				var rows = dbResults[0],
-					count = rows.length,
-					i;
+			return connection.query( widgetSelect, [ boardId ] );
+		} )
+		.then( function( dbResults ) {
+			var rows = dbResults[0],
+				count = rows.length,
+				i;
 
-				for ( i = 0; i < count; i++ ) {
-					board.widgets[i] = {
-						id: rows[i].id,
-						widgetId: rows[i].widget_id,
-						widgetCode: rows[i].code,
-						ownerId: rows[i].owner_id,
-						displayName: rows[i].display_name,
-						description: rows[i].description,
-						isShared: rows[i].is_shared === 1,
-						configuration: JSON.parse( rows[i].configuration )
-					};
-				}
-				return board;
-			});
-		});
+			for ( i = 0; i < count; i++ ) {
+				board.widgets[i] = {
+					id: rows[i].id,
+					widgetId: rows[i].widget_id,
+					widgetCode: rows[i].code,
+					ownerId: rows[i].owner_id,
+					displayName: rows[i].display_name,
+					description: rows[i].description,
+					isShared: rows[i].is_shared === 1,
+					configuration: JSON.parse( rows[i].configuration )
+				};
+			}
+			return board;
+		} );
 	},
 	/**
 	 * Retrieve all boards available to a user (theirs and shared boards)
@@ -270,7 +290,8 @@ module.exports = {
 		var connection = getConnection(),
 			select = 'SELECT id, owner_id, display_name, description, is_shared FROM dash_board WHERE ( is_shared OR owner_id = ? )';
 
-		return connection.query( select, [ userId ] ).then( function( dbResults ) {
+		return connection.query( select, [ userId ] )
+		.then( function( dbResults ) {
 			var rows = dbResults[0],
 				count = rows.length,
 				i,
@@ -294,7 +315,8 @@ module.exports = {
 	 */
 	listWidgets: function() {
 		var connection = getConnection();
-		return connection.query( 'SELECT id, code, display_name, description, preview_path FROM dash_widget').then( function( dbResults ) {
+		return connection.query( 'SELECT id, code, display_name, description, preview_path FROM dash_widget')
+		.then( function( dbResults ) {
 			var rows = dbResults[0],
 				count = rows.length,
 				i,
