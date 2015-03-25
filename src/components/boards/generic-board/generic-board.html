@@ -13,7 +13,7 @@
     </div>
 
     <div class="row widgetDisplayRow" data-bind="foreach: displayedBoard().widgets">
-        <div class="col-md-12" style="padding-left:0">
+        <div class="widgetPlace" style="padding-left:0">
             <span class="floatingWidget" data-bind="component: { name: widgetCode, params: { title: displayName, description: description, configuration: configuration, widgetInstance: id, widgetCode: widgetCode, dataLoading: dataLoading, sharedContext: $parent.sharedContext } }"><span data-bind="text: display_name"></span></span>
         </div>
     </div>
