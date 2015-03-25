@@ -130,10 +130,7 @@ function( ko, template, c3, Chart, WidgetBase ){
 					columns: [
 						['failure', self.gaugeValue()]
 					],
-					type: 'gauge',
-					onclick: function (d, i) { console.log('onclick', d, i); }, //TODO: make these better
-					onmouseover: function (d, i) { console.log('onmouseover', d, i); },
-					onmouseout: function (d, i) { console.log('onmouseout', d, i); }
+					type: 'gauge'
 				},
 				gauge: {
 					min: 0,
@@ -262,7 +259,6 @@ function( ko, template, c3, Chart, WidgetBase ){
 				self.queryRequest.timespan = self.selectedTimePeriod();
 
 				//gauge filters
-				console.log('selected filters? ', self.selectedFilters());
 				self.queryRequest.selectedFilters = self.selectedFilters();
 				if(self.selectedFilters().length > 0){
 				  self.filtersSelected(true);
