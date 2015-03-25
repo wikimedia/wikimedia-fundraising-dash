@@ -18,7 +18,7 @@ define(
         self.widgetInstances    = ko.observableArray();
 
         $.get( '/user/info', function( userInfo ) {
-            if ( userInfo ) {
+            if ( userInfo && !userInfo.error ) {
                 self.userdata( userInfo );
                 self.welcome( userInfo.name.charAt(0).toUpperCase() + userInfo.name.slice(1) );
                 self.loggedIn( true );
