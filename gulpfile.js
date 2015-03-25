@@ -37,7 +37,10 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
             'components/widgets/distance-to-goal-chart/distance-to-goal-chart',
             'components/widgets/totals-earned-chart/totals-earned-chart',
             'components/widgets/amt-per-second-chart/amt-per-second-chart',
-            'components/boards/bigEnglish/bigEnglishBoard'
+            'components/boards/bigEnglish/bigEnglishBoard',
+            'components/boards/generic-board/generic-board',
+            'components/widgets/x-by-y/x-by-y',
+            'components/widgets/cat-trombone/cat-trombone'
         ],
         insertRequire: ['app/startup'],
         bundles: {
@@ -49,7 +52,7 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
         }
     });
 
-var jsfilesToLint = ['src/app/*.js', 'src/components/*/*.js'];
+var jsfilesToLint = ['**/*.js', '!node_modules/**/*.js', '!src/bower_modules/**/*.js'];
 
 // linting
 gulp.task('lint', function () {
@@ -77,6 +80,7 @@ gulp.task('css', ['clean'], function () {
                     'src/bower_modules/fontawesome/css/font-awesome.css',
                     'src/bower_modules/lato/css/lato.css',
                     'src/bower_modules/c3/c3.css',
+                    'src/bower_modules/select2/select2.css',
                     'src/css/*.css'])
         .pipe(concat('style.css')).pipe(rev()).pipe(gulp.dest('./dist/'))
         // Add rev-manifest.json as a new src to prevent rev'ing rev-manifest.json
@@ -157,7 +161,12 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
-gulp.task('default', ['clean', 'replace', 'lint', 'font', 'fonts'], function (callback) {
+gulp.task('images', function() {
+    return gulp.src('./src/images/**/*')
+           .pipe(gulp.dest('./dist/images/'));
+});
+
+gulp.task('default', ['clean', 'replace', 'lint', 'font', 'fonts', 'images'], function (callback) {
     callback();
     console.log('\nPlaced optimized files in ' + chalk.magenta('dist/\n'));
     console.log('\nPlaced font files in ' + chalk.magenta('font/\n'));

@@ -1,21 +1,68 @@
 <section id="navbar">
-	<nav-bar params="welcome: welcome, loggedIn: loggedIn"></nav-bar>
+	<nav-bar params="welcome: welcome, loggedIn: loggedIn, userBoards: userBoards, displayPage: displayPage"></nav-bar>
 </section>
 
-<div class="container-fluid" data-bind='if: loggedIn'>
-	<div class="row">
-		<div data-bind="component: 'bigEnglishBoard'" class="col-md-12"></div>
-	</div>
-	<div class="row layoutRow">
-		<div data-bind="component: 'fraud-gauge'" class="col-md-4 firstWidget"></div>
-	</div>
-</div>
+<section id="appContent" data-bind="if: displayPage() === 'Home'">
 
-<div class="container-fluid" data-bind='if: !loggedIn()'>
-	<div class="row">
-		<div class="jumbotron">
-			<h1>Welcome To Dash.</h1>
-			<h3>Please <a href="/auth/drupal"><button class="btn btn-info">Log in</button></a> to continue.</h3>
+	<div class="container-fluid" data-bind='if: loggedIn'>
+		<div class="row" data-bind='if:displayedBoard'>
+			<generic-board params="displayedBoard: displayedBoard"></generic-board>
 		</div>
 	</div>
-</div>
+
+	<div class="container-fluid" data-bind='if: !loggedIn()'>
+		<div class="row">
+			<div class="jumbotron">
+				<h1>Welcome To Dash.</h1>
+			</div>
+		</div>
+	</div>
+
+</section>
+
+<section id="appContent" data-bind="if: displayPage() === 'Library'">
+
+	<div class="container-fluid" data-bind='if: loggedIn()'>
+		<div class="row">
+			<h1>Widget Template Library</h1>
+			<ul class="widgetLibrary" data-bind="foreach: widgetTemplates">
+				<li>
+					<img data-bind="attr: {src: previewPath}">
+					<h3 data-bind="text: displayName"></h3>
+					<p class="widgetDesc" data-bind="text: description"></p>
+					<button class="btn btn-block btn-col btn-primary addToBoardBtn" data-bind="attr: { id: 'add-widget-'+id }, click: $parent.addWidgetToBoard">Add to my default board</button>
+					<button class="hide btn btn-block btn-col btn-success addToBoardBtn" data-bind="attr: { id: 'saved-widget-'+id }"><i class="fa fa-check-circle-o"></i> Added.</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+</section>
+
+<section id="appContent" data-bind="if: displayPage() === 'Profile'">
+
+	<div class="container-fluid" data-bind='if: loggedIn()'>
+		<div class="row">
+			<div class="col-md-1">
+				<img data-bind="attr: { src: userdata().avatar }" class="avatar">
+			</div>
+			<div class="col-md-11">
+				<h1 data-bind="text: userdata().name"></h1>
+				<span data-bind="text: userdata().title"></span>, <span data-bind="text: userdata().email"></span>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="widgetLibraryTitle">
+				<h3>My Widgets</h3>
+			</div>
+			<ul class="widgetLibrary" data-bind="foreach: widgetInstances">
+				<li>
+					<img data-bind="attr: {src: previewPath}">
+					<h3 data-bind="text: displayName"></h3>
+					<p data-bind="text: description"></p>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+</section>

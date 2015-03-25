@@ -1,11 +1,112 @@
-<div class="row">
-	<div class="panel panel-purple">
-        <div class="panel-heading">
-            <p data-bind="text: title"></p>
-        </div>
-        <div class="panel-body">
-            <!--Daily, Hourly, etc Totals Earned-->
-            <div id='totalsEarnedChart'></div>
-        </div>
-    </div>
+<div class="col-md-12">
+
+	<div class="row">
+		<div class="panel panel-purple">
+			<div class="panel-heading">
+				<p class="pull-left"><span data-bind="text: title"></span> as of <span data-bind="text: displayDate"></span></p>
+				<div class="btn-group btn-group-xs pull-right" style="margin-bottom:10px">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#bigEsqlModal"><i class="fa fa-database"></i></button>
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#BEsettingsModal"><i class="fa fa-gear"></i></button>
+					<button type="button" class="btn btn-default" data-bind="click: reloadData"><i class="fa fa-refresh"></i></button>
+		                <button type="button" class="btn btn-danger" data-bind="visible: !chartSaved(), click: saveWidgetConfig"><i class="fa fa-save"></i></button>
+		                <button type="button" class="btn btn-success" data-bind="visible: chartSaved"><i class="fa fa-save"></i> Saved</button>
+		                <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="modal" data-bind="attr: { 'data-target': '#remove'+instanceID }"><i class="fa fa-times"></i></button>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="row-fluid bigEnglish-updates">
+					<div class="col-md-4 col-sm-4 col-lg-4">
+						<div class="row factbox factbox-blue">
+							<div class="col-md-3">
+								<div class="factbox-icon">
+									<i class='fa fa-soccer-ball-o'></i>
+								</div>
+							</div>
+							<div class="col-md-9">
+								<p class='factbox-header'>Goal</p>
+								<div class="goalText" data-bind="text: formattedGoal"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4 col-sm-4 col-lg-4">
+						<div class="row factbox factbox-yellow">
+							<div class="col-md-3">
+								<div class="factbox-icon">
+									<i class='fa fa-gift'></i>
+								</div>
+							</div>
+							<div class="col-md-9">
+								<p class='factbox-header'>Total To Date</p>
+								<div class="goalText" data-bind="text: totalRaisedToDate"></div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4 col-sm-4 col-lg-4">
+						<div class="row factbox factbox-red">
+							<div class="col-md-3">
+								<div class="factbox-icon">
+									<i class='fa fa-calculator'></i>
+								</div>
+							</div>
+							<div class="col-md-9">
+								<p class='factbox-header'>Remaining To Raise</p>
+								<div class="goalText" data-bind="text: totalRemainingToDate"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id='totalsEarnedChart'></div>
+				<br />
+			</div>
+	</div>
+	</div>
+
+	<div class="modal fade" id="BEsettingsModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Options</h4>
+				</div>
+				<div class="modal-body">
+					<label>Change Big English goal</label>
+					<div class="input-group">
+					  <span class="input-group-addon">$</span>
+					  <input type="text" class="form-control" data-bind="textInput: goal">
+					  <span class="input-group-addon">.00</span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-success pull-right" data-dismiss="modal">Submit</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<div class="modal fade" id="bigEsqlModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Totals Earned SQL:</h4>
+				</div>
+				<div class="modal-body">
+					<p data-bind="text:queryStringSQL"></p>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<div class="modal fade" data-bind="attr: { id: 'remove'+instanceID } ">
+	    <div class="modal-dialog modal-sm">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h2>Remove this widget from the board?</h2>
+	            </div>
+	            <div class="modal-body">
+	                <button class="btn btn-lg btn-success pull-right" data-dismiss="modal" data-bind="click: $parents[2].removeWidgetFromBoard"> OK</button>
+	                <button class="btn btn-lg btn-danger pull-right" data-dismiss="modal"> Cancel</button>
+	            </div>
+	        </div><!-- /.modal-content -->
+	    </div>
+	</div>
 </div>

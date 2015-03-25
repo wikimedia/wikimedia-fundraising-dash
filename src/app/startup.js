@@ -16,6 +16,7 @@ define(
         ko.components.register( 'date-pickers',               { require: 'components/utils/date-pickers/date-pickers' });
 
         //register boards
+        ko.components.register( 'generic-board',               { require: 'components/boards/generic-board/generic-board' });
         ko.components.register( 'bigEnglishBoard',            { require: 'components/boards/bigEnglish/bigEnglishBoard' });
 
         //register individual widgets
@@ -23,6 +24,8 @@ define(
         ko.components.register( 'totals-earned-chart',        { require: 'components/widgets/totals-earned-chart/totals-earned-chart' });
         ko.components.register( 'distance-to-goal-chart',     { require: 'components/widgets/distance-to-goal-chart/distance-to-goal-chart' });
         ko.components.register( 'amt-per-second-chart',       { require: 'components/widgets/amt-per-second-chart/amt-per-second-chart' });
+        ko.components.register( 'x-by-y',                     { require: 'components/widgets/x-by-y/x-by-y' });
+        ko.components.register( 'cat-trombone',               { require: 'components/widgets/cat-trombone/cat-trombone' });
 
         //fire up router
         ko.applyBindings({ route: router.currentRoute });

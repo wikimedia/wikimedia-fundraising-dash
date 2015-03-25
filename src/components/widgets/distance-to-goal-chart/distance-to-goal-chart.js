@@ -1,26 +1,35 @@
 define( [
-    'knockout',
-    'text!components/widgets/distance-to-goal-chart/distance-to-goal-chart.html',
-    'c3'
-], function( ko, template, c3 ){
+	'knockout',
+	'text!components/widgets/distance-to-goal-chart/distance-to-goal-chart.html',
+	'c3',
+	'numeraljs',
+	'WidgetBase'
+], function( ko, template, c3, numeral, WidgetBase ){
 
+	function DistanceToGoalChartViewModel( params ){
 
-    function DistanceToGoalChartViewModel( params ){
+		var self = this;
+		WidgetBase.call( this, params );
+		self.hasData = ko.observable( false );
 
-        var self = this;
-
-        self.title = ko.observable(params.title);
 		self.makeCharts = function() {
-			if ( params.dailyDataArray.length < 2 ) {
+			if ( params.sharedContext.dailyDataArray.length < 2 ) {
 				return;
 			}
-			self.goal = ko.observable(params.goal);
+			self.hasData( true );
 
-			self.updatedGoal = params.goal();
+			self.updatedGoal = params.sharedContext.goal();
 			self.neededArray = ['Needed'];
-			for(var d = 1; d < params.dailyDataArray.length; d++) {
-				self.updatedGoal = self.updatedGoal - params.dailyDataArray[d];
+			for(var d = 1; d < params.sharedContext.dailyDataArray.length; d++) {
+				self.updatedGoal = self.updatedGoal - params.sharedContext.dailyDataArray[d];
 				self.neededArray[d] = self.updatedGoal >= 0 ? self.updatedGoal : 0;
+			}
+
+			if ( self.distanceToGoalChart ) {
+				self.distanceToGoalChart.load( {
+					columns: [ self.neededArray ]
+				} );
+				return;
 			}
 
 			self.distanceToGoalChart = c3.generate({
@@ -54,17 +63,13 @@ define( [
 							position: 'outer-middle'
 						},
 						tick: {
-							format: function(x){ return '$' + x/1000000 + 'm'; }
+							format: function(x){ return numeral(x).format( '$0.[00]a' ); }
 						}
 					}
 				}
 			});
 		};
-		params.dataChanged.subscribe(function() {
-			self.makeCharts();
-		});
-		self.makeCharts();
+		self.subscribe( params.sharedContext, 'totalsChanged', self.makeCharts );
 	}
-    return { viewModel: DistanceToGoalChartViewModel, template: template };
-
+	return { viewModel: DistanceToGoalChartViewModel, template: template };
 });

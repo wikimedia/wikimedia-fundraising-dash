@@ -1,0 +1,176 @@
+
+
+	<span data-bind="if: preDataLoading">
+		<div class="loadingWidget">
+			<img src="/images/catloader.gif" />
+			<h3 class="text-center">Loading.....</h3>
+		</div>
+	</span>
+
+	<div class="panel panel-purple">
+		<div class="panel-heading">
+			<div class="btn-group btn-group-xs pull-right">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#XYsqlModal"><i class="fa fa-database"></i></button>
+				<!-- <button type="button" id="savedCharts" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-target="#XYsavedChart"><i class="fa fa-area-chart"></i> Saved charts...</button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="savedCharts" id="savedChartsMenu" data-bind="foreach: presetTitles, style: { width: '300px'}">
+					<li data-bind="text: $data"></li>
+				</ul> -->
+				<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="modal" data-bind="attr: { 'data-target': '#remove'+instanceID }"><i class="fa fa-times"></i></button>
+			</div>
+		</div>
+
+		<div class="panel-body">
+			<div class="row-fluid">
+				<div class="col-md-3 col-sm-12">
+
+					<div class="row">
+						<div class="well lightWell col-md-12">
+							<form id="XYform" data-bind="event: {change: logStateChange(true)}">
+								<div class="row-fluid">
+									<h4>Show:</h4>
+									<select data-bind="options: ySlices, value: showSlice"></select>
+									<hr>
+								</div>
+								<!-- <div class="row-fluid">
+									<h4>By:</h4>
+									<select data-bind="options: xSlices, value: bySlice"></select>
+									<hr>
+								</div> -->
+
+								<div class="row-fluid">
+									<h4>Starting time range:</h4><br>
+									<select id="startingTimeRange" placeholder="Range..." data-bind="options: timeChoices, value: timeChoice"></select>
+									<!-- <hr> -->
+								</div>
+
+								<!-- <div class="row-fluid">
+									<label for="selectXYFilters">Additional filters:</label><br>
+									<span data-bind="foreach: groupChoices">
+										<div class="panel panel-default xyGroupOption">
+											<div class="panel-heading">
+												<span data-bind="text: $data.name" class="pull-left"></span>
+												<span class="pull-right" data-bind="if: $data.choices"><i class="fa fa-caret-down" data-bind="click: $parent.showPanelBody($data.name)"></i></span>
+											</div>
+											<div class="panel-body hide" data-bind="visible: $data.choices, attr: { id: $data.name + 'body' }">
+												<ul data-bind="foreach: $data.choices" class="filterPickerList list-inline">
+													<li class="subFilterPickerList">
+														<span class="label label-info">
+															<input type="checkbox" data-bind="value: $parent.name + ' eq \'' + $data + '\'', checked: $parents[1].chosenFilters"><span data-bind="text: $data"></span>
+														</span>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</span>
+								</div> -->
+							</form>
+						</div>
+
+					</div>
+
+					<div class="row">
+						<button class="btn btn-block btn-col btn-info" data-bind="click: submitXY"><i class="fa fa-area-chart"></i> Preview chart </button>
+					</div>
+					<div class="row">
+						<button class="btn btn-block btn-col btn-danger" data-bind="visible: !chartSaved() && optionStateChanged, click: saveWidgetConfig"><i class="fa fa-save"></i> Save chart </button>
+					</div>
+					<div class="row">
+						<button class="btn btn-block btn-col btn-success" data-bind="visible: chartSaved"><i class="fa fa-check-circle-o"></i> Chart saved. </button>
+					</div>
+
+				</div>
+
+				<div class="col-md-9 col-sm-12">
+
+					<div class="row" id="specifiedXYchart">
+						<div class="col-md-12">
+							<span data-bind="if: !config">
+								<div class="row-fluid alert alert-danger" data-bind="style: { width: '100%', overflow: 'hidden'}">
+									<div class="col-md-1">
+										<h1><i class="fa fa-gears"></i></h1>
+									</div>
+									<div class="col-md-11">
+										<h3>This widget hasn't been set up yet.</h3>
+										<p>Choose display options to see the chart.</p>
+									</div>
+								</div>
+							</span>
+
+
+							<div class="row-fluid" data-bind="if: chartLoaded">
+								<h1 data-bind="text: title"></h1>
+								<h4 data-bind="text: subtitle"></h4>
+								<h4 data-bind="visible: chosenFilters > 0">Narrowed by:
+									<span data-bind="foreach: chosenFilters">
+										 <span class='label label-success' data-bind="text: $data"></span>
+									</span>
+								</h4>
+							</div>
+							<div id='x-by-yChart' data-bind="attr: { width: chartWidth, height: chartHeight }"></div>
+						</div>
+
+						<!-- <div class="col-md-2 pull-right">
+							<button class="btn-info"><i class="fa fa-bar-chart"></i></button>
+							<button class="btn-info"><i class="fa fa-line-chart"></i></button>
+							<button class="btn-info"><i class="fa fa-pie-chart"></i></button>
+							<button class="btn-info"><i class="fa fa-table"></i></button>
+						</div> -->
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+
+<div class="modal fade" id="XYsavedCharts">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Set up the chart!</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row-fluid">
+					<div class="col-md-12 well">
+						<label>Show a saved chart:</label>
+						<div class="input-group">
+							<select data-bind="options: presetTitles, value: title"></select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-success pull-right" data-dismiss="modal">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="XYsqlModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Chart SQL:</h4>
+			</div>
+			<div class="modal-body" data-bind="text: queryStringSQL"></div>
+		</div><!-- /.modal-content -->
+	</div>
+</div>
+
+<div class="modal fade" data-bind="attr: { id: 'remove'+instanceID } ">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>Remove this widget from the board?</h2>
+			</div>
+			<div class="modal-body">
+				<button class="btn btn-lg btn-success pull-right" data-dismiss="modal" data-bind="click: $parents[2].removeWidgetFromBoard"> OK</button>
+				<button class="btn btn-lg btn-danger pull-right" data-dismiss="modal"> Cancel</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div>
+</div>

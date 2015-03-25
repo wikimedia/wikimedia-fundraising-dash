@@ -1,40 +1,43 @@
 define( [
-    'knockout',
-    'text!components/widgets/amt-per-second-chart/amt-per-second-chart.html',
-    'c3',
-    'numeraljs'
-], function( ko, template, c3, numeral ){
+	'knockout',
+	'text!components/widgets/amt-per-second-chart/amt-per-second-chart.html',
+	'c3',
+	'numeraljs',
+	'WidgetBase'
+], function( ko, template, c3, numeral, WidgetBase ){
 
+	function AmtPerSecondChartViewModel( params ){
 
-    function AmtPerSecondChartViewModel( params ){
-
-        var self = this;
-
-        self.title = ko.observable(params.title);
+		var self = this;
+		WidgetBase.call( this, params );
+		self.hasData = ko.observable( false );
 
 		self.makeChart = function() {
-			if ( params.dayObj.length < 2 ) {
+			var columns;
+
+			if ( params.sharedContext.dayObj.length < 2 ) {
 				return;
 			}
-			var numPoints = ( params.lastDataPoint.day - 1 ) * 24 + params.lastDataPoint.hour + 1,
+			self.hasData( true );
+			var numPoints = ( params.sharedContext.lastDataPoint.day - 1 ) * 24 + params.sharedContext.lastDataPoint.hour + 1,
 				xs = new Array( numPoints + 2 ), // label, data to date, final point
 				index = 0,
-				remainingNeeded = params.goal();
+				remainingNeeded = params.sharedContext.goal();
 			xs[0] = 'x1';
 
 			self.needPerSecond =  new Array( numPoints + 2 );
 			self.needPerSecond[0] = 'Needed Per Second';
 
 			// secondsByHourDonationData already has a label in [0]
-			self.gotPerSecond = params.secondsByHourDonationData.slice( 0, numPoints + 1 );
+			self.gotPerSecond = params.sharedContext.secondsByHourDonationData.slice( 0, numPoints + 1 );
 
-			for( var d = 1; d < params.dayObj.length; d++ ) {
+			for( var d = 1; d < params.sharedContext.dayObj.length; d++ ) {
 				for ( var h = 0; h < 24; h++ ) {
 					index = ( d - 1 ) * 24 + h + 1;
 					if ( index > numPoints + 1 ) {
 						break;
 					}
-					remainingNeeded = remainingNeeded - params.dayObj[d][h + 1].total;
+					remainingNeeded = remainingNeeded - params.sharedContext.dayObj[d][h + 1].total;
 					if ( remainingNeeded < 0 ) {
 						remainingNeeded = 0;
 					}
@@ -51,6 +54,19 @@ define( [
 				self.gotPerSecond[ numPoints + 1 ] = self.gotPerSecond[ numPoints ];
 				self.needPerSecond[ numPoints + 1 ] = self.needPerSecond[ numPoints ];
 			}
+			columns = [
+				xs,
+				self.gotPerSecond,
+				self.needPerSecond
+			];
+
+			if ( self.avgUSDComboChart ) {
+				self.avgUSDComboChart.load( {
+					columns: columns
+				} );
+				return;
+			}
+
 			self.avgUSDComboChart = c3.generate( {
 				bindto: '#avgUSDperSecond',
 				size: {
@@ -63,11 +79,7 @@ define( [
 						'Needed Per Second' : 'x1',
 						'Donations Per Second' : 'x1'
 					},
-					columns: [
-						xs,
-						self.gotPerSecond,
-						self.needPerSecond
-					],
+					columns: columns,
 					type: 'area',
 					types: {
 						'USD per second': 'line'
@@ -83,7 +95,7 @@ define( [
 					},
 					y: {
 						tick: {
-							format: function(x){ return numeral(x).format('$0,0'); }
+							format: function(x){ return numeral(x).format('$0,0.00'); }
 						}
 					}
 				},
@@ -98,10 +110,9 @@ define( [
 				}
 			} );
 		};
-		params.dataChanged.subscribe(self.makeChart);
-		self.makeChart();
-    }
+		self.subscribe( params.sharedContext, 'totalsChanged', self.makeChart );
+	}
 
-    return { viewModel: AmtPerSecondChartViewModel, template: template };
+	return { viewModel: AmtPerSecondChartViewModel, template: template };
 
 });

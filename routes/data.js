@@ -49,7 +49,23 @@ function validateValue( value, column ) {
 		throw new Error( 'Invalid value ' + value + ' for filter ' + column.display );
 	}
 }
-
+/**
+ * Adds to the list of join statements
+ * @param string table alias required
+ * @param Object widget
+ * @param Array joins
+ */
+function addJoin( table, widget, joins ) {
+	var i;
+	if ( table !== widget.mainTableAlias && joins.indexOf( table ) === -1 ) {
+		if ( widget.optionalJoins[table].requires ) {
+			for ( i = 0; i < widget.optionalJoins[table].requires.length; i++ ) {
+				addJoin( widget.optionalJoins[table].requires[i], widget, joins );
+			}
+		}
+		joins.push( table );
+	}
+}
 /**
  * Gets a filter and adds it to joins if not yet present
  * Throws an error if the column does not exist
@@ -64,12 +80,27 @@ function getColumn( name, widget, joins ) {
 	if ( !col ) {
 		throw new Error( 'Illegal filter property ' + name );
 	}
-	if ( col.table !== widget.mainTableAlias && joins.indexOf( col.table ) === -1 ) {
-		joins.push( col.table );
-	}
+	addJoin( col.table, widget, joins );
 	return col;
 }
 
+/**
+ * Formats a column object for SQL
+ * @param Object filter column object
+ * @returns SQL representation of the given column for use in where or group clauses
+ */
+function getColumnText( column ) {
+	var colText = column.table + '.' + column.column;
+	if ( column.func ) {
+		// If the function has a placeholder, use that. Otherwise just add parens.
+		if ( column.func.match( /\[\[COL\]\]/ ) ) {
+			colText = column.func.replace( '[[COL]]', colText );
+		} else {
+			colText = column.func + '(' + colText + ')';
+		}
+	}
+	return colText;
+}
 /**
  * Create a SQL WHERE clause given a parsed filter node.
  * Uses '?' placeholders in clause, and appends literal values to values array
@@ -82,7 +113,7 @@ function getColumn( name, widget, joins ) {
  * @returns {String} WHERE clause with '?' placeholders for values
  */
 function buildWhere( filterNode, widget, values, joins ) {
-	var col, colText, op, rightClause, leftClause, val, i, pattern, ops = {
+	var col, colText, op, rightClause, leftClause, val, i, pattern, partial, ops = {
 		'and': 'AND',
 		'or': 'OR',
 		'eq': '=',
@@ -100,12 +131,23 @@ function buildWhere( filterNode, widget, values, joins ) {
 
 	// Work around busted odata-parser nested condtion parsing
 	if ( filterNode instanceof Array ) {
+		console.log( 'filterNode is an array of length ' + filterNode.length );
+		partial = '';
 		for ( i = 0; i < filterNode.length; i++ ) {
 			if ( filterNode[i].type ) {
-				filterNode = filterNode[i];
-				break;
+				console.log( 'Found array component at index ' + i + ' with type ' + filterNode[i].type );
+				partial = buildWhere( filterNode[i], widget, values, joins );
+			}
+			if ( filterNode[i] instanceof Array && filterNode[i].length > 3 ) {
+				op = ops[filterNode[i][1]];
+				if ( !op ) {
+					throw new Error( 'Illegal filter type ' + filterNode.type );
+				}
+				rightClause = buildWhere( filterNode[i][3], widget, values, joins );
+				partial = '(' + partial + ' ' + op + ' ' + rightClause + ')';
 			}
 		}
+		return partial;
 	}
 
 	op = ops[filterNode.type];
@@ -116,7 +158,9 @@ function buildWhere( filterNode, widget, values, joins ) {
 	switch (op) {
 		case 'AND':
 		case 'OR':
+			console.log( 'Building left clause' );
 			leftClause = buildWhere( filterNode.left, widget, values, joins );
+			console.log( 'Building right clause' );
 			rightClause = buildWhere( filterNode.right, widget, values, joins );
 			return '(' + leftClause + ' ' + op + ' ' + rightClause + ')';
 		case '=':
@@ -125,6 +169,7 @@ function buildWhere( filterNode, widget, values, joins ) {
 		case '>':
 		case '>=':
 		case '!=':
+			console.log( 'Comparison with column ' + filterNode.left.name );
 			if ( filterNode.left.type !== 'property' ) {
 				throw new Error( 'Only property comparisons are currently allowed' );
 			}
@@ -137,13 +182,11 @@ function buildWhere( filterNode, widget, values, joins ) {
 			}
 			values.push( val ); //this may get more complex with nesting...
 
-			colText = col.table + '.' + col.column;
-			if ( col.func ) {
-				colText = col.func + '(' + colText + ')';
-			}
+			colText = getColumnText( col );
 
 			return colText + ' ' + op + ' ?';
 		case 'fn':
+			console.log( 'Function on column ' + filterNode.args[1].name );
 			pattern = patterns[filterNode.func];
 			if ( !pattern ) {
 				throw new Error( 'Unsupported function ' + filterNode.func );
@@ -170,6 +213,24 @@ function buildWhere( filterNode, widget, values, joins ) {
 	return '';
 }
 
+/**
+ * Create a SQL string to show what the query looks like with parameter values
+ * inserted at placeholders.
+ * CAUTION: Only for display. Do not send the output of this function to the db!
+ * @param string sqlQuery query text with '?' placeholders
+ * @param Array values parameter values to insert
+ * @returns string query formatted for display. DO NOT SEND TO DB!
+ */
+function substituteParams( sqlQuery, values) {
+	var valueIndex = 0;
+	while ( sqlQuery.indexOf( '?' ) > -1 ) {
+		// Replace only the first ?
+		sqlQuery = sqlQuery.replace( /\?/, '\'' + values[valueIndex] + '\'' );
+		valueIndex++;
+	}
+	return sqlQuery;
+}
+
 module.exports = function(req, res) {
 	var widget = widgets[req.params.widget],
 		qs = urlParser.parse( req.url ).query,
@@ -182,14 +243,12 @@ module.exports = function(req, res) {
 		values = [],
 		joins = [],
 		joinClause = '',
+		groupCol,
+		groupClause = '',
+		selectGroup = '',
 		i,
 		result,
 		cacheKey;
-
-	if ( !req.session || !req.session.passport || !req.session.passport.user ) {
-		res.json( { error: 'Error: Not logged in' } );
-		return;
-	}
 
 	if ( !widget ) {
 		res.json( { error: 'Error: ' + req.params.widget + ' is not a valid widget' } );
@@ -201,6 +260,10 @@ module.exports = function(req, res) {
 		cacheKey += '-' + parsedQs.$filter;
 	}
 
+	if ( parsedQs.group ) {
+		cacheKey += '-' + parsedQs.group;
+	}
+
 	// cache=false param on QS means they want fresh results now
 	if ( !parsedQs.cache || parsedQs.cache === 'true' ) {
 		result = cache.get( cacheKey );
@@ -210,12 +273,43 @@ module.exports = function(req, res) {
 			return;
 		}
 	}
+	logger.debug( 'Group:' + util.inspect( parsedQs.group) );
+	sqlQuery = widget.query;
+	if ( widget.defaultGroup && !parsedQs.group ) {
+		parsedQs.group = widget.defaultGroup;
+	}
 
-	// remove the cache param so as not to confuse the odata parser
+	if ( parsedQs.group ) {
+		try{
+			if ( !Array.isArray( parsedQs.group ) ) {
+				parsedQs.group = [ parsedQs.group ];
+			}
+			groupClause = 'GROUP BY ';
+			for ( i = 0; i < parsedQs.group.length; i++ ) {
+				groupCol = getColumn( parsedQs.group[i], widget, joins );
+				if ( !groupCol.canGroup ) {
+					throw new Error( 'Can not group by ' + parsedQs.group[i] );
+				}
+				if ( i > 0 ) {
+					groupClause += ', ';
+				}
+				groupClause += getColumnText( groupCol );
+				// Assuming the [[SELECTGROUP]] comes after at least one other
+				// selected property, so always prepending a comma
+				selectGroup += ', ' + getColumnText( groupCol ) + ' AS ' + parsedQs.group[i];
+			}
+		}
+		catch ( err ) {
+			res.json( { error: err.message } );
+			return;
+		}
+	}
+	// remove params the odata parser can't handle
 	delete parsedQs.cache;
+	delete parsedQs.group;
+
 	qs = querystringParser.stringify( parsedQs );
 
-	sqlQuery = widget.query;
 	if ( widget.defaultFilter || qs.length ) {
 		try {
 			if ( qs.length ) {
@@ -237,9 +331,11 @@ module.exports = function(req, res) {
 	}
 	sqlQuery = sqlQuery.replace( '[[WHERE]]', whereClause );
 	for ( i = 0; i < joins.length; i++ ) {
-		joinClause += widget.optionalJoins[joins[i]] + ' ';
+		joinClause += widget.optionalJoins[joins[i]].text + ' ';
 	}
 	sqlQuery = sqlQuery.replace( '[[JOINS]]', joinClause );
+	sqlQuery = sqlQuery.replace( '[[GROUP]]', groupClause );
+	sqlQuery = sqlQuery.replace( '[[SELECTGROUP]]', selectGroup );
 
 	connection = mysql.createConnection({
 		host: config.dbserver,
@@ -253,12 +349,13 @@ module.exports = function(req, res) {
 			return;
 		}
 	});
+	logger.debug( 'Query: ' + sqlQuery );
 	connection.query( sqlQuery, values, function( error, dbResults ) {
 		if ( error ) {
 			res.json( { error: 'Query error: ' + error } );
 			return;
 		}
-		result = { results: dbResults, sqlQuery: sqlQuery, timestamp: new Date().getTime() };
+		result = { results: dbResults, sqlQuery: substituteParams( sqlQuery, values), timestamp: new Date().getTime() };
 		logger.debug( 'Storing results at cache key ' + cacheKey );
 		cache.put( req.url, result, config.cacheDuration );
 		res.json( result );
