@@ -3,6 +3,7 @@ module.exports = {
 	dbserver: 'localhost',
 	db: 'fredge',
 	civicrmDb: 'civicrm',
+	userDb: 'fredge',
 	dblogin: 'testuser',
 	dbpwd: 'testpassword',
 	// URL to redirect the user's browser to

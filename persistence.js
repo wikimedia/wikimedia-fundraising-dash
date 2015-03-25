@@ -7,7 +7,7 @@ function getConnection() {
 		host: config.dbserver,
 		user: config.dblogin,
 		password: config.dbpwd,
-		database: config.db,
+		database: config.userDb,
 		multipleStatements: true
 	});
 	return promiseDb;
