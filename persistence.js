@@ -39,7 +39,7 @@ module.exports = {
 	/**
 	 * Ensures a user exists in the user table and saves the user's local db id
 	 * in session.  Creates a default board if none exists.
-	 * @param Object user should have displayName, provider, and id set by oauth
+	 * @param {object} user should have displayName, provider, and id set by oauth
 	 * @return Promise that fulfills on completion or rejects with error
 	 */
 	loginUser: function( user ) {
@@ -74,7 +74,7 @@ module.exports = {
 	},
 	/**
 	 * Saves a widget configuration
-	 * @param Object instance should have ownerId, widgetId, displayName,
+	 * @param {object} instance should have ownerId, widgetId, displayName,
 	 * isShared, and configuration set.  If id is not set, this function creates
 	 * a new instance and sets the id.
 	 * @return Promise that fulfills on completion or rejects with error
@@ -99,8 +99,8 @@ module.exports = {
 		});
 	},
 	/**
-	 * @param number boardId ID of board to fetch
-	 * @param number userId local ID of user
+	 * @param {Number} instanceId ID of widget instance to fetch
+	 * @param {Number} userId local ID of user
 	 * @returns Promise that resolves with a JSON representation of all
 	 * board widgets or rejects with error
 	 */
@@ -128,7 +128,7 @@ module.exports = {
 	},
 	/**
 	 * List all widget instances available to a user
-	 * @param number userId local ID of user
+	 * @param {number} userId local ID of user
 	 * @returns Promise that resolves with a JSON representation of all
 	 * widget instances owned by or shared with the user, or rejects with error
 	 */
@@ -160,7 +160,7 @@ module.exports = {
 	},
 	/**
 	 * Saves a board
-	 * @param Object instance should have ownerId, displayName, description,
+	 * @param {object} board should have ownerId, displayName, description,
 	 * isShared, and widgets (an ordered array of widget instance ids) set.
 	 * If id is not set, this function creates a new board and sets the id.
 	 * @return Promise that fulfills on completion or rejects with error
@@ -201,8 +201,8 @@ module.exports = {
 		});
 	},
 	/**
-	 * @param number boardId ID of board to fetch
-	 * @param number userId local ID of user
+	 * @param {number} boardId ID of board to fetch
+	 * @param {number} userId local ID of user
 	 * @returns Promise that resolves with a JSON representation of all
 	 * board widgets or rejects with error
 	 */
@@ -249,7 +249,7 @@ module.exports = {
 	},
 	/**
 	 * Retrieve all boards available to a user (theirs and shared boards)
-	 * @param number userId local id of the user
+	 * @param {number} userId local id of the user
 	 * @returns array of boards available to the user
 	 */
 	listBoards: function( userId ) {
