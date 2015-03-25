@@ -273,7 +273,7 @@ select {
 /* Different widget class sizes */
 
 .widget-6 {
-    width: 45%;
+    width: 49%;
     display:inline-block;
 }
 
@@ -441,6 +441,12 @@ input {
     padding: 1em;
 }
 
+.panel {
+    vertical-align: top;
+    min-height: 355px;
+    margin-right: 10px;
+}
+
 .panel-transparent {
     border-color: #ccc;
 }
@@ -511,6 +517,10 @@ input {
 /* Charts are only so useful when small */
 .widgetDisplayRow {
     min-width: 875px;
+}
+
+.widgetPlace {
+    display: inline;
 }
 
 /* C3 Bar Chart Styles */
