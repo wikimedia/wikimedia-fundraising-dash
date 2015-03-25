@@ -52,7 +52,7 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
         }
     });
 
-var jsfilesToLint = ['**/*.js', '!node_modules/**/*.js', '!src/bower_modules/**/*.js'];
+var jsfilesToLint = ['**/*.js', '!node_modules/**/*.js', '!src/bower_modules/**/*.js', '!dist/**/*.js'];
 
 // linting
 gulp.task('lint', function () {
