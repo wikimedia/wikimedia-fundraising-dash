@@ -84,7 +84,8 @@ module.exports = {
 				return;
 			}
 			// If user doesn't have a default board, insert one now
-			return connection.query( insertBoard, [ 'Default dashboard for ' + user.displayName, userId, userId ] );
+			var username = user.displayName.charAt(0).toUpperCase() + user.displayName.slice(1);
+			return connection.query( insertBoard, [ username + '\'s Board', userId, userId ] );
 		} )
 		.then( function( dbResults ) {
 			if ( !dbResults ) {
