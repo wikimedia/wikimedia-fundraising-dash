@@ -9123,6 +9123,7 @@ select {
 .subNavBoardOpts li {
     padding: 10px;
     text-align: right;
+    border-top: 1px rgba(94, 102, 138, 0.2) solid;
 }
 
 .subNavBoardOpts li:hover {
@@ -9250,7 +9251,7 @@ select {
 /* Different widget class sizes */
 
 .widget-6 {
-    width: 49%;
+    width: 47%;
     display:inline-block;
 }
 
@@ -9421,7 +9422,7 @@ input {
 .panel {
     vertical-align: top;
     min-height: 355px;
-    margin-right: 10px;
+    margin-right: 1.4em;
 }
 
 .panel-transparent {

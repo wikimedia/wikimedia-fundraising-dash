@@ -55,7 +55,10 @@
 						</div>
 					</div>
 				</div>
-				<div id='totalsEarnedChart'></div>
+				<!--Daily Totals Earned-->
+				<div id='totalsEarnedChart' data-bind="visible: showChart() === 'daily', c3: dailyChart"></div>
+				<!--Hourly Totals Earned-->
+				<div id='totalsEarnedChart' data-bind="visible: showChart() === 'hourly', c3: hourlyChart"></div>
 				<br />
 			</div>
 	</div>

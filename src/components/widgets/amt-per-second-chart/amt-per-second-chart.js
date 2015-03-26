@@ -11,10 +11,9 @@ define( [
 		var self = this;
 		WidgetBase.call( this, params );
 		self.hasData = ko.observable( false );
+		self.avgUSDperSecondChart = ko.observable( false );
 
 		self.makeChart = function() {
-			var columns;
-
 			if ( params.sharedContext.dayObj.length < 2 ) {
 				return;
 			}
@@ -54,21 +53,8 @@ define( [
 				self.gotPerSecond[ numPoints + 1 ] = self.gotPerSecond[ numPoints ];
 				self.needPerSecond[ numPoints + 1 ] = self.needPerSecond[ numPoints ];
 			}
-			columns = [
-				xs,
-				self.gotPerSecond,
-				self.needPerSecond
-			];
-
-			if ( self.avgUSDComboChart ) {
-				self.avgUSDComboChart.load( {
-					columns: columns
-				} );
-				return;
-			}
-
-			self.avgUSDComboChart = c3.generate( {
-				bindto: '#avgUSDperSecond',
+			
+			self.avgUSDperSecondChart( {
 				size: {
 					height: 250,
 					width: window.width/2
@@ -79,7 +65,11 @@ define( [
 						'Needed Per Second' : 'x1',
 						'Donations Per Second' : 'x1'
 					},
-					columns: columns,
+					columns: [
+						xs,
+						self.gotPerSecond,
+						self.needPerSecond
+					],
 					type: 'area',
 					types: {
 						'USD per second': 'line'

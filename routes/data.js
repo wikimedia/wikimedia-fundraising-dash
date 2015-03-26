@@ -357,7 +357,7 @@ module.exports = function(req, res) {
 		}
 		result = { results: dbResults, sqlQuery: substituteParams( sqlQuery, values), timestamp: new Date().getTime() };
 		logger.debug( 'Storing results at cache key ' + cacheKey );
-		cache.put( req.url, result, config.cacheDuration );
+		cache.put( cacheKey, result, config.cacheDuration );
 		res.json( result );
 	});
 };

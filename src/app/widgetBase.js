@@ -75,7 +75,7 @@ define([
 
 		};
 
-		self.processData = function(rawdata, timescale){
+		self.processData = function( rawdata, timescale, timestamp ){
 
 			var timeWord = ( timescale === 'Day' ? 'Dai' : timescale ) + 'ly',
 				totals = [ timeWord + ' Total'],
@@ -83,16 +83,28 @@ define([
 				xs = [ 'x' ],
 				defaultYear = new Date().getFullYear(),
 				defaultMonth = new Date().getMonth() + 1,
-				tempDate, timeFormat;
-
+				tempDate, timeFormat, now = new Date( timestamp );
+		
+			// coerce UTC into the default timezone.  Comparing offset values
+			// so we only have to adjust 'now', not each data point
+			now.setHours( now.getHours() + now.getTimezoneOffset() / 60 );
 			$.each( rawdata, function( index, dataPoint ) {
+				var year = dataPoint.Year || defaultYear,
+					month = dataPoint.Month || defaultMonth,
+					day = dataPoint.Day || 1,
+					hour = dataPoint.Hour || 0;
+
+				// Filter bogons
+				if ( year < 2004 || new Date( year, month - 1, day, hour ) > now ) {
+					return;
+				}
 				totals.push( dataPoint.usd_total );
 				counts.push( dataPoint.donations );
 
-				tempDate = ( dataPoint.Year || defaultYear ) + '-';
-				tempDate += zeroPad( dataPoint.Month || defaultMonth ) + '-';
-				tempDate += zeroPad( dataPoint.Day || 1 );
-				tempDate += ' ' + zeroPad( dataPoint.Hour || 0 );
+				tempDate = year + '-';
+				tempDate += zeroPad( month ) + '-';
+				tempDate += zeroPad( day );
+				tempDate += ' ' + zeroPad( hour );
 
 				xs.push( tempDate );
 			} );
@@ -124,12 +136,15 @@ define([
 
 			var timeArray = ['Year', 'Month', 'Day', 'Hour'],
 				index = timeArray.indexOf( userChoices.timeBreakout ),
-				query = 'group=' + userChoices.timeBreakout;
+				query = 'group=' + userChoices.timeBreakout,
+				levelDiff;
 
 			// If we're grouping by anything finer than year, add a filter and
-			// also group by the next level up.
+			// also group by the next levels up.
+			for ( levelDiff = 1; index - levelDiff >= 0; levelDiff++ ) {
+				query = query + '&group=' + timeArray[index - levelDiff];
+			}
 			if ( index > 0 ) {
-				query = query + '&group=' + timeArray[index - 1];
 				query = query + '&$filter=' + timeArray[index - 1] + 'sAgo lt \'1\'';
 			}
 			//groupStr = timeBreakout + '&group=' + userChoices.xSlice;

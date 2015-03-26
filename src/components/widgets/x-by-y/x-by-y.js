@@ -22,6 +22,7 @@ define( [
 		self.queryString              = '';
 		self.chosenFilters            = ko.observableArray();
 		self.subChoices               = ko.observableArray();
+		self.xByYChart				  = ko.observable( false );
 		self.chartWidth(950);
 
 		self.title = ko.computed( function(){
@@ -55,8 +56,8 @@ define( [
 			axes[data.totals[0]] = 'y';
 			axes[data.counts[0]] = 'y2';
 
-			self.xByYChart = c3.generate( {
-				bindto: '#x-by-yChart', //need to update this to allow multiples
+			self.xByYChart( false );
+			self.xByYChart( {
 				size: {
 					height: 450,
 					width: window.width
@@ -179,7 +180,7 @@ define( [
 				self.displayedTimeChoice(self.timeChoice());
 				self.retrievedResults(dataArray.results);
 
-				self.chartData = self.processData(self.retrievedResults(), self.timeChoice());
+				self.chartData = self.processData( self.retrievedResults(), self.timeChoice(), dataArray.timestamp );
 
 				self.makeChart(self.chartData);
 

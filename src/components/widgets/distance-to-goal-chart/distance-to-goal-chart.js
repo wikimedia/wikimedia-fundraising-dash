@@ -11,6 +11,7 @@ define( [
 		var self = this;
 		WidgetBase.call( this, params );
 		self.hasData = ko.observable( false );
+		self.distanceToGoalChart = ko.observable( false );
 
 		self.makeCharts = function() {
 			if ( params.sharedContext.dailyDataArray.length < 2 ) {
@@ -25,15 +26,7 @@ define( [
 				self.neededArray[d] = self.updatedGoal >= 0 ? self.updatedGoal : 0;
 			}
 
-			if ( self.distanceToGoalChart ) {
-				self.distanceToGoalChart.load( {
-					columns: [ self.neededArray ]
-				} );
-				return;
-			}
-
-			self.distanceToGoalChart = c3.generate({
-				bindto: '#distanceToGoalChart',
+			self.distanceToGoalChart({
 				size: {
 					height: 250,
 					width: window.width/2
