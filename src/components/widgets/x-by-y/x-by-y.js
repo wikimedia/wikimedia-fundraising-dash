@@ -180,7 +180,7 @@ define( [
 				self.displayedTimeChoice(self.timeChoice());
 				self.retrievedResults(dataArray.results);
 
-				self.chartData = self.processData(self.retrievedResults(), self.timeChoice());
+				self.chartData = self.processData( self.retrievedResults(), self.timeChoice(), dataArray.timestamp );
 
 				self.makeChart(self.chartData);
 
