@@ -11,10 +11,11 @@ define( [
         var self = this,
             timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
 
-        self.sharedContext = {};
+        self.sharedContext          = {};
+        self.displayedBoard         = params.displayedBoard;
+        self.boardName              = ko.observable();
+        self.widgetLoads            = ko.observableArray([]);
 
-        self.displayedBoard = params.displayedBoard;
-        self.widgetLoads = ko.observableArray([]);
 		function setWidgetLoads() {
 			self.widgetLoads.removeAll();
 			$.each( self.displayedBoard().widgets, function( i, widget ) {
@@ -24,6 +25,9 @@ define( [
 		}
 		setWidgetLoads();
 		self.displayedBoard.subscribe( setWidgetLoads );
+
+        //TODO: be able to change board name
+        //self.boardName(self.displayedBoard().displayName);
 
         //This will return true if any child widget is loading
         self.dataLoading = ko.computed( function() {
@@ -48,32 +52,6 @@ define( [
         } );
         // Get the date
         self.displayDate = ko.observable( moment().format( timeFormat ) );
-
-        //todo: this could go elsewhere
-        self.ellipsis = ko.observable('');
-        self.ellipsisObj = {
-            'value' : ['', '.', '..', '...', '....'],
-            'count' : 0,
-            'run' : false,
-            'timer' : null,
-            'element' : '.ellipsis',
-            'start' : function () {
-              var t = this;
-                this.run = true;
-                this.timer = setInterval(function () {
-                    if (t.run) {
-                        self.ellipsis(t.value[t.count % t.value.length]);
-                        t.count++;
-                    }
-                }, 400);
-            },
-            'stop' : function () {
-                this.run = false;
-                clearInterval(this.timer);
-                this.count = 0;
-            }
-        };
-        self.ellipsisObj.start();
 
         // Reload the data.  For the automatic reload, we're fine getting
         // something from the cache.

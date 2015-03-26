@@ -9266,6 +9266,10 @@ select {
     border-bottom: 1px #ccc solid;
 }
 
+.transparent {
+    background-color: #f5f5f5;
+}
+
 /* Gauges */
 
 .fraudGauge {

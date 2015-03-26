@@ -140,7 +140,7 @@ function( ko, template, c3, Chart, WidgetBase ){
 				color: {
 					pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
 					threshold: {
-						values: [ 0, self.greenHighRange, self.redLowRange, 100]
+						values: [ 0, self.greenHighRange(), self.redLowRange(), 100]
 					}
 				}
 			});
@@ -193,7 +193,7 @@ function( ko, template, c3, Chart, WidgetBase ){
 			});
 
 			var currentDate = new Date();
-			switch( userChoices.timespan[0] ){
+			switch( userChoices.timespan ){
 				case timePresets[0]:
 					var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
 					ds += 'DT gt \'' + lfm.toISOString() + '\'';
