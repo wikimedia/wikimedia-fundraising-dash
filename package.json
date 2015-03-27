@@ -26,7 +26,8 @@
     "odata-parser": "~1.0.0",
     "passport": "^0.2.1",
     "passport-drupal": "0.3.3",
-    "passport-oauth": "^1.0.0"
+    "passport-oauth": "^1.0.0",
+    "node.extend": "1.1.3"
   },
   "devDependencies": {
     "chalk": "^0.5.1",
