@@ -37,11 +37,16 @@ function( ko, $, template ){
 					metadata: filterMeta,
 					queryString: ko.observable('')
 				};
-				if ( filterMeta.type === 'dropdown' ) {
-					filter.userChoices = ko.observableArray( params.userChoices()[name] || [] );
-				} else {
-					return;//temporarily only doing dropdown filters
-					//filter.userChoices = ko.observable( params.userChoices()[name] );
+				switch( filterMeta.type ) {
+					case 'dropdown':
+						filter.userChoices = ko.observableArray( params.userChoices()[name] || [] );
+						break;
+					case 'text':
+						filter.userChoices = ko.observable( params.userChoices()[name] || {} );
+						break;
+					default:
+						//not yet supported filter type
+						return;
 				}
 				filter.queryString.subscribe( self.setChoices );
 				self.filters.push( filter );

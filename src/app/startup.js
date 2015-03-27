@@ -19,6 +19,7 @@ define(
 			//register filters
 			ko.components.register( 'filters',                    { require: 'components/filters/filters' });
 			ko.components.register( 'dropdown-filter',            { require: 'components/filters/dropdown-filter/dropdown-filter' });
+			ko.components.register( 'text-filter',                { require: 'components/filters/text-filter/text-filter' });
 
 			//register individual widgets
 			ko.components.register( 'fraud-gauge',                { require: 'components/widgets/fraud-gauge/fraud-gauge' });
