@@ -12,7 +12,7 @@ var widgets = require( '../widgets' ),
  * Throws an error if an value is invalid for the given column
  *
  * @param {mixed} value
- * @param {Object} column
+ * @param {object} column
  */
 function validateValue( value, column ) {
 	var valid = false,
@@ -51,9 +51,9 @@ function validateValue( value, column ) {
 }
 /**
  * Adds to the list of join statements
- * @param string table alias required
- * @param Object widget
- * @param Array joins
+ * @param {string} table alias required
+ * @param {object} widget
+ * @param {Array} joins
  */
 function addJoin( table, widget, joins ) {
 	var i;
@@ -70,10 +70,10 @@ function addJoin( table, widget, joins ) {
  * Gets a filter and adds it to joins if not yet present
  * Throws an error if the column does not exist
  *
- * @param {String} name - qs param for the filter
- * @param {Object} widget
+ * @param {string} name - qs param for the filter
+ * @param {object} widget
  * @param {Array} joins - list of table aliases to join
- * @returns {Object} describing column
+ * @returns {object} describing column
  */
 function getColumn( name, widget, joins ) {
 	var col = widget.filters[name];
@@ -86,7 +86,7 @@ function getColumn( name, widget, joins ) {
 
 /**
  * Formats a column object for SQL
- * @param Object filter column object
+ * @param {object} column filter column object
  * @returns SQL representation of the given column for use in where or group clauses
  */
 function getColumnText( column ) {
@@ -106,11 +106,11 @@ function getColumnText( column ) {
  * Uses '?' placeholders in clause, and appends literal values to values array
  * and required join table aliases to the joins array.
  *
- * @param {Object} filterNode - parsed from odata-parser
- * @param {Object} widget
- * @param {Array} values - list of values to use for placeholders
- * @param {Array} joins - list of table aliases to join
- * @returns {String} WHERE clause with '?' placeholders for values
+ * @param {object} filterNode parsed from odata-parser
+ * @param {object} widget
+ * @param {Array} values list of values to use for placeholders
+ * @param {Array} joins list of table aliases to join
+ * @returns {string} WHERE clause with '?' placeholders for values
  */
 function buildWhere( filterNode, widget, values, joins ) {
 	var col, colText, op, rightClause, leftClause, val, i, pattern, partial, ops = {
@@ -217,8 +217,8 @@ function buildWhere( filterNode, widget, values, joins ) {
  * Create a SQL string to show what the query looks like with parameter values
  * inserted at placeholders.
  * CAUTION: Only for display. Do not send the output of this function to the db!
- * @param string sqlQuery query text with '?' placeholders
- * @param Array values parameter values to insert
+ * @param {string} sqlQuery query text with '?' placeholders
+ * @param {Array} values parameter values to insert
  * @returns string query formatted for display. DO NOT SEND TO DB!
  */
 function substituteParams( sqlQuery, values) {
