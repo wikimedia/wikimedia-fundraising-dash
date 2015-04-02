@@ -8,22 +8,22 @@ DROP TABLE dash_user;
 
 CREATE TABLE IF NOT EXISTS dash_user(
 	id INT AUTO_INCREMENT PRIMARY KEY, /* local id */
-	oauth_id VARCHAR(255), /* remote unique id */
-	oauth_provider VARCHAR(255), /* service that gave us the remote id */
-	display_name VARCHAR(255), /* display name provided by oauth */
+	oauth_id VARCHAR(255) CHARACTER SET utf8, /* remote unique id */
+	oauth_provider VARCHAR(255) CHARACTER SET utf8, /* service that gave us the remote id */
+	display_name VARCHAR(255) CHARACTER SET utf8, /* display name provided by oauth */
 	default_board INT,
-	avatar VARCHAR(255), /* avatar image */
-	title VARCHAR(255),
-	email VARCHAR(255),
+	avatar VARCHAR(255) CHARACTER SET utf8, /* avatar image */
+	title VARCHAR(255) CHARACTER SET utf8,
+	email VARCHAR(255) CHARACTER SET utf8,
 	UNIQUE (oauth_id, oauth_provider)
 );
 /* List of available widgets */
 CREATE TABLE IF NOT EXISTS dash_widget(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	code VARCHAR(255), /* used in data and metadata URLs */
-	display_name VARCHAR(255),
-	description TEXT,
-	preview_path VARCHAR(255), /* preview image */
+	code VARCHAR(255) CHARACTER SET utf8, /* used in data and metadata URLs */
+	display_name VARCHAR(255) CHARACTER SET utf8,
+	description TEXT CHARACTER SET utf8,
+	preview_path VARCHAR(255) CHARACTER SET utf8, /* preview image */
 	UNIQUE (code)
 );
 /* Saved widget configurations */
@@ -31,18 +31,18 @@ CREATE TABLE IF NOT EXISTS dash_widget_instance(
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	widget_id INT,
 	owner_id INT,
-	display_name VARCHAR(255),
-	description TEXT,
+	display_name VARCHAR(255) CHARACTER SET utf8,
+	description TEXT CHARACTER SET utf8,
 	is_shared TINYINT DEFAULT 0,
-	configuration TEXT, /* json blob */
+	configuration TEXT CHARACTER SET utf8, /* json blob */
 	FOREIGN KEY (widget_id) REFERENCES dash_widget(id),
 	FOREIGN KEY (owner_id) REFERENCES dash_user(id)
 );
 /* List of available boards */
 CREATE TABLE IF NOT EXISTS dash_board(
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	display_name VARCHAR(255),
-	description TEXT,
+	display_name VARCHAR(255) CHARACTER SET utf8,
+	description TEXT CHARACTER SET utf8,
 	owner_id INT NOT NULL,
 	is_shared TINYINT DEFAULT 0,
 	FOREIGN KEY (owner_id) REFERENCES dash_user(id)
