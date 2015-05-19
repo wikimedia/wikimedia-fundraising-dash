@@ -2,8 +2,9 @@ define([
 	'knockout',
 	'text!components/widgets/ABTesting/ABTestingMain.html',
 	'gauge',
+	'WidgetBase',
 	'bootstrap-datepicker'],
-	function( ko, template, datePickersTemplate ){
+	function( ko, template, datePickersTemplate, WidgetBase ){
 
 		var ABTestingViewModel = function ( params ) {
 
@@ -132,7 +133,7 @@ define([
 
 		//put the data into objects for use on screen
 
-
+		WidgetBase.call( this, params );
 
 	};
 

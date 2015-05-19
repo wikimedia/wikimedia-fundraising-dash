@@ -8,6 +8,10 @@
 					<h1 data-bind="text: title"></h1>
 				</div>
 
+				<div class="btn-group btn-group-xs pull-right">
+					<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="modal" data-bind="attr: { 'data-target': '#remove'+instanceID }"><i class="fa fa-times"></i></button>
+				</div>
+
 				<ul class="navbar-form navbar-right">
 					<div class="form-group">
 						<input type="text" class="form-control" placeholder="Test Start Time">
@@ -50,4 +54,18 @@
 	</div>
 
 
+</div>
+
+<div class="modal fade" data-bind="attr: { id: 'remove'+instanceID } ">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>Remove this widget from the board?</h2>
+			</div>
+			<div class="modal-body">
+				<button class="btn btn-lg btn-success pull-right" data-dismiss="modal" data-bind="click: $parents[2].removeWidgetFromBoard"> OK</button>
+				<button class="btn btn-lg btn-danger pull-right" data-dismiss="modal"> Cancel</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div>
 </div>
