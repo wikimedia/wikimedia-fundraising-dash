@@ -1,6 +1,6 @@
 define([
 	'knockout',
-	'text!components/widgets/ABTesting/ABTestingMain.html',
+	'text!components/widgets/ab-testing/ab-testing.html',
 	'gauge',
 	'WidgetBase',
 	'bootstrap-datepicker'],

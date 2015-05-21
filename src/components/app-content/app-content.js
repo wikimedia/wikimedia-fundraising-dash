@@ -28,11 +28,7 @@ define(
 					});
 
 					$.get( 'board/', function ( boards ){
-						$.each( boards, function( i, board ){
-							if( board.ownerId === self.userdata().id ){
-								self.userBoards.push(board);
-							}
-						});
+						self.userBoards( boards );
 					});
 				}
 			});

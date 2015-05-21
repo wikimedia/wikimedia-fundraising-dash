@@ -60,9 +60,6 @@ module.exports = {
 				'SELECT dwi.id, @beboard, 2 FROM dash_widget_instance dwi JOIN dash_widget dw ON dwi.widget_id = dw.id WHERE owner_id = @uid AND code = \'distance-to-goal-chart\';\n' +
 				'INSERT INTO dash_widget_instance_board ( instance_id, board_id, widget_position )\n' +
 				'SELECT dwi.id, @beboard, 3 FROM dash_widget_instance dwi JOIN dash_widget dw ON dwi.widget_id = dw.id WHERE owner_id = @uid AND code = \'amt-per-second-chart\';',
-			insertABTesting = 'SET @uid = ?;\n' +
-				'INSERT into dash_board (display_name, description, owner_id)\n' +
-				'SELECT \'A/B Testing\', \'\', @uid FROM dash_user LEFT JOIN dash_board ON dash_board.owner_id = @uid AND dash_board.display_name = \'A/B Testing\' WHERE dash_board.id IS NULL;',
 			connection = getConnection(),
 			defaultBoard,
 			userId;
@@ -96,10 +93,6 @@ module.exports = {
 			}
 			user.defaultBoard = dbResults[0][2][0].id;
 			return connection.query( insertBigEnglish, [ userId ] );
-		} )
-		.then( function( dbResults ) {
-			// Don't check dbResults, the query prevents duplicates.
-			return connection.query( insertABTesting, [ userId ] );
 		} );
 	},
 	/**

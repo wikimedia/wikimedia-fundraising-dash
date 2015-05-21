@@ -24,7 +24,7 @@ define(
 			ko.components.register( 'amt-per-second-chart',       { require: 'components/widgets/amt-per-second-chart/amt-per-second-chart' });
 			ko.components.register( 'x-by-y',                     { require: 'components/widgets/x-by-y/x-by-y' });
 			ko.components.register( 'cat-trombone',               { require: 'components/widgets/cat-trombone/cat-trombone' });
-			ko.components.register( 'ABTesting',                  { require: 'components/widgets/ABTesting/ABTestingMain' });
+			ko.components.register( 'ab-testing',                 { require: 'components/widgets/ab-testing/ab-testing' });
 
 			//fire up router
 			ko.applyBindings({ route: router.currentRoute });
