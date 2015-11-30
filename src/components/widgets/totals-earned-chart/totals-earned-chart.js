@@ -29,7 +29,7 @@ define( [
 		self.hourlyChart = ko.observable( false );
 		self.dailyChart = ko.observable( false );
 
-		self.goal = params.sharedContext.goal = ko.observable( self.config.goal || 20000000 );
+		self.goal = params.sharedContext.goal = ko.observable( self.config.goal || 25000000 );
 		params.sharedContext.goal.subscribe( function() {
 			self.config.goal = params.sharedContext.goal();
 			self.logStateChange();
