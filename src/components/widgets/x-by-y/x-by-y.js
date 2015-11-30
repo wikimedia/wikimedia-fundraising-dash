@@ -115,8 +115,8 @@ define( [
 		//TODO: these will trigger a saved set of parameters to draw the chart with.
 		self.presetTitles = ko.observableArray([
 			'This does not work yet.',
-			'Donations During Big English 2014',
-			'Donations for Fiscal Year 2014'
+			'Donations During Big English 2015',
+			'Donations for Fiscal Year 2015'
 		]);
 		///////
 
@@ -132,7 +132,7 @@ define( [
 		//populate user choices dynamically
 		self.populateChoices = function(){
 			//populate y slices
-			return $.get( 'metadata/x-by-y', function(reqData){
+			return self.metadataRequest.then( function( reqData ) {
 				self.metadata = reqData;
 
 				var xArray = [], timeArray = ['Year', 'Month', 'Day', 'Hour'], groupArray = [];

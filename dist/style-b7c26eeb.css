@@ -8976,473 +8976,473 @@ html[dir="rtl"] .select2-container-multi .select2-search-choice-close {
 }
 
 html {
-    margin:0;
-    padding:0;
+	margin:0;
+	padding:0;
 }
 
 body {
-    background-color: #f5f5f5;
-    font-family: "Lato";
-    margin:0;
-    padding:0;
+	background-color: #f5f5f5;
+	font-family: "Lato";
+	margin:0;
+	padding:0;
 }
 
 .container-fluid {
-    padding: 12px 85px;
+	padding: 12px 85px;
 }
 
 #dashApp {
-    padding-left: 175px;
-    transition: all 0.4s ease 0s;
+	padding-left: 175px;
+	transition: all 0.4s ease 0s;
 }
 
 #dashApp .container {
-    padding-top: 50px;
+	padding-top: 50px;
 }
 
 .navRow {
-    width: 200px;
-    padding:0;
-    margin: 0;
+	width: 200px;
+	padding:0;
+	margin: 0;
 }
 
 .navWrapper {
-    margin-left: -200px;
-    left: 200px;
-    width: 200px;
-    position: fixed;
-    height: 100%;
-    overflow-y: auto;
-    z-index: 1000;
-    transition: all 0.4s ease 0s;
-    background-color: #5e668a;
-    color: #f5f5f5;
+	margin-left: -200px;
+	left: 200px;
+	width: 200px;
+	position: fixed;
+	height: 100%;
+	overflow-y: auto;
+	z-index: 1000;
+	transition: all 0.4s ease 0s;
+	background-color: #5e668a;
+	color: #f5f5f5;
 }
 
 select {
-    height: 37px;
-    border-radius: none;
+	height: 37px;
+	border-radius: none;
 }
 
 .sidebar-nav ul {
-    list-style-type: none;
-    width: 100%;
-    padding: 0;
-    background-color: rgba(255,255,255,0.2);
-    margin-bottom: 0;
+	list-style-type: none;
+	width: 100%;
+	padding: 0;
+	background-color: rgba(255,255,255,0.2);
+	margin-bottom: 0;
 }
 
 .mainNavButton, .mainNavButtonLogin {
-    font-size: 16px;
-    font-weight: normal;
-    width: 100%;
-    text-align: left;
-    padding: 1em;
-    border-bottom: rgba(255,255,255,0.3) solid 1px;
-    overflow: hidden;
+	font-size: 16px;
+	font-weight: normal;
+	width: 100%;
+	text-align: left;
+	padding: 1em;
+	border-bottom: rgba(255,255,255,0.3) solid 1px;
+	overflow: hidden;
 }
 
 .mainNavButton i {
-    margin-right: 8px;
+	margin-right: 8px;
 }
 
 .mainNavButton:hover {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .sidebar-nav a {
-    color: #f5f5f5;
+	color: #f5f5f5;
 }
 
 .setupAsk {
-    margin: 0 auto;
-    background-color: rgba(0,0,0,0.03);
-    padding: 5%;
-    font-size: 1.4em;
-    color: rgba(0,0,0,0.6);
+	margin: 0 auto;
+	background-color: rgba(0,0,0,0.03);
+	padding: 5%;
+	font-size: 1.4em;
+	color: rgba(0,0,0,0.6);
 }
 
 .setupWidget {
-    background-color: rgba(217,83,79, 0.7);
+	background-color: rgba(217,83,79, 0.7);
 }
 
 #collapseNavMenu {
-    background-color: rgba(255,255,255,0.4);
+	background-color: rgba(255,255,255,0.4);
 }
 
 #collapseNavMenu:hover {
-    background-color: rgba(255,255,255,0.7);
-    color: #5e668a;
-    cursor: pointer;
+	background-color: rgba(255,255,255,0.7);
+	color: #5e668a;
+	cursor: pointer;
 }
 
 .collapsedNavMenu {
-    width: 15px;
-    transition-duration: 1s;
+	width: 15px;
+	transition-duration: 1s;
 }
 
 #mainNav ul{
-    list-style-type: none;
-    cursor: pointer;
+	list-style-type: none;
+	cursor: pointer;
 }
 
 .libraryTitle {
-    margin-bottom: .5em;
+	margin-bottom: .5em;
 }
 
 #showNavMenu {
-    display: none;
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    cursor: pointer;
+	display: none;
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	cursor: pointer;
 }
 
 .selectedSubNav {
-    background-color: #f5f5f5;
-    color: #5e668a;
-    cursor: pointer;
-    border-top: 1px rgba(94,102,138,0.5) solid;
+	background-color: #f5f5f5;
+	color: #5e668a;
+	cursor: pointer;
+	border-top: 1px rgba(94,102,138,0.5) solid;
 }
 
 .subNavButton {
-    background-color: rgba(255,255,255,0.5);
-    color: #5e668a;
-    cursor: pointer;
-    transition:700ms ease-in;
+	background-color: rgba(255,255,255,0.5);
+	color: #5e668a;
+	cursor: pointer;
+	transition:700ms ease-in;
 }
 
 .subNavButton {
-    border-top: 1px rgba(94,102,138,0.5) solid;
+	border-top: 1px rgba(94,102,138,0.5) solid;
 }
 
 .subNavButton a {
-    color: #5e668a;
+	color: #5e668a;
 }
 
 .subNavBoardOpts li {
-    padding: 10px;
-    text-align: right;
-    border-top: 1px rgba(94, 102, 138, 0.2) solid;
+	padding: 10px;
+	text-align: right;
+	border-top: 1px rgba(94, 102, 138, 0.2) solid;
 }
 
 .subNavBoardOpts li:hover {
-    background-color: rgba(94,102,138,0.2);
+	background-color: rgba(94,102,138,0.2);
 }
 
 #welcomeTitle {
-    margin-bottom: 50px;
-    border-bottom: 1px #555 solid;
+	margin-bottom: 50px;
+	border-bottom: 1px #555 solid;
 }
 
 .titlebrand, .titlebrandToggle {
-    background-color: #d9534f;
-    overflow: hidden;
-    padding: 12px;
-    margin: 0;
+	background-color: #d9534f;
+	overflow: hidden;
+	padding: 12px;
+	margin: 0;
 }
 
 .titlebrand:hover {
-    background-color: #c12e2a;
-    cursor: pointer;
+	background-color: #c12e2a;
+	cursor: pointer;
 }
 
 .titlebrandToggle {
-    padding: 5px;
-    margin-left: 5px;
+	padding: 5px;
+	margin-left: 5px;
 }
 
 .titlebrandToggle:hover {
-    background-color: #fff;
-    color: #F15854;
+	background-color: #fff;
+	color: #F15854;
 }
 
 .titleCol {
-    padding: 0;
+	padding: 0;
 }
 
 .titleCol p {
-    color: #555;
+	color: #555;
 }
 
 /* MAIN BASE QUALITY STYLEINGS */
 
 .avatar {
-    height: 70px;
-    width: 70px;
-    border-radius: 35px;
-    margin: 18px 10px;
+	height: 70px;
+	width: 70px;
+	border-radius: 35px;
+	margin: 18px 10px;
 }
 
 .boxedIcon {
-    color: #333;
-    font-size: 18px;
-    color: rgba(0,0,0,0.2);
-    background-color: rgba(0,0,0,0.05);
-    padding: .5em;
+	color: #333;
+	font-size: 18px;
+	color: rgba(0,0,0,0.2);
+	background-color: rgba(0,0,0,0.05);
+	padding: .5em;
 }
 
 .smallIcon {
-    color: #333;
-    font-size: 13px;
-    color: #fff;
+	color: #333;
+	font-size: 13px;
+	color: #fff;
 }
 
 .lightWell {
-    background-color: rgba(0,0,0,0.009);
+	background-color: rgba(0,0,0,0.009);
 }
 
 .whiteWell {
-    background-color: #fff;
+	background-color: #fff;
 }
 
 .noUi-base {
-    background-color: #dff0d8;
+	background-color: #dff0d8;
 }
 
 .noUi-background {
-    background-color: #f2dede;
+	background-color: #f2dede;
 }
 
 .noUi-connect {
-    background-color: #fcf8e3;
+	background-color: #fcf8e3;
 }
 
 /* WIDGET BASE STYLINGS */
 
 .alert {
-    overflow: hidden;
+	overflow: hidden;
 }
 
 .factbox {
-    width: 100%;
-    padding: 7px;
-    color: #f5f5f5;
+	width: 100%;
+	padding: 7px;
+	color: #f5f5f5;
 }
 
 .factbox h3 {
-    font-size: 2em;
+	font-size: 2em;
 }
 
 .factbox-blue {
-    background-color: rgb(49,176,213);
+	background-color: rgb(49,176,213);
 }
 
 .factbox-yellow {
-    background-color: rgb(92,184,92);
+	background-color: rgb(92,184,92);
 }
 
 .factbox-red {
-    background-color: rgb(217,83,79);
+	background-color: rgb(217,83,79);
 }
 
 .factbox-icon {
-    font-size: 4em;
-    text-align: center;
-    padding:0;
+	font-size: 4em;
+	text-align: center;
+	padding:0;
 }
 
 .factbox-header {
-    margin-top: 10px;
-    margin-bottom: -12px;
+	margin-top: 10px;
+	margin-bottom: -12px;
 }
 
 /* TODO: finish this schema */
 /* Different widget class sizes */
 
 .widget-6 {
-    width: 47%;
-    display:inline-block;
+	width: 47%;
+	display:inline-block;
 }
 
 /* Big English */
 
 #bigEnglishThermometer {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 
 .bigEnglish-updates .row {
-    margin: 0 0 10px 0;
-    border-bottom: 1px #ccc solid;
+	margin: 0 0 10px 0;
+	border-bottom: 1px #ccc solid;
 }
 
 .transparent {
-    background-color: #f5f5f5;
+	background-color: #f5f5f5;
 }
 
 /* Gauges */
 
 .fraudGauge {
-    padding: 0;
-    display: inline-block;
-    clear:right;
+	padding: 0;
+	display: inline-block;
+	clear:right;
 }
 
 #fraudGaugeWidget .panel-body {
-    padding: 0;
+	padding: 0;
 }
 
 #fraudGaugeMeta {
-    margin: 10px;
+	margin: 10px;
 }
 
 #FraudRiskScoreGauge {
-    width: 390px;
-    margin: -90px auto 0 auto;
+	width: 390px;
+	margin: -90px auto 0 auto;
 }
 
 #fraudPercentRanges {
-    margin: 0 auto;
-    display: inherit;
+	margin: 0 auto;
+	display: inherit;
 }
 
 #queryButton {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 ul.filterPickerList {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
 }
 
 .filterPickerList > li {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 .subFilterPickerList input {
-    height: 12px;
+	height: 12px;
 }
 
 #filterNav > li > input, .subfilterSubnav > li > input{
-    vertical-align: middle;
-    margin-right:3px;
+	vertical-align: middle;
+	margin-right:3px;
 }
 
 #filterNav > li {
-    width: 25%;
-    padding:10px 0 0 0;
+	width: 25%;
+	padding:10px 0 0 0;
 }
 
 #filterNav.nav-tabs {
-    border: none;
+	border: none;
 }
 
 .subfilterSubnav {
-    margin-left: -35px;
+	margin-left: -35px;
 }
 
 #customTimePicker {
-    width: 100px;
+	width: 100px;
 }
 
 #customDate {
-    width: 100px;
+	width: 100px;
 }
 
 .input-sm.form-control{
-    height: 34px;
-    font-size: 14px;
+	height: 34px;
+	font-size: 14px;
 }
 
 #chosenTimePeriod {
-    margin: 15px 0 -15px 0;
+	margin: 15px 0 -15px 0;
 }
 
 #customTimepickerRange {
-    margin-left: 7px;
+	margin-left: 7px;
 }
 
 #fraudSubmissionErrors {
-    text-align: left;
+	text-align: left;
 }
 
 #unspecifiedFraudGauge.row{
-    margin: 10px;
+	margin: 10px;
 }
 
 .btn.percentBtn {
-    padding: .44em;
+	padding: .44em;
 }
 
 .btn.btn-warning.percentBtn {
-    width: 100%;
+	width: 100%;
 }
 
 .addToBoardBtn {
-    bottom: 0;
+	bottom: 0;
 }
 
 .widgetDesc {
-    height: 70px;
+	height: 70px;
 }
 
 /* BOOTSTRAP OVERRIDES */
 
 .btn {
-    border-radius: 0;
-    padding: .7em;
+	border-radius: 0;
+	padding: .7em;
 }
 
 .btn-col {
-    margin: 5px 0;
+	margin: 5px 0;
 }
 
 .btn-mint {
-    background-color: rgb(220,245,242);
-    color: #5e668a;
+	background-color: rgb(220,245,242);
+	color: #5e668a;
 }
 
 .btn-mint:hover {
-    background-color: rgba(220,245,242,0.9);
-    color: #000;
+	background-color: rgba(220,245,242,0.9);
+	color: #000;
 }
 
 a:hover {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 input {
-    height: 28px;
+	height: 28px;
 }
 
 .modal-body {
-    overflow: hidden;
+	overflow: hidden;
 }
 
 #loadingModal .modal-content {
-    padding: 10px;
+	padding: 10px;
 }
 
 .navbar-fixed-top {
-    height: 70px;
+	height: 70px;
 }
 
 .padded {
-    padding: 1em;
+	padding: 1em;
 }
 
 .panel {
-    vertical-align: top;
-    min-height: 355px;
-    margin-right: 1.4em;
+	vertical-align: top;
+	min-height: 355px;
+	margin-right: 1.4em;
 }
 
 .panel-transparent {
-    border-color: #ccc;
+	border-color: #ccc;
 }
 
 .panel-purple {
-  border-color: #ccc;
+	border-color: #ccc;
 }
 
 .panel-purple > .panel-heading {
-  color: #f5f5f5;
-  background-color: rgb(94,102,138);
-  border-color: #5e668a;
-  height:33px;
-  padding:5px 5px 0 10px;
+	color: #f5f5f5;
+	background-color: rgb(94,102,138);
+	border-color: #5e668a;
+	height:33px;
+	padding:5px 5px 0 10px;
 }
 
 .panel-heading button {
@@ -9450,166 +9450,166 @@ input {
 }
 
 .panel-purple > .panel-heading + .panel-collapse .panel-body {
-  border-top-color: #5e668a;
+	border-top-color: #5e668a;
 }
 
 .panel-purple > .panel-footer + .panel-collapse .panel-body {
-  border-bottom-color: #5e668a;
+	border-bottom-color: #5e668a;
 }
 
 .label {
-    font-weight: normal;
+	font-weight: normal;
 }
 
 .layoutRow:first-child, .layoutRow .firstWidget {
-    padding-left: 0;
+	padding-left: 0;
 }
 
 .layoutRow:last-child, .layoutRow .lastWidget {
-    padding-right: 0;
+	padding-right: 0;
 }
 
 .datepicker {
-    z-index: 1151 !important;
+	z-index: 1151 !important;
 }
 
 .datePickerForm input[type="radio"], input[type="checkbox"] {
-    margin: -4px 0 0 0;
+	margin: -4px 0 0 0;
 }
 
 .input-daterange .add-on{
-    margin-top: -4px;
-    height: 27px;
+	margin-top: -4px;
+	height: 27px;
 }
 
 #queryTimepickerFrom.input-small, #queryTimepickerTo.input-small {
-    width: 100px;
+	width: 100px;
 }
 
 .sliderTable {
-    width: 50%;
-    margin-top: -30px;
-    font-weight: bold;
+	width: 50%;
+	margin-top: -30px;
+	font-weight: bold;
 }
 
 .sliderTable > tbody > tr > td {
-    border-top: none;
+	border-top: none;
 }
 
 /* Charts are only so useful when small */
 .widgetDisplayRow {
-    min-width: 875px;
+	min-width: 875px;
 }
 
 .widgetPlace {
-    display: inline;
+	display: inline;
 }
 
 /* C3 Bar Chart Styles */
 .c3-region {
-  fill: red;
-  fill-opacity: .1;
+	fill: red;
+	fill-opacity: .1;
 }
 
 #distanceToGoalChart {
-    padding: 0 9px 0 0;
+	padding: 0 9px 0 0;
 }
 
 .goalText {
-    font-size: 1.5em;
-    margin-top: 1em;
+	font-size: 1.5em;
+	margin-top: 1em;
 }
 
 .loading, .loadingWidget {
-    background-color: #5bc0de;
-    opacity: .85;
-    border-radius: 25px;
-    padding: 37px;
-    color: #ffffff;
-    z-index: 99999;
-    font-size: 110%;
-    height: 192px;
-    width: 192px;
+	background-color: #5bc0de;
+	opacity: .85;
+	border-radius: 25px;
+	padding: 37px;
+	color: #ffffff;
+	z-index: 99999;
+	font-size: 110%;
+	height: 192px;
+	width: 192px;
 }
 
 .loading {
-    position: fixed;
-    top: 360px;
-    left: 50%;
-    margin-top: -96px;
-    margin-left: -96px;
+	position: fixed;
+	top: 360px;
+	left: 50%;
+	margin-top: -96px;
+	margin-left: -96px;
 }
 
 .loadingWidget {
-    position: absolute;
-    display: block;
-    margin: 10% 43%;
+	position: absolute;
+	display: block;
+	margin: 10% 43%;
 }
 
 .loading div {
-    margin-left: 10px;
+	margin-left: 10px;
 }
 
 #demoChart {
-    margin-left:30px;
+	margin-left:30px;
 }
 
 #savedChartsMenu {
-    padding: 5px;
-    color: #555;
+	padding: 5px;
+	color: #555;
 }
 #savedChartsMenu li {
-    padding: 3px;
+	padding: 3px;
 }
 
 #savedChartsMenu li:hover{
-    background-color: rgba(0,0,0,0.05);
+	background-color: rgba(0,0,0,0.05);
 }
 
 .select2-container-multi .select2-choices {
-    min-height: 36px;
-    min-width: 200px;
-    margin-left: 1px;
+	min-height: 36px;
+	min-width: 200px;
+	margin-left: 1px;
 }
 
 .widgetLibrary {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
 }
 
 .widgetLibraryTitle {
-    margin-left: 10px;
+	margin-left: 10px;
 }
 
 .widgetLibrary li {
-    display: inline-block;
-    padding: 20px;
-    margin: 10px;
-    background-color: rgba(49,176,213,0.6);
-    color: #f5f5f5;
-    width: 250px;
-    height: 320px;
-    overflow: hidden;
-    border-bottom: 7px solid rgb(49,176,213);
-    border-radius: 4px 4px 0 0;
+	display: inline-block;
+	padding: 20px;
+	margin: 10px;
+	background-color: rgba(49,176,213,0.6);
+	color: #f5f5f5;
+	width: 250px;
+	height: 320px;
+	overflow: hidden;
+	border-bottom: 7px solid rgb(49,176,213);
+	border-radius: 4px 4px 0 0;
 }
 
 .widgetLibrary li:hover {
-    background-color: rgb(49,176,213);
+	background-color: rgb(49,176,213);
 }
 
 .widgetLibrary img {
-    width: 210px;
-    height: 100px;
+	width: 210px;
+	height: 100px;
 }
 
 .xyGroupOption {
-    overflow: hidden;
-    min-width: 250px;
-    margin: 10px auto;
+	overflow: hidden;
+	min-width: 250px;
+	margin: 10px auto;
 }
 
 .xyGroupOption .panel-heading{
-    overflow: hidden;
+	overflow: hidden;
 }

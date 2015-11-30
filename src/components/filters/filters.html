@@ -1,0 +1,6 @@
+<div class="filters">
+    <div class="row" data-bind="foreach: filters">
+		<span data-bind="text: metadata.display"></span>:
+        <div data-bind="component: { name: metadata.type + '-filter', params: { name: name, queryString: queryString, metadata: metadata, userChoices: userChoices } }"></div>
+    </div>
+</div>
