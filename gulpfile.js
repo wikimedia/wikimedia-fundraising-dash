@@ -16,7 +16,9 @@ var gulp                    = require('gulp'),
 	rev                     = require('gulp-rev'),
 	jshint                  = require('gulp-jshint'),
 	rename                  = require('gulp-rename'),
-	replace                 = require('gulp-replace');
+	replace                 = require('gulp-replace'),
+	flatten                 = require('gulp-flatten'),
+	urlAdjuster		= require('gulp-css-url-adjuster');
 
 // Config
 var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require.config.js') + '; require;'),
@@ -29,17 +31,19 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
 		},
 		include: [
 			'requireLib',
-			'components/nav-bar/nav-bar',
-			'components/home/home',
 			'components/app-content/app-content',
-			'components/utils/date-pickers/date-pickers',
-			'components/widgets/fraud-gauge/fraud-gauge',
-			'components/widgets/distance-to-goal-chart/distance-to-goal-chart',
-			'components/widgets/totals-earned-chart/totals-earned-chart',
-			'components/widgets/amt-per-second-chart/amt-per-second-chart',
 			'components/boards/generic-board/generic-board',
-			'components/widgets/x-by-y/x-by-y',
-			'components/widgets/cat-trombone/cat-trombone'
+			'components/filters/filters',
+			'components/filters/dropdown-filter/dropdown-filter',
+			'components/filters/text-filter/text-filter',
+			'components/nav-bar/nav-bar',
+			'components/utils/date-pickers/date-pickers',
+			'components/widgets/amt-per-second-chart/amt-per-second-chart',
+			'components/widgets/cat-trombone/cat-trombone',
+			'components/widgets/distance-to-goal-chart/distance-to-goal-chart',
+			'components/widgets/fraud-gauge/fraud-gauge',
+			'components/widgets/totals-earned-chart/totals-earned-chart',
+			'components/widgets/x-by-y/x-by-y'
 		],
 		insertRequire: ['app/startup'],
 		bundles: {
@@ -81,7 +85,12 @@ gulp.task('css', ['clean'], function () {
 			'src/bower_modules/c3/c3.css',
 			'src/bower_modules/select2/select2.css',
 			'src/css/*.css'])
-		.pipe(concat('style.css')).pipe(rev()).pipe(gulp.dest('./dist/'))
+		.pipe(concat('style.css'))
+		.pipe(urlAdjuster({
+			prependRelative: '/images/'
+		}))
+		.pipe(rev())
+		.pipe(gulp.dest('./dist/'))
 		// Add rev-manifest.json as a new src to prevent rev'ing rev-manifest.json
 		.pipe(rev.manifest())
 		.pipe(rename('css.manifest.json'))
@@ -161,7 +170,9 @@ gulp.task('clean', function () {
 });
 
 gulp.task('images', function() {
-	return gulp.src('./src/images/**/*')
+	return gulp.src(['./src/images/**/*',
+			 './src/bower_modules/**/*{png,gif,jpg}'])
+			.pipe(flatten())
 			.pipe(gulp.dest('./dist/images/'));
 });
 
