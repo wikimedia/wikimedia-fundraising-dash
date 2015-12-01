@@ -11462,6 +11462,10 @@ input {
   margin-right: 1.4em;
 }
 
+.panel-short {
+  min-height: 0;
+}
+
 .panel-transparent {
   border-color: #ccc;
 }
