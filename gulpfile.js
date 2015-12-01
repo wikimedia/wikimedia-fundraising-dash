@@ -38,6 +38,7 @@ var requireJsRuntimeConfig = vm.runInNewContext(fs.readFileSync('src/app/require
 			'components/filters/text-filter/text-filter',
 			'components/nav-bar/nav-bar',
 			'components/utils/date-pickers/date-pickers',
+			'components/widgets/ab-testing/ab-testing',
 			'components/widgets/amt-per-second-chart/amt-per-second-chart',
 			'components/widgets/cat-trombone/cat-trombone',
 			'components/widgets/distance-to-goal-chart/distance-to-goal-chart',
