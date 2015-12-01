@@ -129,7 +129,7 @@ module.exports = {
 			column: 'utm_medium',
 			display: 'Medium',
 			type: 'dropdown',
-			values: [ 'sitenotice', 'sidebar', 'email', 'spontaneous', 'wmfWikiRedirect', 'SocialMedia', 'WaysToGive', 'event', 'externalbanner', 'outage' ],
+			values: [ 'sitenotice', 'sidebar', 'email', 'civicrm', 'spontaneous', 'wmfWikiLink', 'WikipediaApp', 'wmfWikiRedirect', 'SocialMedia', 'WaysToGive', 'event' ],
 			canGroup: true
 		},
 		Referrer: {
@@ -154,7 +154,7 @@ module.exports = {
 			column: 'payment_method',
 			display: 'Method',
 			type: 'dropdown',
-			values: [ 'cc', 'paypal', 'rtbt', 'amazon', 'dd', 'ew', 'obt', 'bt'],
+			values: [ 'amazon', 'bt', 'cc', 'dd', 'ew', 'paypal', 'obt', 'rtbt' ],
 			canGroup: true
 		},
 		Gateway: {
@@ -162,7 +162,7 @@ module.exports = {
 			column: 'gateway',
 			display: 'Gateway',
 			type: 'dropdown',
-			values: [ 'globalcollect', 'worldpay', 'amazon', 'paypal' ],
+			values: [ 'adyen', 'amazon', 'astropay', 'globalcollect', 'paypal', 'worldpay' ],
 			canGroup: true
 		},
 		Amount: {
@@ -248,14 +248,14 @@ module.exports = {
 			column: 'payment_method',
 			display: 'Method',
 			type: 'dropdown',
-			values: [ 'cc', 'paypal', 'rtbt', 'amazon', 'dd', 'ew', 'obt', 'bt']
+			values: [ 'cc', 'bt' ]
 		},
 		Gateway: {
 			table: 'pf',
 			column: 'gateway',
 			display: 'Gateway',
 			type: 'dropdown',
-			values: [ 'globalcollect', 'worldpay' ]
+			values: [ 'adyen', 'astropay', 'globalcollect', 'worldpay' ]
 		},
 		Score: {
 			table: 'pf',
