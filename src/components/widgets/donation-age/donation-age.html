@@ -1,0 +1,45 @@
+<div id="donationAgeWidget" class="panel panel-purple panel-short widget-6">
+	<div class="panel-heading">
+		<span data-bind='text: title'></span>
+		<div class="btn-group btn-group-xs pull-right">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-target="#donationAgeSqlModal"><i class="fa fa-database"></i></button>
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="modal" data-bind="attr: { 'data-target': '#remove'+instanceID }"><i class="fa fa-times"></i></button>
+			<button type="button" class="btn btn-default" data-bind="click: reloadData"><i class="fa fa-refresh"></i></button>
+		</div>
+	</div>
+	<div class="panel-body">
+		<div class="row text-center">
+			<h4>Average age of last 10 donations inserted:</h4>
+			<h2 data-bind="text:averageAge"></h2>
+		</div>
+	</div>
+
+	<div class="modal fade" id="donationAgeSqlModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">Donation age SQL:</h4>
+				</div>
+				<div class="modal-body">
+					<p data-bind="text:queryStringSQL"></p>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+	<div class="modal fade" data-bind="attr: { id: 'remove'+instanceID } ">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>Remove this widget from the board?</h2>
+				</div>
+				<div class="modal-body">
+					<button class="btn btn-lg btn-success pull-right" data-dismiss="modal" data-bind="click: $parents[2].removeWidgetFromBoard"> OK</button>
+					<button class="btn btn-lg btn-danger pull-right" data-dismiss="modal"> Cancel</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div>
+	</div>
+
+</div>
