@@ -9,7 +9,7 @@ AND b.display_name = 'Big English'
 AND wi.id IS NULL;
 
 INSERT INTO dash_widget_instance_board
-SELECT instance_id, next_pos.board_id, next_pos.pos
+SELECT NULL, instance_id, next_pos.board_id, next_pos.pos
 FROM 
 (SELECT MAX(widget_position) + 1 AS pos, id AS board_id
 FROM dash_widget_instance_board

@@ -29,9 +29,12 @@ To install and run the application in development mode, first ensure you do
 not have anything already listening to port 8080.  If so, stop it or change
 the configured port in defaults.js, or in a new config file, using -c.
 
-+ Be sure you have the submodules: git submodule update -i
+```
++ git submodule update -i
 + nvm use 0.8.2
++ cat schema/*.sql | mysql fredge
 + node server.js -d
+```
 
 To test OAuth, omit the "-d" option when starting the server.
 
