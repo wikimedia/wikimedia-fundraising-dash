@@ -59,7 +59,9 @@ module.exports = {
 				'INSERT INTO dash_widget_instance_board ( instance_id, board_id, widget_position )\n' +
 				'SELECT dwi.id, @beboard, 2 FROM dash_widget_instance dwi JOIN dash_widget dw ON dwi.widget_id = dw.id WHERE owner_id = @uid AND code = \'distance-to-goal-chart\';\n' +
 				'INSERT INTO dash_widget_instance_board ( instance_id, board_id, widget_position )\n' +
-				'SELECT dwi.id, @beboard, 3 FROM dash_widget_instance dwi JOIN dash_widget dw ON dwi.widget_id = dw.id WHERE owner_id = @uid AND code = \'amt-per-second-chart\';',
+				'SELECT dwi.id, @beboard, 3 FROM dash_widget_instance dwi JOIN dash_widget dw ON dwi.widget_id = dw.id WHERE owner_id = @uid AND code = \'amt-per-second-chart\';' +
+				'INSERT INTO dash_widget_instance_board ( instance_id, board_id, widget_position )\n' +
+				'SELECT dwi.id, @beboard, 4 FROM dash_widget_instance dwi JOIN dash_widget dw ON dwi.widget_id = dw.id WHERE owner_id = @uid AND code = \'donation-age\';\n',
 			connection = getConnection(),
 			defaultBoard,
 			userId;
