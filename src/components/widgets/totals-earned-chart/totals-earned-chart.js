@@ -87,7 +87,6 @@ define( [
 			}
 
 			var dataCount = data.length;
-
 			for (var i = 0; i < dataCount; i++ ) {
 
 				var el = data[i],
@@ -111,14 +110,13 @@ define( [
 		// something from the cache.
 		self.reloadData = function( automatic ){
 			// FIXME: use some common filter logic
-			var url = '/data/big-english?$filter='
-				+ 'Year eq \'' + new Date().getFullYear() + '\' and '
-				+ 'Month eq \'12\' and '
-				+ 'Amount lt \'' + self.majorDonationCutoff() + '\'',
+			var url = '/data/big-english?$filter=' +
+					'Year eq \'' + new Date().getFullYear() + '\' and ' +
+					'Month eq \'12\' and ' +
+					'Amount lt \'' + self.majorDonationCutoff() + '\'',
 				interval = 500000,
 				firstLoad = ( self.raised() === 0 ),
 				threshold = interval + self.raised() - self.raised() % interval;
-
 			self.dataLoading(true);
 			if ( automatic !== true ) {
 				url += '&cache=false';
