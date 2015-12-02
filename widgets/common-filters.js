@@ -80,7 +80,7 @@ module.exports = {
 			display : 'Amount',
 			type : 'number',
 			min : 0,
-			max : 10000
+			max : 5000000
 		},
 		Country: {
 			table: 'pi',
@@ -171,7 +171,7 @@ module.exports = {
 			display : 'Amount',
 			type : 'number',
 			min : 0,
-			max : 10000
+			max : 5000000
 		}
 	},
 	paymentsFraud: {

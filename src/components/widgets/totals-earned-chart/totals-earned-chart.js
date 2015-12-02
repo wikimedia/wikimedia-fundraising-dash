@@ -30,9 +30,18 @@ define( [
 		self.dailyChart = ko.observable( false );
 
 		self.goal = params.sharedContext.goal = ko.observable( self.config.goal || 25000000 );
+		self.majorDonationCutoff = ko.observable( self.config.majorDonationCutoff || 5000 ).extend( { throttle: 500 } );
+
+		// FIXME: do this stuff on 'Submit', actually cancel changes on 'Cancel'
 		params.sharedContext.goal.subscribe( function() {
 			self.config.goal = params.sharedContext.goal();
 			self.logStateChange();
+		} );
+
+		self.majorDonationCutoff.subscribe( function() {
+			self.config.majorDonationCutoff = self.majorDonationCutoff();
+			self.logStateChange();
+			self.reloadData();
 		} );
 
 		self.raised = ko.observable(0);
@@ -100,10 +109,14 @@ define( [
 		// Reload the data.  For the automatic reload, we're fine getting
 		// something from the cache.
 		self.reloadData = function( automatic ){
+			// FIXME: use some common filter logic
+			var url = '/data/big-english?$filter='
+				+ 'Year eq \'' + new Date().getFullYear() + '\' and '
+				+ 'Month eq \'12\' and '
+				+ 'Amount lt \'' + self.majorDonationCutoff() + '\'';
 			self.dataLoading(true);
-			var url = '/data/big-english';
 			if ( automatic !== true ) {
-				url += '/?cache=false';
+				url += '&cache=false';
 			}
 			$.get( url , function ( dataget ) {
 				self.loadData( dataget.results, dataget.timestamp );
