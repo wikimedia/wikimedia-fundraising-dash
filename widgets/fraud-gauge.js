@@ -8,7 +8,7 @@ extend( filters, commonFilters.paymentsFraud );
 
 module.exports = {
 	name: 'fraud',
-	query: 'SELECT AVG(CASE pf.validation_action WHEN \'reject\' THEN 100 ELSE 0 END) AS fraud_percent\nFROM payments_fraud pf [[JOINS]] [[WHERE]]',
+	query: 'SELECT AVG(fraud_score) AS fraud_percent\nFROM (SELECT AVG(CASE pf.validation_action WHEN \'reject\' THEN 100 ELSE 0 END) AS fraud_score\nFROM payments_fraud pf\n[[JOINS]]\n[[WHERE]]\nGROUP BY pf.contribution_tracking_id) AS deduped',
 	mainTableAlias: 'pf',
 	optionalJoins: {
 		pi: {
