@@ -22,7 +22,7 @@ function( ko, $, template ){
 			};
 		}
 
-		this.selectedValues.subscribe( function( vals ) {
+		this.setQueryString = function( vals ) {
 			var qs = '';
 			$.each( vals, function( i, value ) {
 				if ( i > 0 ) {
@@ -31,7 +31,10 @@ function( ko, $, template ){
 				qs += params.name + ' eq \'' + value + '\'';
 			} );
 			params.queryString( qs );
-		} );
+		};
+
+		this.selectedValues.subscribe( this.setQueryString );
+		this.setQueryString( this.selectedValues() );
 	}
 
 	return { viewModel: DropdownFilterViewModel, template: template };
