@@ -27,7 +27,7 @@
 						<div class="well lightWell col-md-12">
 							<form id="XYform" data-bind="event: {change: logStateChange(true)}">
 								<div class="row-fluid">
-									<h4>Show:</h4>
+									<span class="h4">Show: </span>
 									<select data-bind="options: ySlices, value: showSlice"></select>
 									<hr>
 								</div>
@@ -38,13 +38,13 @@
 								</div>
 
 								<div class="row-fluid">
-									<h4>Starting time range:</h4><br>
-									<select id="startingTimeRange" placeholder="Range..." data-bind="options: timeChoices, value: timeChoice"></select>
-									<!-- <hr> -->
+									<span class="h4">Time range:</span>
+									<select data-bind="options: timeChoices, value: timeChoice"></select>
+									<hr>
 								</div>
 
 								<div class="row-fluid">
-									<label for="selectXYFilters">Additional filters:</label><br>
+									<p class="text-center"><label>Additional filters</label></p>
 									<filters params="change: logStateChange, userChoices: userChoices, metadataRequest: metadataRequest, queryString: filterQueryString" />
 								</div>
 							</form>
