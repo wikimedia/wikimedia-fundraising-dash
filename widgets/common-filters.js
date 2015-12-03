@@ -82,23 +82,6 @@ module.exports = {
 			min : 0,
 			max : 5000000
 		},
-		Country: {
-			table: 'pi',
-			column: 'country',
-			display: 'Country',
-			type: 'dropdown',
-			values: [ 'AE', 'AF', 'AL', 'AM', 'AO', 'AR', 'AT', 'AU', 'AW', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BG', 'BH', 'BJ', 'BM', 'BN', 'BO', 'BR', 'BS', 'CA', 'CH', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CW', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DO', 'DZ', 'EC', 'EE', 'EG', 'ES', 'FR', 'GB', 'GE', 'GH', 'GR', 'GT', 'GU', 'HK', 'HN', 'HR', 'HU', 'IE', 'IL', 'IM', 'IN', 'IS', 'IT', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LI', 'LK', 'LR', 'LT', 'LU', 'LV', 'MA', 'ME', 'MG', 'MK', 'MN', 'MR', 'MT', 'MX', 'MY', 'MZ', 'NC', 'NE', 'NG', 'NI', 'NL', 'NO', 'NP', 'NZ', 'OM', 'PA', 'PE', 'PH', 'PK', 'PL', 'PR', 'PS', 'PT', 'QA', 'RO', 'RS', 'SC', 'SE', 'SG', 'SI', 'SV', 'TH', 'TN', 'TW', 'TZ', 'UA', 'US', 'UY', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'XX', 'ZA', 'ZM' ],
-			canGroup: true
-		},
-		Action: {
-			table: 'pf',
-			column: 'validation_action',
-			func: 'COALESCE([[COL]], \'no action\')',
-			display: 'Validation Action',
-			type: 'dropdown',
-			values: [ 'process', 'reject' ],
-			canGroup: true
-		},
 		Status: {
 			table: 'cc',
 			column: 'contribution_status_id',
@@ -140,6 +123,14 @@ module.exports = {
 		}
 	},
 	paymentsInitial: {
+		Country: {
+			table: 'pi',
+			column: 'country',
+			display: 'Country',
+			type: 'dropdown',
+			values: [ 'AE', 'AF', 'AL', 'AM', 'AO', 'AR', 'AT', 'AU', 'AW', 'AZ', 'BA', 'BB', 'BD', 'BE', 'BG', 'BH', 'BJ', 'BM', 'BN', 'BO', 'BR', 'BS', 'CA', 'CH', 'CK', 'CL', 'CM', 'CN', 'CO', 'CR', 'CW', 'CY', 'CZ', 'DE', 'DJ', 'DK', 'DO', 'DZ', 'EC', 'EE', 'EG', 'ES', 'FR', 'GB', 'GE', 'GH', 'GR', 'GT', 'GU', 'HK', 'HN', 'HR', 'HU', 'IE', 'IL', 'IM', 'IN', 'IS', 'IT', 'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LI', 'LK', 'LR', 'LT', 'LU', 'LV', 'MA', 'ME', 'MG', 'MK', 'MN', 'MR', 'MT', 'MX', 'MY', 'MZ', 'NC', 'NE', 'NG', 'NI', 'NL', 'NO', 'NP', 'NZ', 'OM', 'PA', 'PE', 'PH', 'PK', 'PL', 'PR', 'PS', 'PT', 'QA', 'RO', 'RS', 'SC', 'SE', 'SG', 'SI', 'SV', 'TH', 'TN', 'TW', 'TZ', 'UA', 'US', 'UY', 'VC', 'VE', 'VG', 'VI', 'VN', 'VU', 'XX', 'ZA', 'ZM' ],
+			canGroup: true
+		},
 		Currency: {
 			table: 'pi',
 			column : 'currency_code',
@@ -175,6 +166,15 @@ module.exports = {
 		}
 	},
 	paymentsFraud: {
+		Action: {
+			table: 'pf',
+			column: 'validation_action',
+			func: 'COALESCE([[COL]], \'no action\')',
+			display: 'Validation Action',
+			type: 'dropdown',
+			values: [ 'process', 'reject' ],
+			canGroup: true
+		},
 		DT: {
 			table: 'pf',
 			column : 'date',

@@ -2,10 +2,11 @@ define([
 	'knockout',
 	'text!components/widgets/fraud-gauge/fraud-gauge.html',
 	'c3',
+	'select2',
 	'chartjs',
 	'WidgetBase'
 	],
-function( ko, template, c3, Chart, WidgetBase ){
+function( ko, template, c3, select2, Chart, WidgetBase ){
 
 	//extend the chart so we can flip the circle
 	Chart.types.Doughnut.extend({
@@ -39,38 +40,19 @@ function( ko, template, c3, Chart, WidgetBase ){
 		var self 		= this,
 			wasSaved  	= self.chartSaved();
 
-		self.filters 				= ko.observableArray();
-		self.title 					= ko.observable(params.title);
 		self.queryString			= '';
 		self.columnSize 			= ko.observable('col-lg-' + ( self.config.width || 6 ) + ' fraudGauge');
 		self.selectedTimePeriod 	= ko.observable( self.config.timeBreakout || 'Last 15 Minutes');
-		self.selectedFilters 		= ko.observableArray([]);
-		self.selectedSubFilters 	= ko.observableArray([]);
 		self.queryRequest 			= [];
 		self.gaugeValue 			= ko.observable(0);
-		self.filtersSelected 		= ko.observable(false);
 		self.queryStringSQL 		= ko.observable('This widget hasn\'t been set up yet!');
 		self.greenHighRange 		= ko.observable( self.config.greenHighRange || 17 );
 		self.redLowRange 			= ko.observable( self.config.redLowRange || 68 );
 		self.configSet				= ko.observable(Object.keys(self.config).length > 0);
 		self.gauge					= ko.observable(false);
-
-		self.populateChoices = function(){
-			return $.get( 'metadata/fraud-gauge', function(reqData){
-				self.data = reqData;
-
-				self.filters($.map(self.data.filters, function(val, i){return [val];}));
-				self.filterNames = ko.computed( function(){
-					var names = [];
-
-					$.each(self.filters(), function(el, i){
-					  names.push(i.display);
-					});
-
-					return names;
-				});
-			});
-		};
+		self.showFilterText			= ko.computed( function() {
+			return !( $.isEmptyObject( self.userChoices() ) );
+		} );
 
 		self.renderPercentRangeChart = function(){
 
@@ -146,7 +128,7 @@ function( ko, template, c3, Chart, WidgetBase ){
 			});
 		};
 
-		self.validateSubmission = function( times, filters ){
+		self.validateSubmission = function( times ){
 			var validation = {
 				validated: '',
 				errors: []
@@ -162,38 +144,16 @@ function( ko, template, c3, Chart, WidgetBase ){
 			return validation;
 		};
 
-		self.convertToQueryString = function( userChoices ){
-			var qs            	= '',
+		self.createQueryString = function(){
+			var qs            	= self.filterQueryString(),
 				ds            	= '',
 				timePresets		= [ 'Last 15 Minutes',
 									'Last Hour',
 									'Last 24 Hours',
 									'Last 5 Minutes'];
 
-			var filterObj = {};
-			var haveMultipleSubfilters = [];
-			$.each( userChoices.selectedSubFilters, function(el, subfilter){
-				var filter = subfilter.substr(0, subfilter.indexOf(' '));
-
-				if(!filterObj[filter]){
-					filterObj[filter] = subfilter;
-				} else {
-					filterObj[filter] += ' or ' + subfilter;
-					haveMultipleSubfilters.push(filter);
-				}
-			});
-
-			$.each( filterObj, function(el, s){
-				if( haveMultipleSubfilters.indexOf(el) > -1){
-					qs += '(' + filterObj[el] + ')';
-				} else {
-					qs += filterObj[el];
-				}
-				qs += ' and ';
-			});
-
 			var currentDate = new Date();
-			switch( userChoices.timespan ){
+			switch( self.selectedTimePeriod() ){
 				case timePresets[0]:
 					var lfm = new Date(currentDate.getTime() - (15 * 60 * 1000));
 					ds += 'DT gt \'' + lfm.toISOString() + '\'';
@@ -219,16 +179,12 @@ function( ko, template, c3, Chart, WidgetBase ){
 
 			var postQS = '';
 			if(qs.length > 0){
-				postQS = qs + ds;
+				postQS = qs + ' and ' + ds;
 			} else {
-				postQS = ds;
+				postQS = '$filter=' + ds;
 			}
 
-			return '$filter=' + postQS;
-		};
-
-		self.showSubfilters = function( stuff ){
-			$('#'+stuff).toggleClass('hide');
+			return postQS;
 		};
 
 		self.resetGaugeSettings = function(){
@@ -237,15 +193,13 @@ function( ko, template, c3, Chart, WidgetBase ){
 			self.renderPercentRangeChart();
 
 			$('#timePeriodDropdown option:eq(0)').prop('selected', true);
-			$('.subfilterSubnav').addClass('hide');
-			$('input:checkbox').removeAttr('checked');
 		};
 
 		self.submitGaugeModifications = function(btn){
 
 			if(btn){self.logStateChange(true);}
 
-			var validation = self.validateSubmission( self.selectedTimePeriod(), self.selectedFilters() );
+			var validation = self.validateSubmission( self.selectedTimePeriod() );
 			if( !validation.validated ){
 
 				$('#fraudSubmissionErrors').html('<p class="text-danger">you have errors in your submission:</p><ul></ul>' ).addClass('show');
@@ -255,18 +209,8 @@ function( ko, template, c3, Chart, WidgetBase ){
 
 			} else{
 				self.configSet( true );
-				//gauge time period
-				self.queryRequest.timespan = self.selectedTimePeriod();
 
-				//gauge filters
-				self.queryRequest.selectedFilters = self.selectedFilters();
-				if(self.selectedFilters().length > 0){
-				  self.filtersSelected(true);
-				}
-
-				//gauge subfilters
-				self.queryRequest.selectedSubFilters = self.selectedSubFilters() ? self.selectedSubFilters().sort() : '';
-				self.queryString = self.convertToQueryString(self.queryRequest);
+				self.queryString = self.createQueryString();
 
 				//put gauge mods into temp config to be pushed if/when saved
 				//width, queryString, timeBreakout, showSlice
@@ -274,30 +218,28 @@ function( ko, template, c3, Chart, WidgetBase ){
 					width: self.config.width,
 					queryString: self.queryString,
 					timeBreakout: self.selectedTimePeriod().toString(),
-					selectedFilters: self.queryRequest.selectedFilters,
-					selectedSubFilters: self.queryRequest.selectedSubFilters,
 					greenHighRange: self.greenHighRange(),
-					redLowRange: self.redLowRange()
+					redLowRange: self.redLowRange(),
+					userChoices: self.userChoices()
 				};
 
 				var chartDataCall = self.getChartData( self.queryString );
 				$.when( chartDataCall ).then( function( dataget ){
-					self.gaugeValue(parseFloat(dataget.results[0].fraud_percent).toFixed(2) );
-					self.queryStringSQL(dataget.sqlQuery);
+					self.gaugeValue( parseFloat( dataget.results[0].fraud_percent ).toFixed( 2 ) );
+					self.queryStringSQL( dataget.sqlQuery );
 					self.makeChart();
 				});
 			}
 		};
 
-		self.populateChoices().then(function() {
-			self.preDataLoading(false);
+		self.metadataRequest.then( function() {
+			self.preDataLoading( false );
 
 			if ( wasSaved ) {
 				// restore choices and show the chart
 				if(self.config !== 'NULL') {
-					self.selectedTimePeriod(self.config.timeBreakout);
-					self.selectedFilters(self.config.selectedFilters ? self.config.selectedFilters : '');
-					self.selectedSubFilters(self.config.selectedSubFilters ? self.config.selectedSubFilters : '');
+					self.selectedTimePeriod( self.config.timeBreakout );
+					self.userChoices( self.config.userChoices );
 				}
 				self.chartSaved( true );
 				self.submitGaugeModifications();
