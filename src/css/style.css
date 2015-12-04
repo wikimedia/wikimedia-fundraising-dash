@@ -640,3 +640,15 @@ input {
 .xyGroupOption .panel-heading{
 	overflow: hidden;
 }
+
+.credit {
+	display: none;
+	background-color: #fdd;
+	bottom: 0;
+	position: fixed;
+	right: 0;
+	text-align: right;
+	z-index: 1000;
+	padding: 4px 10px;
+	border-radius: 10px;
+}

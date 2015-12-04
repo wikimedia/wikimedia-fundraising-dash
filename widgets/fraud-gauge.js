@@ -5,6 +5,7 @@ var extend			= require( 'node.extend' ),
 extend( filters, commonFilters.contributionTracking );
 extend( filters, commonFilters.paymentsInitial );
 extend( filters, commonFilters.paymentsFraud );
+delete( filters.Action ); // Hard-coded in query template
 
 module.exports = {
 	name: 'fraud',

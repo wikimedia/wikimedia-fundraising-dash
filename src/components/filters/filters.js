@@ -31,6 +31,7 @@ function( ko, $, template ){
 		};
 
 		params.metadataRequest.then( function( metadata ) {
+			var filters = [];
 			$.each( metadata.filters, function( name, filterMeta ) {
 				var filter = {
 					name: name,
@@ -49,8 +50,25 @@ function( ko, $, template ){
 						return;
 				}
 				filter.queryString.subscribe( self.setChoices );
-				self.filters.push( filter );
+				filters.push( filter );
 			} );
+			//sort filters by type then display name
+			filters.sort( function( a, b ) {
+				if ( a.type > b.type ) {
+					return 1;
+				}
+				if ( a.type < b.type ) {
+					return -1;
+				}
+				if ( a.display > b.display ) {
+					return 1;
+				}
+				if ( a.display < b.display ) {
+					return -1;
+				}
+				return 0;
+			} );
+			self.filters( filters );
 		} );
 	}
 

@@ -42,6 +42,22 @@ define([
 				localStorage.setItem( storageKey, JSON.stringify( fetchedData ) );
 			} );
 		} )();
+		self.filterText			= ko.computed( function() {
+			var filterName, text, parts = [], choices = self.userChoices();
+			for ( filterName in choices ) {
+				if ( !choices.hasOwnProperty( filterName ) || choices[filterName].length === 0 ) {
+					continue;
+				}
+				text = filterName;
+				if ( choices[filterName].length === 1 ) {
+					text += ' = ' + choices[filterName][0];
+				} else {
+					text += ' in (' + choices[filterName].join( ', ' ) + ')';
+				}
+				parts.push( text );
+			}
+			return parts.join( ', ' );
+		} );
 
 		self.getChartData = function( qs ){
 			self.dataLoading(true);
