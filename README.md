@@ -38,6 +38,23 @@ the configured port in defaults.js, or in a new config file, using -c.
 
 To test OAuth, omit the "-d" option when starting the server.
 
+Test Data
+=========
+
+Start with a working install of [WMF's CiviCRM setup](http://git.wikimedia.org/summary/?r=wikimedia/fundraising/crm).  That should include the contribution_tracking table in the drupal database and tables civicrm_contribution and wmf_contribution_extra in the civicrm database.
+
+Then run the scripts in this app's schema/ folder to create a fredge database (skip 0000 if you already have a fredge db) and add the tables needed for dash.
+
+First populate the contribution_tracking table.  Run the script in test_data/contribution_tracking.sql against the drupal database.  If you need more, generate SQL insert statements from this schema: https://mockaroo.com/e17c4fd0 .
+
+Next, populate the CiviCRM donation and contact tables.  In your CiviCRM install's drupal directory, run drush dpm <dash dir>/test_data/DonationQueueMessages.json.  If you need more, generate them from this schema: https://mockaroo.com/787ef4e0.
+
+If you are generating multiple sets of fake donations, be sure to increment the starting contribution tracking IDs so that they match and do not overlap existing donations.
+
+Then populate fredge's payments_initial table using the script in test_data/payments_initial.sql.
+
+TODO: add payments-fraud rows to match...
+
 Framework / Libraries
 =====================
 
