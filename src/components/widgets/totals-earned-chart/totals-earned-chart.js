@@ -87,6 +87,7 @@ define( [
 			}
 
 			var dataCount = data.length;
+
 			for (var i = 0; i < dataCount; i++ ) {
 
 				var el = data[i],
@@ -113,7 +114,11 @@ define( [
 			var url = '/data/big-english?$filter='
 				+ 'Year eq \'' + new Date().getFullYear() + '\' and '
 				+ 'Month eq \'12\' and '
-				+ 'Amount lt \'' + self.majorDonationCutoff() + '\'';
+				+ 'Amount lt \'' + self.majorDonationCutoff() + '\'',
+				interval = 500000,
+				firstLoad = ( self.raised() === 0 ),
+				threshold = interval + self.raised() - self.raised() % interval;
+
 			self.dataLoading(true);
 			if ( automatic !== true ) {
 				url += '&cache=false';
@@ -122,6 +127,17 @@ define( [
 				self.loadData( dataget.results, dataget.timestamp );
 				self.dataLoading( false );
 				self.queryStringSQL( dataget.sqlQuery );
+				if ( !firstLoad && self.raised() > threshold ) {
+					$( '.credit' ).fadeIn( 'slow' );
+					$( 'body' ).append(
+						'<audio style="display:none" autoplay>' +
+						'<source src="images/b.ogg" type="audio/ogg"/>' +
+						'<source src="images/b.mp3" type="audio/mpeg"/></audio>'
+					);
+					setTimeout( function () {
+						$( '.credit' ).fadeOut( 'slow' );
+					}, 6000 );
+				}
 			});
 			// Do it every 5 minutes as well
 			setTimeout( function () {
