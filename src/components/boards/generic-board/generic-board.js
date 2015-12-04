@@ -40,7 +40,7 @@ for ( i = 0; i < widgetCount; i++ ) {
 	}
 }
 return false;
-} ).extend( { throttle: 10 } ); // don't flip too often
+} ).extend( { throttle: 50 } ); // don't flip too often
 
 self.dataLoading.subscribe( function( value ) {
 	if ( value ) {
@@ -48,6 +48,10 @@ self.dataLoading.subscribe( function( value ) {
 	} else {
 		$('#loadingModal').modal('hide'); //todo: knockout-style!
 	}
+} );
+$( '#loadingModal' ).on( 'hidden.bs.modal', function () {
+	$( this ).css( "display", "none");
+	$( '.modal-backdrop' ).remove();
 } );
 // Get the date
 self.displayDate = ko.observable( moment().format( timeFormat ) );
