@@ -41,6 +41,11 @@
 						<ul data-bind="foreach: userBoards">
 							<li data-bind="attr: {id: $data['id']}, click: $parents[1].setDisplayPage, text: displayName"></li>
 						</ul>
+						<div id="newBoard">
+							<input type="text" data-bind="value: newBoardName" placeholder="New board name"/>
+							<button class="addBoard" data-bind="click: addBoard" >Add board</button>
+							<span class="error" data-bind="text: boardError"></span>
+						</div>
 					</div>
 
 					<div class="mainNavButton" id="Library" data-bind="click: $parent.setDisplayPage"><i class="fa fa-plug"></i><span id="LibraryLink"> Library</span>
