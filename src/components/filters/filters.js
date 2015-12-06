@@ -43,6 +43,7 @@ function( ko, $, template ){
 						filter.userChoices = ko.observableArray( params.userChoices()[name] || [] );
 						break;
 					case 'text':
+					case 'number':
 						filter.userChoices = ko.observable( params.userChoices()[name] || {} );
 						break;
 					default:

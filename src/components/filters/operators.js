@@ -1,8 +1,18 @@
 define({
+	ge: {
+		value: 'ge',
+		text: 'At least',
+		abbr: '\u2265'
+	},
 	gt: {
 		value: 'gt',
 		text: 'Greater than',
 		abbr: '>'
+	},
+	le: {
+		value: 'le',
+		text: 'At most',
+		abbr: '\u2264'
 	},
 	lt: {
 		value: 'lt',
