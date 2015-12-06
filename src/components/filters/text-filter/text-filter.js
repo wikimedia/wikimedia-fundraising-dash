@@ -1,54 +1,46 @@
 define( [
 	'knockout',
-	'text!components/filters/text-filter/text-filter.html'
+	'text!components/filters/text-filter/text-filter.html',
+	'operators'
 	],
-function( ko, template ){
+function( ko, template, ops ){
 
 	function TextFilterViewModel( params ){
 		var self = this;
 
 		this.operators = [
-			{
-				value: 'eq',
-				text: 'Exactly'
-			},
-			{
-				value: 'fn|startswith',
-				text: 'Starts with'
-			},
-			{
-				value: 'fn|endswith',
-				text: 'Ends with'
-			},
-			{
-				value: 'fn|substringof',
-				text: 'Contains'
-			}
+			ops.eq,
+			ops.startswith,
+			ops.endswith,
+			ops.substringof
 		];
 		this.selectedOperator = ko.observable( params.userChoices().operator || 'eq' );
 		this.value = ko.observable( params.userChoices().value || '' );
 
 		this.changed = function() {
+			var value = self.value();
+
 			params.userChoices( {
 				operator: self.selectedOperator(),
-				value: self.value()
+				value: value
 			} );
 
-			if ( self.value() === '' ) {
-				params.queryString( null );
+			if ( value === '' ) {
+				params.queryString( '' );
 				return;
 			}
 			var parts = self.selectedOperator().split( '|' );
 
 			if ( parts.length === 1 ) {
-				params.queryString( params.name + ' eq \'' + self.value() + '\'' );
+				params.queryString( params.name + ' ' + parts[0] + ' \'' + value + '\'' );
 				return;
 			}
-			params.queryString( parts[1] + '(\'' + self.value() + '\',' + params.name + ')'  );
+			params.queryString( parts[1] + '(\'' + value + '\',' + params.name + ')'  );
 		};
 
 		this.selectedOperator.subscribe( this.changed );
 		this.value.subscribe( this.changed );
+		this.changed();
 	}
 
 	return { viewModel: TextFilterViewModel, template: template };
