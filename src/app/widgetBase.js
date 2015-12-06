@@ -1,8 +1,8 @@
 define([
 	'jquery',
 	'knockout',
-	'momentjs'
-], function( $, ko, moment ){
+	'operators'
+], function( $, ko, ops ){
 
 	function zeroPad( number ) {
 		if ( number < 10 ) {
@@ -42,17 +42,45 @@ define([
 				localStorage.setItem( storageKey, JSON.stringify( fetchedData ) );
 			} );
 		} )();
+
 		self.filterText			= ko.computed( function() {
-			var filterName, text, parts = [], choices = self.userChoices();
+			var filterName,
+				text,
+				parts = [],
+				choices = self.userChoices(),
+				filterChoices,
+				operator;
+
 			for ( filterName in choices ) {
-				if ( !choices.hasOwnProperty( filterName ) || choices[filterName].length === 0 ) {
+				if ( !choices.hasOwnProperty( filterName ) ) {
 					continue;
 				}
-				text = filterName;
-				if ( choices[filterName].length === 1 ) {
-					text += ' = ' + choices[filterName][0];
+				text = filterName + ' ';
+				filterChoices = choices[filterName];
+				// FIXME: this should be part of a filter base class so different
+				// types of filter can define their own summary text generation
+				if ( filterChoices.constructor === Array ) {
+					// Dropdown filter
+					if ( filterChoices.length === 0 ) {
+						continue;
+					}
+					if ( filterChoices.length === 1 ) {
+						text += '= ' + filterChoices[0];
+					} else {
+						text += 'in (' + filterChoices.join( ', ' ) + ')';
+					}
 				} else {
-					text += ' in (' + choices[filterName].join( ', ' ) + ')';
+					// Text or numeric filter
+					if ( filterChoices.value === '' ) {
+						continue;
+					}
+					operator = ops[filterChoices.operator];
+					if ( operator.abbr ) {
+						text += operator.abbr;
+					} else {
+						text += operator.text.toLowerCase();
+					}
+					text += ' ' + filterChoices.value;
 				}
 				parts.push( text );
 			}
