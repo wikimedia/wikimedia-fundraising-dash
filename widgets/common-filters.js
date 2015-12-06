@@ -19,7 +19,6 @@ module.exports = {
 			table: 'cc',
 			func: 'YEAR',
 			column: 'receive_date',
-			display: 'Year',
 			type: 'number',
 			canGroup: true
 		},
@@ -27,7 +26,6 @@ module.exports = {
 			table: 'cc',
 			func: 'MONTH',
 			column: 'receive_date',
-			display: 'Month',
 			type: 'number',
 			canGroup: true
 		},
@@ -35,7 +33,6 @@ module.exports = {
 			table: 'cc',
 			func: 'DAY',
 			column: 'receive_date',
-			display: 'Year',
 			type: 'number',
 			canGroup: true
 		},
@@ -43,7 +40,6 @@ module.exports = {
 			table: 'cc',
 			func: 'HOUR',
 			column: 'receive_date',
-			display: 'Hour',
 			type: 'number',
 			canGroup: true
 		},
@@ -51,7 +47,6 @@ module.exports = {
 			table: 'cc',
 			column : 'receive_date',
 			func: 'timestampdiff(YEAR, [[COL]], utc_timestamp())',
-			display: 'Years ago',
 			type: 'number',
 			min: 0,
 			max: 12
@@ -60,7 +55,6 @@ module.exports = {
 			table: 'cc',
 			column : 'receive_date',
 			func: 'timestampdiff(MONTH, [[COL]], utc_timestamp())',
-			display: 'Months ago',
 			type: 'number',
 			min: 0,
 			max: 10000
@@ -69,7 +63,6 @@ module.exports = {
 			table: 'cc',
 			column : 'receive_date',
 			func: 'timestampdiff(DAY, [[COL]], utc_timestamp())',
-			display: 'Days ago',
 			type: 'number',
 			min: 0,
 			max: 10000
@@ -188,7 +181,6 @@ module.exports = {
 			table: 'pf',
 			func: 'YEAR',
 			column: 'date',
-			display: 'Year',
 			type: 'number',
 			canGroup: true
 		},
@@ -196,7 +188,6 @@ module.exports = {
 			table: 'pf',
 			func: 'MONTH',
 			column: 'date',
-			display: 'Month',
 			type: 'number',
 			canGroup: true
 		},
@@ -204,7 +195,6 @@ module.exports = {
 			table: 'pf',
 			func: 'DAY',
 			column: 'date',
-			display: 'Year',
 			type: 'number',
 			canGroup: true
 		},
@@ -212,7 +202,6 @@ module.exports = {
 			table: 'pf',
 			func: 'HOUR',
 			column: 'date',
-			display: 'Hour',
 			type: 'number',
 			canGroup: true
 		},
@@ -220,7 +209,6 @@ module.exports = {
 			table: 'pf',
 			column : 'date',
 			func: 'timestampdiff(YEAR, [[COL]], utc_timestamp())',
-			display: 'Years ago',
 			type: 'number',
 			min: 0,
 			max: 12
@@ -229,7 +217,6 @@ module.exports = {
 			table: 'pf',
 			column : 'date',
 			func: 'timestampdiff(MONTH, [[COL]], utc_timestamp())',
-			display: 'Months ago',
 			type: 'number',
 			min: 0,
 			max: 10000
@@ -238,7 +225,6 @@ module.exports = {
 			table: 'pf',
 			column : 'date',
 			func: 'timestampdiff(DAY, [[COL]], utc_timestamp())',
-			display: 'Days ago',
 			type: 'number',
 			min: 0,
 			max: 10000

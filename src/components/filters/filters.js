@@ -33,6 +33,9 @@ function( ko, $, template ){
 		params.metadataRequest.then( function( metadata ) {
 			var filters = [];
 			$.each( metadata.filters, function( name, filterMeta ) {
+				if ( !filterMeta.display ) {
+					return;
+				}
 				var filter = {
 					name: name,
 					metadata: filterMeta,
