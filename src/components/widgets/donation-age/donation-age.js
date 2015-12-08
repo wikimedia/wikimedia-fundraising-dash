@@ -12,9 +12,10 @@ function( ko, template, moment, WidgetBase ){
 
 		var self = this;
 
-		self.title			= ko.observable(params.title);
-		self.queryStringSQL	= ko.observable('This widget hasn\'t been set up yet!');
-		self.averageAge		= ko.observable('...');
+		self.title = ko.observable(params.title);
+		self.queryStringSQL = ko.observable('This widget hasn\'t been set up yet!');
+		self.averageAgeCivi = ko.observable('...');
+		self.averageAgeInitial = ko.observable('...');
 
 		// Reload the data.  For the automatic reload, we're fine getting
 		// something from the cache.
@@ -25,7 +26,8 @@ function( ko, template, moment, WidgetBase ){
 				url += '?cache=false';
 			}
 			$.get( url , function ( dataget ) {
-				self.averageAge( moment.duration( dataget.results[0].age, 'seconds' ).humanize() );
+				self.averageAgeCivi( moment.duration( dataget.results[0].age, 'seconds' ).humanize() );
+				self.averageAgeInitial( moment.duration( dataget.results[1].age, 'seconds' ).humanize() );
 				self.dataLoading( false );
 				self.queryStringSQL( dataget.sqlQuery );
 			});
