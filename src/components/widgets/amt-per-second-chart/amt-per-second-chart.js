@@ -48,12 +48,12 @@ define( [
 				}
 			}
 			// extend last point to end of graph unless we're already there
-			if ( index > numPoints + 1 ) {
+			if ( index >= numPoints ) {
 				xs[numPoints + 1] = index;
 				self.gotPerSecond[ numPoints + 1 ] = self.gotPerSecond[ numPoints ];
 				self.needPerSecond[ numPoints + 1 ] = self.needPerSecond[ numPoints ];
 			}
-			
+
 			self.avgUSDperSecondChart( {
 				size: {
 					height: 250,
