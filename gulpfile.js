@@ -172,6 +172,7 @@ gulp.task('clean', function () {
 });
 
 gulp.task('images', function() {
+	gulp.src('./src/favicon.ico').pipe(gulp.dest('./dist'));
 	return gulp.src(['./src/images/**/*',
 			 './src/bower_modules/**/*{png,gif,jpg}'])
 			.pipe(flatten())
