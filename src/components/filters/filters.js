@@ -54,16 +54,19 @@ function( ko, $, template ){
 			} );
 			//sort filters by type then display name
 			filters.sort( function( a, b ) {
-				if ( a.type > b.type ) {
+				var aMeta = a.metadata,
+					bMeta = b.metadata;
+
+				if ( aMeta.type > bMeta.type ) {
 					return 1;
 				}
-				if ( a.type < b.type ) {
+				if ( aMeta.type < bMeta.type ) {
 					return -1;
 				}
-				if ( a.display > b.display ) {
+				if ( aMeta.display > bMeta.display ) {
 					return 1;
 				}
-				if ( a.display < b.display ) {
+				if ( aMeta.display < bMeta.display ) {
 					return -1;
 				}
 				return 0;
