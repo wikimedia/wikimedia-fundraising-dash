@@ -45,7 +45,7 @@ Start with a working install of [WMF's CiviCRM setup](http://git.wikimedia.org/s
 
 Then run the scripts in this app's schema/ folder to create a fredge database (skip 0000 if you already have a fredge db) and add the tables needed for dash.
 
-First populate the contribution_tracking table.  Run the script in test_data/contribution_tracking.sql against the drupal database.  If you need more, generate SQL insert statements from this schema: https://mockaroo.com/e17c4fd0 .
+First populate the contribution_tracking and exchange_rates tables.  Run the test_data scripts contribution_tracking.sql and exchange_rates.sql against the drupal database.  If you need more, generate SQL insert statements from this schema: https://mockaroo.com/e17c4fd0 .
 
 Next, populate the CiviCRM donation and contact tables.  In your CiviCRM install's drupal directory, run drush dpm <dash dir>/test_data/DonationQueueMessages.json.  If you need more, generate them from this schema: https://mockaroo.com/787ef4e0.
 
