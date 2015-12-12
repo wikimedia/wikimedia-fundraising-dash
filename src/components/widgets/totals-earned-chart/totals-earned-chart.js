@@ -33,7 +33,9 @@ define( [
 		self.majorDonationCutoff = ko.observable( self.config.majorDonationCutoff || 5000 ).extend( { throttle: 500 } );
 		self.year = ko.observable( self.config.year || new Date().getFullYear() ).extend( { throttle: 500 } );
 		self.isCurrentYear = ko.computed( function() {
+			/*jslint -W116*/
 			return self.year() == new Date().getFullYear();
+			/*jslint -W116*/
 		} );
 
 		// FIXME: do this stuff on 'Submit', actually cancel changes on 'Cancel'
