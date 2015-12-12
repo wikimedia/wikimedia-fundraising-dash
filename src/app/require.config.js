@@ -25,7 +25,8 @@ var require = {
 		'c3':                   'bower_modules/c3/c3',
 		'numeraljs':            'bower_modules/numeraljs/numeral',
 		'decemberData':         'bower_modules/fakeData/decemberData',
-		'WidgetBase':           'app/widgetBase'
+		'WidgetBase':           'app/widgetBase',
+		'operators':            'components/filters/operators'
 	},
 	shim: {
 		'bootstrap': {

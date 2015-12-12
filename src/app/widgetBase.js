@@ -1,8 +1,8 @@
 define([
 	'jquery',
 	'knockout',
-	'momentjs'
-], function( $, ko, moment ){
+	'operators'
+], function( $, ko, ops ){
 
 	function zeroPad( number ) {
 		if ( number < 10 ) {
@@ -42,17 +42,45 @@ define([
 				localStorage.setItem( storageKey, JSON.stringify( fetchedData ) );
 			} );
 		} )();
+
 		self.filterText			= ko.computed( function() {
-			var filterName, text, parts = [], choices = self.userChoices();
+			var filterName,
+				text,
+				parts = [],
+				choices = self.userChoices(),
+				filterChoices,
+				operator;
+
 			for ( filterName in choices ) {
-				if ( !choices.hasOwnProperty( filterName ) || choices[filterName].length === 0 ) {
+				if ( !choices.hasOwnProperty( filterName ) ) {
 					continue;
 				}
-				text = filterName;
-				if ( choices[filterName].length === 1 ) {
-					text += ' = ' + choices[filterName][0];
+				text = filterName + ' ';
+				filterChoices = choices[filterName];
+				// FIXME: this should be part of a filter base class so different
+				// types of filter can define their own summary text generation
+				if ( filterChoices.constructor === Array ) {
+					// Dropdown filter
+					if ( filterChoices.length === 0 ) {
+						continue;
+					}
+					if ( filterChoices.length === 1 ) {
+						text += '= ' + filterChoices[0];
+					} else {
+						text += 'in (' + filterChoices.join( ', ' ) + ')';
+					}
 				} else {
-					text += ' in (' + choices[filterName].join( ', ' ) + ')';
+					// Text or numeric filter
+					if ( filterChoices.value === '' ) {
+						continue;
+					}
+					operator = ops[filterChoices.operator];
+					if ( operator.abbr ) {
+						text += operator.abbr;
+					} else {
+						text += operator.text.toLowerCase();
+					}
+					text += ' ' + filterChoices.value;
 				}
 				parts.push( text );
 			}
@@ -108,16 +136,44 @@ define([
 
 		};
 
-		self.processData = function( rawdata, timescale, timestamp ){
+		self.processData = function( rawdata, timescale, grouping, timestamp ){
 
 			var timeWord = ( timescale === 'Day' ? 'Dai' : timescale ) + 'ly',
-				totals = [ timeWord + ' Total'],
-				counts = [ timeWord + ' Count'],
+				totals,
+				counts,
+				isGrouped = ( grouping && grouping !== '' ),
+				groupValue,
+				groupValues,
+				groupedTotals,
+				groupedCounts,
+				totalGroupNames,
+				countGroupNames,
+				totalName,
+				countName,
+				usedDates = [],
 				xs = [ 'x' ],
 				defaultYear = new Date().getFullYear(),
 				defaultMonth = new Date().getMonth() + 1,
-				tempDate, timeFormat, now = new Date( timestamp );
-		
+				tempDate, timeFormat, now = new Date( timestamp ),
+				sortFunction;
+
+			if ( isGrouped ) {
+				// distinct values of the group column
+				groupValues = [];
+				// for c3 to stack totals with totals and counts with counts
+				totalGroupNames = [];
+				countGroupNames = [];
+				// these two are populated in the first pass with e.g.
+				// groupedTotals['US']['2015-12-02 15'] = 123.45
+				groupedTotals = [];
+				groupedCounts = [];
+				// these will be populated in a second pass
+				totals = [];
+				counts = [];
+			} else {
+				totals = [timeWord + ' Total'];
+				counts = [timeWord + ' Count'];
+			}
 			// coerce UTC into the default timezone.  Comparing offset values
 			// so we only have to adjust 'now', not each data point
 			now.setHours( now.getHours() + now.getTimezoneOffset() / 60 );
@@ -131,17 +187,66 @@ define([
 				if ( year < 2004 || new Date( year, month - 1, day, hour ) > now ) {
 					return;
 				}
-				totals.push( dataPoint.usd_total );
-				counts.push( dataPoint.donations );
 
 				tempDate = year + '-';
 				tempDate += zeroPad( month ) + '-';
 				tempDate += zeroPad( day );
 				tempDate += ' ' + zeroPad( hour );
 
-				xs.push( tempDate );
+				if ( !usedDates[tempDate] ){
+					xs.push( tempDate );
+					usedDates[tempDate] = true;
+				}
+				if ( isGrouped ) {
+					groupValue = dataPoint[grouping];
+					if ( !totals[groupValue] ) {
+						groupValues.push( groupValue );
+						totalName = groupValue + ' total';
+						totals[groupValue] = [totalName];
+						groupedTotals[groupValue] = [];
+						totalGroupNames.push( totalName );
+						countName = groupValue + ' count';
+						counts[groupValue] = [countName];
+						groupedCounts[groupValue] = [];
+						countGroupNames.push( countName );
+					}
+					groupedTotals[groupValue][tempDate] = dataPoint.usd_total;
+					groupedCounts[groupValue][tempDate] = dataPoint.donations;
+				} else {
+					// not grouped
+					totals.push( dataPoint.usd_total );
+					counts.push( dataPoint.donations );
+				}
 			} );
 
+			if ( isGrouped ) {
+				// second pass to create data arrays with an entry for each x val
+				// FIXME: remove this and use the xs property
+				// http://c3js.org/reference.html#data-xs
+				$.each( xs, function( index, xVal ) {
+					if ( xVal === 'x' ) {
+						return;
+					}
+					//clobber index because who cares
+					$.each( groupValues, function( index, groupVal ) {
+						if ( groupedTotals[groupVal][xVal] !== undefined ) {
+							totals[groupVal].push( groupedTotals[groupVal][xVal] );
+							counts[groupVal].push( groupedCounts[groupVal][xVal] );
+						} else {
+							totals[groupVal].push( 0 );
+							counts[groupVal].push( 0 );
+						}
+					} );
+				} );
+				groupValues.sort();
+				totalGroupNames.sort();
+				countGroupNames.sort();
+				sortFunction = function( seriesA, seriesB ) {
+					return seriesA[0] < seriesB[0] ? -1 : 1;
+				};
+				totals.sort( sortFunction );
+				counts.sort( sortFunction );
+			}
 			switch(timescale){
 				case 'Year':
 					timeFormat = '%Y';
@@ -161,7 +266,10 @@ define([
 				totals: totals,
 				counts: counts,
 				xs: xs,
-				timeFormat: timeFormat
+				timeFormat: timeFormat,
+				totalGroups: totalGroupNames,
+				countGroups: countGroupNames,
+				groupValues: groupValues
 			};
 		};
 
@@ -178,6 +286,9 @@ define([
 			// also group by the next levels up.
 			for ( levelDiff = 1; index - levelDiff >= 0; levelDiff++ ) {
 				query = query + '&group=' + timeArray[index - levelDiff];
+			}
+			if ( userChoices.xSlice ) {
+				query = query + '&group=' + userChoices.xSlice;
 			}
 			if ( index > 0 ) {
 				extraFilter = timeArray[index - 1] + 'sAgo lt \'1\'';

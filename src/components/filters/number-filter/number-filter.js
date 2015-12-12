@@ -1,21 +1,24 @@
 define( [
 	'knockout',
-	'text!components/filters/text-filter/text-filter.html',
+	'text!components/filters/number-filter/number-filter.html',
 	'operators'
 	],
 function( ko, template, ops ){
 
-	function TextFilterViewModel( params ){
+	function NumberFilterViewModel( params ){
 		var self = this;
 
 		this.operators = [
 			ops.eq,
-			ops.startswith,
-			ops.endswith,
-			ops.substringof
+			ops.gt,
+			ops.lt,
+			ops.ge,
+			ops.le
 		];
 		this.selectedOperator = ko.observable( params.userChoices().operator || 'eq' );
 		this.value = ko.observable( params.userChoices().value || '' );
+		this.min = params.metadata.min;
+		this.max = params.metadata.max;
 
 		this.changed = function() {
 			var value = self.value();
@@ -29,13 +32,11 @@ function( ko, template, ops ){
 				params.queryString( '' );
 				return;
 			}
-			var parts = self.selectedOperator().split( '|' );
 
-			if ( parts.length === 1 ) {
-				params.queryString( params.name + ' ' + parts[0] + ' \'' + value + '\'' );
-				return;
-			}
-			params.queryString( parts[1] + '(\'' + value + '\',' + params.name + ')'  );
+			params.queryString(
+					params.name + ' ' + self.selectedOperator() + ' \'' + value + '\''
+			);
+			return;
 		};
 
 		this.selectedOperator.subscribe( this.changed );
@@ -43,5 +44,5 @@ function( ko, template, ops ){
 		this.changed();
 	}
 
-	return { viewModel: TextFilterViewModel, template: template };
+	return { viewModel: NumberFilterViewModel, template: template };
 } );

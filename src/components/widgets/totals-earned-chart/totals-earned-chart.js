@@ -31,6 +31,10 @@ define( [
 
 		self.goal = params.sharedContext.goal = ko.observable( self.config.goal || 25000000 );
 		self.majorDonationCutoff = ko.observable( self.config.majorDonationCutoff || 5000 ).extend( { throttle: 500 } );
+		self.year = ko.observable( self.config.year || new Date().getFullYear() ).extend( { throttle: 500 } );
+		self.isCurrentYear = ko.computed( function() {
+			return self.year() == new Date().getFullYear();
+		} );
 
 		// FIXME: do this stuff on 'Submit', actually cancel changes on 'Cancel'
 		params.sharedContext.goal.subscribe( function() {
@@ -40,6 +44,12 @@ define( [
 
 		self.majorDonationCutoff.subscribe( function() {
 			self.config.majorDonationCutoff = self.majorDonationCutoff();
+			self.logStateChange();
+			self.reloadData();
+		} );
+
+		self.year.subscribe( function() {
+			self.config.year = self.year();
 			self.logStateChange();
 			self.reloadData();
 		} );
@@ -67,11 +77,10 @@ define( [
 		//get the data needed for this chart
 		self.loadData = function ( data, timestamp ) {
 			var runningTotal = 0,
-				currentDate = new Date();
+				currentDate = new Date(),
+				lastData = params.sharedContext.lastDataPoint;
 			currentDate.setTime( timestamp );
 			self.displayDate( moment( currentDate ).format( timeFormat ) );
-			params.sharedContext.lastDataPoint.day = currentDate.getUTCDate();
-			params.sharedContext.lastDataPoint.hour = currentDate.getUTCHours();
 
 			for (var d = 1; d < 32; d++) {
 				params.sharedContext.dailyDataArray[d] = 0;
@@ -101,6 +110,14 @@ define( [
 				params.sharedContext.dailyCountArray[day] += el.donations;
 			}
 
+			if ( self.isCurrentYear() ) {
+				lastData.day = currentDate.getUTCDate();
+				lastData.hour = currentDate.getUTCHours();
+			} else {
+				lastData.day = data[dataCount - 1].day;
+				lastData.hour = data[dataCount - 1].hour;
+			}
+
 			self.makeCharts();
 
 			self.raised(runningTotal);
@@ -111,7 +128,7 @@ define( [
 		self.reloadData = function( automatic ){
 			// FIXME: use some common filter logic
 			var url = '/data/big-english?$filter=' +
-					'Year eq \'' + new Date().getFullYear() + '\' and ' +
+					'Year eq \'' + self.year() + '\' and ' +
 					'Month eq \'12\' and ' +
 					'Amount lt \'' + self.majorDonationCutoff() + '\'',
 				interval = 500000,
@@ -137,10 +154,12 @@ define( [
 					}, 6000 );
 				}
 			});
-			// Do it every 5 minutes as well
-			setTimeout( function () {
-				self.reloadData( true );
-			}, 300000 );
+			if ( self.isCurrentYear() ) {
+				// Do it every 5 minutes as well
+				setTimeout( function () {
+					self.reloadData( true );
+				}, 300000 );
+			}
 		};
 
 		self.reloadData( true );

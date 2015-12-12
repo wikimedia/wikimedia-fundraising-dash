@@ -15,10 +15,11 @@ define(
 			ko.components.register( 'date-pickers',               { require: 'components/utils/date-pickers/date-pickers' });
 
 			//register boards
-			ko.components.register( 'generic-board',               { require: 'components/boards/generic-board/generic-board' });
+			ko.components.register( 'generic-board',              { require: 'components/boards/generic-board/generic-board' });
 			//register filters
 			ko.components.register( 'filters',                    { require: 'components/filters/filters' });
 			ko.components.register( 'dropdown-filter',            { require: 'components/filters/dropdown-filter/dropdown-filter' });
+			ko.components.register( 'number-filter',              { require: 'components/filters/number-filter/number-filter' });
 			ko.components.register( 'text-filter',                { require: 'components/filters/text-filter/text-filter' });
 
 			//register individual widgets
