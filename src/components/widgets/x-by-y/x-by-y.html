@@ -31,11 +31,11 @@
 									<select data-bind="options: ySlices, value: showSlice"></select>
 									<hr>
 								</div>
-								<!-- <div class="row-fluid">
-									<h4>By:</h4>
-									<select data-bind="options: xSlices, value: bySlice"></select>
+								<div class="row-fluid">
+									<h4>Group By:</h4>
+									<select data-bind="options: xSlices, optionsCaption: 'No group', value: bySlice, optionsText: 'text', optionsValue: 'value'"></select>
 									<hr>
-								</div> -->
+								</div>
 
 								<div class="row-fluid">
 									<h4>Starting time range:</h4><br>
@@ -46,23 +46,6 @@
 								<div class="row-fluid">
 									<label for="selectXYFilters">Additional filters:</label><br>
 									<filters params="change: logStateChange, userChoices: userChoices, metadataRequest: metadataRequest, queryString: filterQueryString" />
-									<!--span data-bind="foreach: groupChoices">
-										<div class="panel panel-default xyGroupOption">
-											<div class="panel-heading">
-												<span data-bind="text: $data.name" class="pull-left"></span>
-												<span class="pull-right" data-bind="if: $data.choices"><i class="fa fa-caret-down" data-bind="click: $parent.showPanelBody($data.name)"></i></span>
-											</div>
-											<div class="panel-body hide" data-bind="visible: $data.choices, attr: { id: $data.name + 'body' }">
-												<ul data-bind="foreach: $data.choices" class="filterPickerList list-inline">
-													<li class="subFilterPickerList">
-														<span class="label label-info">
-															<input type="checkbox" data-bind="value: $parent.name + ' eq \'' + $data + '\'', checked: $parents[1].chosenFilters"><span data-bind="text: $data"></span>
-														</span>
-													</li>
-												</ul>
-											</div>
-										</div>
-									</span-->
 								</div>
 							</form>
 						</div>

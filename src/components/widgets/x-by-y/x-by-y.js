@@ -20,8 +20,7 @@ define( [
 		self.displayedTimeChoice      = ko.observable('');
 		self.queryRequest             = {};
 		self.queryString              = '';
-		self.chosenFilters            = ko.observableArray();
-		self.subChoices               = ko.observableArray();
+		self.chosenFilters            = ko.observableArray(); // FIXME: remove, maybe adapt display to use filterText
 		self.xByYChart				  = ko.observable( false );
 		self.chartWidth(950);
 
@@ -50,27 +49,19 @@ define( [
 		});
 
 		self.makeChart = function(data){
-			var colors = {}, axes = {};
-			colors[data.totals[0]] = 'rgb(92,184,92)';
-			colors[data.counts[0]] = '#f0ad4e';
-			axes[data.totals[0]] = 'y';
-			axes[data.counts[0]] = 'y2';
+			var colors = {},
+				axes = {},
+				settings,
+				columns = [],
+				isGrouped = !!data.groupValues,
+				numValues;
 
-			self.xByYChart( false );
-			self.xByYChart( {
+			settings = {
 				size: {
 					height: 450,
 					width: window.width
 				},
 				zoom: { enabled: true },
-				data: {
-					x: 'x',
-					columns: [ data.xs, data.totals, data.counts ],
-					type: 'bar',
-					colors: colors,
-					axes: axes,
-					xFormat: '%Y-%m-%d %H'
-				},
 				grid: {
 					x: {
 						show: true
@@ -103,7 +94,49 @@ define( [
 						ratio: 0.4
 					}
 				}
-			} );
+			};
+
+			if ( isGrouped ) {
+				columns = [data.xs];
+				numValues = data.groupValues.length;
+				$.each( data.groupValues, function( index, groupVal ) {
+					var hue = index * 360 / numValues,
+						totalColumnName = data.totals[groupVal][0],
+						countColumnName = data.counts[groupVal][0];
+					columns[index + 1] = data.totals[groupVal];
+					columns[index + 1 + numValues] = data.counts[groupVal];
+					axes[totalColumnName] = 'y';
+					axes[countColumnName] = 'y2';
+					colors[totalColumnName] = 'hsl(' + hue + ',100%,50%)';
+					colors[countColumnName] = 'hsl(' + hue + ',100%,65%)';
+				} );
+				settings.data = {
+					columns: columns,
+					groups: [
+						data.totalGroups,
+						data.countGroups
+					],
+					colors: colors
+				};
+			} else {
+				colors[data.totals[0]] = 'rgb(92,184,92)';
+				colors[data.counts[0]] = '#f0ad4e';
+				axes[data.totals[0]] = 'y';
+				axes[data.counts[0]] = 'y2';
+
+				settings.data = {
+					columns: [ data.xs, data.totals, data.counts ],
+					colors: colors
+				};
+			}
+			settings.data.x = 'x';
+			settings.data.type = 'bar';
+			settings.data.xFormat = '%Y-%m-%d %H';
+			settings.data.axes = axes;
+
+			self.xByYChart( false );
+
+			self.xByYChart( settings );
 			self.chartLoaded(true);
 		};
 
@@ -135,23 +168,15 @@ define( [
 			return self.metadataRequest.then( function( reqData ) {
 				self.metadata = reqData;
 
-				var xArray = [], timeArray = ['Year', 'Month', 'Day', 'Hour'], groupArray = [];
+				var xArray = [],
+					timeArray = ['Year', 'Month', 'Day', 'Hour'],
+					groupArray = [];
 
 				$.each(self.metadata.filters, function(prop, obj){
-
 					if(obj.type !== 'number' || prop === 'Amount'){
-
 						if(obj.canGroup){
-							if(obj.values){
-								groupArray.push({ 'name': prop, 'choices': obj.values });
-							}
-
-							$('select #'+prop).select2();
-
-							//TODO: later this will do something different/more specific.
-							xArray.push(prop);
+							xArray.push( { text: obj.display, value: prop } );
 						}
-
 					}
 				});
 				self.xSlices(xArray);
@@ -164,12 +189,13 @@ define( [
 		self.submitXY = function(){
 
 			self.queryRequest.ySlice = self.showSlice();
-			//self.queryRequest.xSlice = self.bySlice();
+			self.queryRequest.xSlice = self.bySlice();
 			//self.queryRequest.additionalFilters = self.chosenFilters();
 			self.queryRequest.timeBreakout = self.timeChoice();
 
 			self.queryString		 = self.convertToQuery(self.queryRequest);
 			self.config.showSlice	 = self.showSlice();
+			self.config.bySlice		 = self.bySlice();
 			self.config.queryString  = self.queryString;
 			self.config.timeBreakout = self.queryRequest.timeBreakout;
 			self.config.chartData	 = self.chartData;
@@ -180,7 +206,7 @@ define( [
 				self.displayedTimeChoice(self.timeChoice());
 				self.retrievedResults(dataArray.results);
 
-				self.chartData = self.processData( self.retrievedResults(), self.timeChoice(), dataArray.timestamp );
+				self.chartData = self.processData( self.retrievedResults(), self.timeChoice(), self.bySlice(), dataArray.timestamp );
 
 				self.makeChart(self.chartData);
 
@@ -193,6 +219,7 @@ define( [
 			self.preDataLoading(false);
 			if ( wasSaved ) {
 				// restore choices and show the chart
+				self.bySlice( self.config.bySlice );
 				self.showSlice( self.config.showSlice );
 				self.timeChoice( self.config.timeBreakout );
 				self.chartSaved( true );
