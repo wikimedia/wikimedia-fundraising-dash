@@ -74,7 +74,7 @@ define([
 					if ( filterChoices.value === '' ) {
 						continue;
 					}
-					operator = ops[filterChoices.operator];
+					operator = ops[filterChoices.operator.replace( 'fn|', '' )];
 					if ( operator.abbr ) {
 						text += operator.abbr;
 					} else {
