@@ -16,6 +16,15 @@ define(
 			self.welcome            = ko.observable('');
 			self.widgetTemplates    = ko.observableArray();
 			self.widgetInstances    = ko.observableArray();
+			self.currentBoardWidgets= ko.computed( function() {
+				var widgets = [];
+				if ( self.displayedBoard() ) {
+					$.each( self.displayedBoard().widgets, function( idx, widget ) {
+						widgets[widget.widgetId] = true;
+					} );
+				}
+				return widgets;
+			} );
 
 			$.get( '/user/info', function( userInfo ) {
 				if ( userInfo && !userInfo.error ) {
@@ -40,28 +49,23 @@ define(
 					contentType: 'application/json; charset=UTF-8',
 					data: JSON.stringify( {
 						widgetId: event.id,
-					displayName: 'My ' + event.displayName,
-					isShared: false
+						displayName: 'My ' + event.displayName,
+						isShared: false
 					} ),
 					success: function( data ) {
 						$.ajax( {
 							method: 'POST',
-						url: '/board/' + self.userdata().defaultBoard + '/widgets',
-						contentType: 'application/json; charset=UTF-8',
-						data: JSON.stringify( {
-							instanceId: data.id
-						} ),
-						success: function( stuff ) {
-							//change the look of the add widget button
-							$( '#add-widget-' + event.id ).hide();
-							$( '#saved-widget-' + event.id ).removeClass( 'hide' );
-							//refresh the displayed board
-							if ( parseInt( self.displayedBoard().id, 10 ) === self.userdata().defaultBoard ) {
-								$.get( 'board/' + self.userdata().defaultBoard, function( moredata ){
+							url: '/board/' + self.displayedBoard().id + '/widgets',
+							contentType: 'application/json; charset=UTF-8',
+							data: JSON.stringify( {
+								instanceId: data.id
+							} ),
+							success: function( stuff ) {
+								//refresh the displayed board
+								$.get( 'board/' + self.displayedBoard().id, function( moredata ){
 									self.displayedBoard( moredata );
 								});
 							}
-						}
 						} );
 					}
 				} );
@@ -95,20 +99,19 @@ define(
 						self.displayedBoard( bdata );
 					});
 				}
-
 			};
 
-			self.getWidgetTemplates = function(){
-				$.get( '/widget', function( widgetTemplates ){
+			$.get( '/widget', function( widgetTemplates ){
 
-					var wt = $.map(widgetTemplates, function(n){
-						return n;
-					});
-
-					self.widgetTemplates(wt);
+				var wt = $.map(widgetTemplates, function(n){
+					n.onBoard = ko.computed( function() {
+						return ( self.currentBoardWidgets()[n.id] );
+					} );
+					return n;
 				});
-			};
-			self.getWidgetTemplates();
+
+				self.widgetTemplates(wt);
+			});
 
 			self.getUsersWidgetInstances = function(){
 				$.get('/widget-instance', function( widgetInstances ){

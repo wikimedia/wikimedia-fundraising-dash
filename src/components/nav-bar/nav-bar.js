@@ -10,6 +10,8 @@ define( [
 			self.welcome = params.welcome;
 			self.userBoards = params.userBoards;
 			self.displayPage = ko.observable('filler');
+			self.newBoardName = ko.observable('');
+			self.boardError = ko.observable('');
 
 			self.hideNav = function(){
 				//make the nav menu fold out of view.
@@ -46,6 +48,35 @@ define( [
 				});
 			};
 
+			self.addBoard = function() {
+				var board, name = self.newBoardName();
+				self.boardError('');
+				if ( name === '' ) {
+					self.boardError( 'Enter new board name' );
+					return;
+				}
+				board = {
+					displayName: name,
+					description: '',
+					isShared: false,
+					widgets: []
+				};
+				$.ajax( {
+					method: 'POST',
+					url: '/board',
+					contentType: 'application/json; charset=UTF-8',
+					data: JSON.stringify( board ),
+					success: function( returned ) {
+						if ( returned.error ) {
+							self.boardError( returned.error );
+							return;
+						}
+						board.id = returned.id;
+						self.userBoards.push( board );
+						self.newBoardName( '' );
+					}
+				});
+			};
 		}
 
 		return { viewModel: NavBarViewModel, template: template };
