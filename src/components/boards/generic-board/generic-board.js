@@ -50,7 +50,7 @@ self.dataLoading.subscribe( function( value ) {
 	}
 } );
 $( '#loadingModal' ).on( 'hidden.bs.modal', function () {
-	$( this ).css( "display", "none");
+	$( this ).css( 'display', 'none');
 	$( '.modal-backdrop' ).remove();
 } );
 // Get the date
