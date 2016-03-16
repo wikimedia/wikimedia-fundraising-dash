@@ -1,24 +1,18 @@
-var hasSyslog = !!process.platform.match(/linux/),
-	LOG_DEBUG = 0,
+var LOG_DEBUG = 0,
 	LOG_INFO = 1,	
 	LOG_ERR = 2,
-	syslog,
+	syslog = require( 'modern-syslog' ),
 	constMap = [];
 
-if ( hasSyslog ) {
-	syslog = require( 'modern-syslog' );
-	/*jslint bitwise: true*/
-	syslog.init( 'dash', syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0 );
-	/*jslint bitwise: false*/
-	constMap[LOG_DEBUG] = syslog.LOG_DEBUG;
-	constMap[LOG_INFO] = syslog.LOG_INFO;
-	constMap[LOG_ERR] = syslog.LOG_ERR;
-}
+/*jslint bitwise: true*/
+syslog.init( 'dash', syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0 );
+/*jslint bitwise: false*/
+constMap[LOG_DEBUG] = syslog.LOG_DEBUG;
+constMap[LOG_INFO] = syslog.LOG_INFO;
+constMap[LOG_ERR] = syslog.LOG_ERR;
 
 function log( level, message ) {
-	if ( hasSyslog ) {
-		syslog.log( constMap[level], message );
-	}
+	syslog.log( constMap[level], message );
 	if ( level === LOG_ERR ) {
 		console.error( message );
 	} else {
