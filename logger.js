@@ -6,7 +6,7 @@ var hasSyslog = !!process.platform.match(/linux/),
 	constMap = [];
 
 if ( hasSyslog ) {
-	syslog = require( 'modern-syslog' );
+	syslog = require( 'node-syslog' );
 	/*jslint bitwise: true*/
 	syslog.init( 'dash', syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0 );
 	/*jslint bitwise: false*/
