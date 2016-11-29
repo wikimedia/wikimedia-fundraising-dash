@@ -80,7 +80,7 @@ define( [
 					x: {
 						tick: {
 							count: 31,
-							format: function(x){ return 'Dec ' + ( Math.floor( x / 24 ) + 1 ); }
+							format: function(x){ return 'Day ' + ( Math.floor( x / 24 ) + 1 ); }
 						}
 					},
 					y: {
@@ -94,7 +94,7 @@ define( [
 						title: function(x) {
 							var day = Math.floor( x / 24 ) + 1;
 							var hour = x % 24;
-							return 'Dec ' + day + ' ' + hour + ':00 &ndash; ' + hour + ':59 UTC';
+							return 'Day ' + day + ' ' + hour + ':00 &ndash; ' + hour + ':59 UTC';
 						}
 					}
 				}

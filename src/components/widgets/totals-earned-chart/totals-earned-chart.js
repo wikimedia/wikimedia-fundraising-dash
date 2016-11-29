@@ -214,7 +214,7 @@ define( [
 				axis: {
 					x: {
 						label: {
-							text: 'December ' + ( d.x + 1 ),
+							text: 'Day ' + ( d.x + 1 ),
 							position: 'outer-left'
 						},
 						tick: {
@@ -287,7 +287,7 @@ define( [
 				axis: {
 					x: {
 						tick: {
-							format: function(x){ return 'Dec ' + (x+1); }
+							format: function(x){ return 'Day ' + (x+1); }
 						}
 					},
 					y: {
