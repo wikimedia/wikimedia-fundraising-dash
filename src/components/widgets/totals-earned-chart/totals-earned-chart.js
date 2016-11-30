@@ -103,10 +103,11 @@ define( [
 				var el = data[i],
 						day = el.day,
 						hour = el.hour,
-						total = el.usd_total;
+						total = el.usd_total,
+						seconds = Math.min( el.minutes * 60, 60 ); // Don't divide by zero
 				params.sharedContext.dayObj[day][hour + 1] = { total: total, count: el.donations };
 
-				params.sharedContext.secondsByHourDonationData[(day - 1) * 24 + hour + 1] = el.usd_per_second;
+				params.sharedContext.secondsByHourDonationData[(day - 1) * 24 + hour + 1] = el.usd_total / seconds;
 				runningTotal += total;
 				params.sharedContext.dailyDataArray[day] += total;
 				params.sharedContext.dailyCountArray[day] += el.donations;
