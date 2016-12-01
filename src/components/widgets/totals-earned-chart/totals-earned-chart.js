@@ -13,12 +13,10 @@ define( [
 
 		var self = this,
 			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a',
-			campaign = new Campaign({
+			campaign = ko.observable( new Campaign({
 				startDate: new Date( 2016, 10, 29 ),
 				endDate: new Date( 2017, 0, 1 )
-			}),
-			days = campaign.getLengthInDays(),
-			offset = campaign.getDayOfYearOffset();
+			}) );
 
 		WidgetBase.call( this, params );
 
@@ -87,7 +85,10 @@ define( [
 		self.loadData = function ( data, timestamp ) {
 			var runningTotal = 0,
 				currentDate = new Date(),
-				lastData = params.sharedContext.lastDataPoint;
+				lastData = params.sharedContext.lastDataPoint,
+				days = campaign().getLengthInDays(),
+				offset = campaign().getDayOfYearOffset();
+
 			currentDate.setTime( timestamp );
 			self.displayDate( moment( currentDate ).format( timeFormat ) );
 
@@ -139,7 +140,7 @@ define( [
 		self.reloadData = function( automatic ){
 			// FIXME: use some common filter logic
 			var url = '/data/big-english?$filter=' +
-					campaign.getDateFilter() + ' and ' +
+					campaign().getDateFilter() + ' and ' +
 					'Amount lt \'' + self.majorDonationCutoff() + '\'',
 				interval = 500000,
 				firstLoad = ( self.raised() === 0 ),
