@@ -84,8 +84,12 @@
 					  <input type="text" class="form-control" data-bind="textInput: majorDonationCutoff">
 					  <span class="input-group-addon">.00</span>
 					</div>
-					<label>Year</label>
-					<input disabled type="number" min="2009" class="form-control" data-bind="textInput: year, attr: { max: new Date().getFullYear() }">
+					<label>Campaign</label>
+					<select data-bind="options: campaigns,
+						optionsText: function(item) {
+							return item.name
+						},
+						value: campaign"></select>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

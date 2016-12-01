@@ -1,26 +1,31 @@
-define([
-	'momentjs'
-], function( moment ){
+define( function () {
 
 	function msToDays( ms ) {
 		return Math.round( ms / ( 24 * 60 * 60 * 1000 ) );
 	}
 
 	function Campaign( params ){
-		var currentYear = new Date().getFullYear();
+		var currentYear = new Date( Date.UTC() ).getFullYear();
 
-		this.startDate = params.startDate ||
-			new Date( currentYear, 11, 1 );
-		this.endDate = params.endDate ||
-			new Date( currentYear + 1, 0, 1 );
+		this.startDate = new Date( params.startDate ||
+			Date.UTC( currentYear, 11, 1 ) );
+		this.endDate = new Date( params.endDate ||
+			Date.UTC( currentYear + 1, 0, 1 ) );
+		this.name = params.name || currentYear.toString();
 	}
 
 	Campaign.prototype.getDayOfYearOffset = function () {
-		var diff = startOfYear = new Date( this.startDate );
+		var diff,
+			campaignStart = new Date(
+				this.startDate.getUTCFullYear(),
+				this.startDate.getUTCMonth(),
+				this.startDate.getUTCDate()
+			),
+			startOfYear = new Date( campaignStart );
 
 		startOfYear.setMonth(0);
 		startOfYear.setDate(1);
-		diff = this.startDate.getTime() - startOfYear.getTime();
+		diff = campaignStart.getTime() - startOfYear.getTime();
 
 		// Not a fencepost error - this should be 0 for Jan 1
 		return msToDays( diff );
@@ -42,4 +47,4 @@ define([
 	}
 
 	return Campaign;
-});
+} );
