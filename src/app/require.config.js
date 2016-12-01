@@ -26,6 +26,7 @@ var require = {
 		'numeraljs':            'bower_modules/numeraljs/numeral',
 		'decemberData':         'bower_modules/fakeData/decemberData',
 		'WidgetBase':           'app/widgetBase',
+		'Campaign':             'app/campaign',
 		'operators':            'components/filters/operators'
 	},
 	shim: {

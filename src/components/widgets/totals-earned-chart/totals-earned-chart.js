@@ -4,14 +4,21 @@ define( [
 	'c3',
 	'numeraljs',
 	'momentjs',
+	'Campaign',
 	'WidgetBase'
-], function( ko, template, c3, numeral, moment, WidgetBase ){
+], function( ko, template, c3, numeral, moment, Campaign, WidgetBase ){
 
 
 	function TotalsEarnedChartViewModel( params ){
 
 		var self = this,
-			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
+			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a',
+			campaign = new Campaign({
+				startDate: new Date( 2016, 10, 29 ),
+				endDate: new Date( 2017, 0, 1 )
+			}),
+			days = campaign.getLengthInDays(),
+			offset = campaign.getDayOfYearOffset();
 
 		WidgetBase.call( this, params );
 
@@ -84,7 +91,7 @@ define( [
 			currentDate.setTime( timestamp );
 			self.displayDate( moment( currentDate ).format( timeFormat ) );
 
-			for (var d = 1; d < 32; d++) {
+			for (var d = 1; d < days + 1; d++) {
 				params.sharedContext.dailyDataArray[d] = 0;
 				params.sharedContext.dailyCountArray[d] = 0;
 				if (!params.sharedContext.dayObj[d]) {
@@ -101,7 +108,7 @@ define( [
 			for (var i = 0; i < dataCount; i++ ) {
 
 				var el = data[i],
-						day = el.day,
+						day = el.day - offset,
 						hour = el.hour,
 						total = el.usd_total,
 						seconds = Math.min( el.minutes * 60, 60 ); // Don't divide by zero
@@ -114,6 +121,7 @@ define( [
 			}
 
 			if ( self.isCurrentYear() ) {
+				// FIXME
 				lastData.day = currentDate.getUTCDate();
 				lastData.hour = currentDate.getUTCHours();
 			} else {
@@ -131,8 +139,7 @@ define( [
 		self.reloadData = function( automatic ){
 			// FIXME: use some common filter logic
 			var url = '/data/big-english?$filter=' +
-					'Year eq \'' + self.year() + '\' and ' +
-					'Month eq \'12\' and ' +
+					campaign.getDateFilter() + ' and ' +
 					'Amount lt \'' + self.majorDonationCutoff() + '\'',
 				interval = 500000,
 				firstLoad = ( self.raised() === 0 ),
