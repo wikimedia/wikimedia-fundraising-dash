@@ -3,7 +3,6 @@ var express			= require( 'express' ),
 	routes			= require( './routes'),
 	passport		= require( 'passport' ),
 	DrupalStrategy	= require( 'passport-drupal' ).DrupalStrategy,
-	evilDns			= require( 'evil-dns' ),
 	url				= require( 'url' ),
 	logger			= require( './logger.js' ),
 	config			= require( './config.js' ),
@@ -27,19 +26,25 @@ if (!serverConfig) {
 
 logger.debug( 'Will try to listen on IP address: ' + serverConfig[2] );
 logger.debug( 'Will try to listen on port: ' + serverConfig[3] );
-logger.debug( 'Using OAuth providerURL: ' + config.providerURL );
-logger.debug( 'Using OAuth providerBackendURL: ' + config.providerBackendURL );
 
-// Override DNS resolution if providerBackendIP is given
-if ( config.providerBackendIP ) {
-	logger.info( 'OAuth providerBackendIP set, will use address ' +
-		config.providerBackendIP + ' for hostname "' +
-		url.parse( config.providerBackendURL ).hostname + '"' );
-	evilDns.add(
-		url.parse( config.providerBackendURL ).hostname,
-		config.providerBackendIP
-	);
+if ( config.debug ) {
+	logger.debug( 'Running in debug mode - non-minified src and fake authentication' );
+} else {
+	logger.debug( 'Using OAuth providerURL: ' + config.providerURL );
+	logger.debug( 'Using OAuth providerBackendURL: ' + config.providerBackendURL );
+
+	// Override DNS resolution if providerBackendIP is given
+	if ( config.providerBackendIP ) {
+		logger.info( 'OAuth providerBackendIP set, will use address ' +
+			config.providerBackendIP + ' for hostname "' +
+			url.parse( config.providerBackendURL ).hostname + '"' );
+		require( 'evil-dns' ).add(
+			url.parse( config.providerBackendURL ).hostname,
+			config.providerBackendIP
+		);
+	}
 }
+
 app.use( express.json() );
 
 app.use( express.session( { secret: config.sessionSecret } ) );
