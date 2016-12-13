@@ -10093,6 +10093,7 @@ button.close {
 
 .c3 svg {
   font: 10px sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .c3 path,
@@ -10195,13 +10196,13 @@ button.close {
 
 .c3-region {
   fill: steelblue;
-  fill-opacity: 0.1;
+  fill-opacity: .1;
 }
 
 /*-- Brush --*/
 
 .c3-brush .extent {
-  fill-opacity: 0.1;
+  fill-opacity: .1;
 }
 
 /*-- Select - Drag --*/
@@ -10221,6 +10222,12 @@ button.close {
   fill: white;
   stroke: lightgray;
   stroke-width: 1;
+}
+
+/*-- Title --*/
+
+.c3-title {
+  font: 14px sans-serif;
 }
 
 /*-- Tooltip --*/
@@ -11293,9 +11300,18 @@ select {
   margin-top: 10px;
 }
 
+.bigEnglish-updates {
+  overflow: hidden;
+  /* gives it the height of floating kids */
+}
+
 .bigEnglish-updates .row {
   margin: 0 0 10px 0;
   border-bottom: 1px #ccc solid;
+}
+
+#totalsEarnedChart svg {
+  margin-left: -15px;
 }
 
 .transparent {
