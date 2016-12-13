@@ -19,13 +19,12 @@ var require = {
 		'gauge':                'bower_modules/gauge.js/dist/gauge',
 		'bootstrap-datepicker': 'bower_modules/bootstrap-datepicker/js/bootstrap-datepicker',
 		'bootstrap-timepicker': 'bower_modules/bootstrap-timepicker/js/bootstrap-timepicker',
-		'sifter':               'bower_modules/sifter/sifter',
-		'microplugin':          'bower_modules/microplugin/src/microplugin',
 		'select2':              'bower_modules/select2/select2',
 		'c3':                   'bower_modules/c3/c3',
 		'numeraljs':            'bower_modules/numeraljs/numeral',
 		'decemberData':         'bower_modules/fakeData/decemberData',
 		'WidgetBase':           'app/widgetBase',
+		'Campaign':             'app/campaign',
 		'operators':            'components/filters/operators'
 	},
 	shim: {
@@ -45,13 +44,6 @@ var require = {
 		'noUISlider': {
 			deps: [
 				'jquery'
-				]
-		},
-		'selectize': {
-			deps: [
-				'bootstrap',
-			'sifter',
-			'microplugin'
 				]
 		}
 	}

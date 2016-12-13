@@ -1,12 +1,22 @@
-var hasSyslog = !!process.platform.match(/linux/),
+var hasSyslog = true,
 	LOG_DEBUG = 0,
 	LOG_INFO = 1,	
 	LOG_ERR = 2,
 	syslog,
 	constMap = [];
 
-if ( hasSyslog ) {
+// FIXME: remove the old one when we upgrade the dash host
+try {
 	syslog = require( 'node-syslog' );
+} catch( ex ) {
+	try{
+		syslog = require( 'modern-syslog' );
+	} catch( ex ) {
+		hasSyslog = false;
+	}
+}
+
+if ( hasSyslog ) {
 	/*jslint bitwise: true*/
 	syslog.init( 'dash', syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0 );
 	/*jslint bitwise: false*/

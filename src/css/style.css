@@ -284,9 +284,17 @@ select {
 	margin-top: 10px;
 }
 
+.bigEnglish-updates {
+	overflow: hidden; /* gives it the height of floating kids */
+}
+
 .bigEnglish-updates .row {
 	margin: 0 0 10px 0;
 	border-bottom: 1px #ccc solid;
+}
+
+#totalsEarnedChart svg {
+	margin-left: -15px;
 }
 
 .transparent {
