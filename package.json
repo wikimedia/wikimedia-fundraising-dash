@@ -34,6 +34,7 @@
                 "node-syslog": "~1.1.7"
         },
 	"devDependencies": {
+		"bower": "1.8.0",
 		"chalk": "^0.5.1",
 		"deeply": "^0.1.0",
 		"event-stream": "^3.1.7",
