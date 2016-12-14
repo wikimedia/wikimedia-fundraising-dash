@@ -24,7 +24,7 @@ module.exports = {
 			right: {
 				type: 'lt',
 				left: { type: 'property', name: 'Amount' },
-				right: { type: 'literal', value: '5000' }
+				right: { type: 'literal', value: '1000' }
 			}
 		}
 	}
