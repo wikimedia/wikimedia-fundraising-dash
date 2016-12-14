@@ -31,6 +31,7 @@ define( [
 		{ require: 'components/widgets/distance-to-goal-chart/distance-to-goal-chart' } );
 	ko.components.register( 'donation-age', { require: 'components/widgets/donation-age/donation-age' } );
 	ko.components.register( 'fraud-gauge', { require: 'components/widgets/fraud-gauge/fraud-gauge' } );
+	ko.components.register( 'top10', { require: 'components/widgets/top10/top10' } );
 	ko.components.register( 'totals-earned-chart',
 		{ require: 'components/widgets/totals-earned-chart/totals-earned-chart' } );
 	ko.components.register( 'x-by-y', { require: 'components/widgets/x-by-y/x-by-y' } );

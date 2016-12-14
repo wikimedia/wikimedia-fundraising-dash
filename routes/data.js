@@ -252,7 +252,9 @@ module.exports = function ( req, res ) {
 		selectGroup = '',
 		i,
 		result,
-		cacheKey;
+		cacheKey,
+		whereCopies,
+		sqlParams = [];
 
 	if ( !widget ) {
 		res.json( { error: 'Error: ' + req.params.widget + ' is not a valid widget' } );
@@ -331,13 +333,19 @@ module.exports = function ( req, res ) {
 			return;
 		}
 	}
-	sqlQuery = sqlQuery.replace( '[[WHERE]]', whereClause );
+	// For SQL queries with repeated WHERE clauses (e.g. UNIONed)
+	// we need to know how many times to repeat the parameter values
+	whereCopies = ( sqlQuery.match( /\[\[WHERE\]\]/g ) || [] ).length;
+	for ( i = 0; i < whereCopies; i++ ) {
+		sqlParams = sqlParams.concat( values );
+	}
+	sqlQuery = sqlQuery.replace( /\[\[WHERE\]\]/g, whereClause );
 	for ( i = 0; i < joins.length; i++ ) {
 		joinClause += widget.optionalJoins[ joins[ i ] ].text + ' ';
 	}
-	sqlQuery = sqlQuery.replace( '[[JOINS]]', joinClause );
-	sqlQuery = sqlQuery.replace( '[[GROUP]]', groupClause );
-	sqlQuery = sqlQuery.replace( '[[SELECTGROUP]]', selectGroup );
+	sqlQuery = sqlQuery.replace( /\[\[JOINS\]\]/g, joinClause );
+	sqlQuery = sqlQuery.replace( /\[\[GROUP\]\]/g, groupClause );
+	sqlQuery = sqlQuery.replace( /\[\[SELECTGROUP\]\]/g, selectGroup );
 
 	connection = mysql.createConnection( {
 		host: config.dbserver,
@@ -351,15 +359,15 @@ module.exports = function ( req, res ) {
 			return;
 		}
 	} );
-	logger.debug( 'Query: ' + sqlQuery );
-	connection.query( sqlQuery, values, function ( error, dbResults ) {
+	logger.debug( 'Query: ' + sqlQuery + '\nParams: ' + sqlParams.join( ', ' ) );
+	connection.query( sqlQuery, sqlParams, function ( error, dbResults ) {
 		if ( error ) {
 			res.json( { error: 'Query error: ' + error } );
 			return;
 		}
 		result = {
 			results: dbResults,
-			sqlQuery: substituteParams( sqlQuery, values ),
+			sqlQuery: substituteParams( sqlQuery, sqlParams ),
 			timestamp: new Date().getTime()
 		};
 		logger.debug( 'Storing results at cache key ' + cacheKey );
