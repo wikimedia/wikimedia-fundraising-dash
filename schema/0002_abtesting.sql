@@ -6,13 +6,14 @@ set @wid = (select id from dash_widget where code = 'ab-testing');
 insert ignore into dash_user (id, display_name)
 	value (1, 'Dev User');
 
--- TODO: Make idempotent
+set @board_count = ( select count(*) FROM dash_board WHERE display_name='A/B Testing' AND owner_id = 1 );
+
 insert ignore into dash_board (display_name, description, owner_id, is_shared)
-	values ('A/B Testing', 'Banner A/B test results', 1, true);
+	SELECT 'A/B Testing', 'Banner A/B test results', 1, 1
+	FROM dash_user u
+	WHERE id = 1 AND @board_count = 0;
 
-set @bid = (select id from dash_board where display_name = 'A/B Testing');
-
-update dash_user set default_board = @bid where id = 1;
+set @bid = (select id from dash_board where owner_id = 1 AND display_name = 'A/B Testing');
 
 insert ignore into dash_widget_instance (widget_id, owner_id, display_name, is_shared)
 	select @wid, 1, display_name, 1 from dash_widget where id = @wid;
