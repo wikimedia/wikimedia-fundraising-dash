@@ -29,7 +29,7 @@ define( function () {
 
 		// Not a fencepost error - this should be 0 for Jan 1
 		return msToDays( diff );
-	}
+	};
 
 	Campaign.prototype.getDateFilter = function () {
 		var filter = '(DT gt \'' +
@@ -38,13 +38,13 @@ define( function () {
 			this.endDate.toISOString() + '\')';
 
 		return filter;
-	}
+	};
 
 	Campaign.prototype.getLengthInDays = function () {
 		var diff = this.endDate.getTime() - this.startDate.getTime();
 
 		return msToDays( diff );
-	}
+	};
 
 	return Campaign;
 } );

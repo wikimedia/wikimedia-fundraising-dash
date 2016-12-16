@@ -3,9 +3,9 @@ define( [
 	'text!components/filters/number-filter/number-filter.html',
 	'operators'
 	],
-function( ko, template, ops ){
+function( ko, template, ops ) {
 
-	function NumberFilterViewModel( params ){
+	function NumberFilterViewModel( params ) {
 		var self = this;
 
 		this.operators = [
@@ -20,7 +20,7 @@ function( ko, template, ops ){
 		this.min = params.metadata.min;
 		this.max = params.metadata.max;
 
-		this.changed = function() {
+		this.changed = function () {
 			var value = self.value();
 
 			params.userChoices( {
@@ -34,9 +34,8 @@ function( ko, template, ops ){
 			}
 
 			params.queryString(
-					params.name + ' ' + self.selectedOperator() + ' \'' + value + '\''
+				params.name + ' ' + self.selectedOperator() + ' \'' + value + '\''
 			);
-			return;
 		};
 
 		this.selectedOperator.subscribe( this.changed );
