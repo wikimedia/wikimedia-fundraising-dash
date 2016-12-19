@@ -145,7 +145,7 @@ define( [
 						day = el.day - offset,
 						hour = el.hour,
 						total = el.usd_total,
-						seconds = Math.min( el.minutes * 60, 60 ); // Don't divide by zero
+						seconds = Math.max( el.minutes * 60, 60 ); // Don't divide by zero
 				params.sharedContext.dayObj[day][hour + 1] = { total: total, count: el.donations };
 
 				params.sharedContext.secondsByHourDonationData[(day - 1) * 24 + hour + 1] = el.usd_total / seconds;
