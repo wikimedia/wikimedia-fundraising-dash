@@ -8,6 +8,15 @@ define( [
 	'WidgetBase'
 ], function( ko, template, c3, numeral, moment, Campaign, WidgetBase ){
 
+	function initializedSharedContext( params ) {
+		// initialize day/hour data
+		// sharing these for other widgets
+		params.sharedContext.dayObj = [];
+		params.sharedContext.dailyDataArray = ['Daily Total'];
+		params.sharedContext.dailyCountArray = ['Daily Count'];
+		params.sharedContext.lastDataPoint = { day: 1, hour: 0 };
+		params.sharedContext.secondsByHourDonationData = ['Donations Per Second'];
+	}
 
 	function TotalsEarnedChartViewModel( params ){
 
@@ -16,13 +25,7 @@ define( [
 
 		WidgetBase.call( this, params );
 
-		//initialize day/hour data
-		//sharing these for other widgets
-		params.sharedContext.dayObj = [];
-		params.sharedContext.dailyDataArray = ['Daily Total'];
-		params.sharedContext.dailyCountArray = ['Daily Count'];
-		params.sharedContext.lastDataPoint = { day: 1, hour: 0 };
-		params.sharedContext.secondsByHourDonationData = ['Donations Per Second'];
+		initializedSharedContext( params );
 
 		// Get the date
 		self.displayDate = ko.observable( moment().format( timeFormat ) );
@@ -51,17 +54,17 @@ define( [
 			}),
 			new Campaign({
 				name: '2013',
-				startDate: Date.UTC( 2016, 11, 1 ),
+				startDate: Date.UTC( 2013, 11, 3 ),
 				endDate: Date.UTC( 2014, 0, 1 )
 			}),
 			new Campaign({
 				name: '2012',
-				startDate: Date.UTC( 2016, 11, 1 ),
+				startDate: Date.UTC( 2012, 10, 27 ),
 				endDate: Date.UTC( 2013, 0, 1 )
 			}),
 			new Campaign({
 				name: '2011',
-				startDate: Date.UTC( 2016, 11, 1 ),
+				startDate: Date.UTC( 2011, 10, 16 ),
 				endDate: Date.UTC( 2012, 0, 1 )
 			})
 		];
@@ -112,9 +115,12 @@ define( [
 		self.loadData = function ( data, timestamp ) {
 			var runningTotal = 0,
 				currentDate = new Date(),
-				lastData = params.sharedContext.lastDataPoint,
+				lastData,
 				days = self.campaign().getLengthInDays(),
 				offset = self.campaign().getDayOfYearOffset();
+
+			initializedSharedContext( params );
+			lastData = params.sharedContext.lastDataPoint;
 
 			currentDate.setTime( timestamp );
 			self.displayDate( moment( currentDate ).format( timeFormat ) );
@@ -156,7 +162,8 @@ define( [
 				lastData.day = data[dataCount - 1].day - offset;
 				lastData.hour = data[dataCount - 1].hour;
 			} else {
-				lastData.day = lastData.hour = 0;
+				lastData.day = 1;
+				lastData.hour = 0;
 			}
 
 			self.makeCharts();
