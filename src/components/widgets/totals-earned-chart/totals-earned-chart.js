@@ -8,25 +8,24 @@ define( [
 	'WidgetBase'
 ], function( ko, template, c3, numeral, moment, Campaign, WidgetBase ){
 
-
-	function TotalsEarnedChartViewModel( params ){
-
-		var self = this,
-			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a',
-			campaign = ko.observable( new Campaign({
-				startDate: new Date( 2016, 10, 29 ),
-				endDate: new Date( 2017, 0, 1 )
-			}) );
-
-		WidgetBase.call( this, params );
-
-		//initialize day/hour data
-		//sharing these for other widgets
+	function initializedSharedContext( params ) {
+		// initialize day/hour data
+		// sharing these for other widgets
 		params.sharedContext.dayObj = [];
 		params.sharedContext.dailyDataArray = ['Daily Total'];
 		params.sharedContext.dailyCountArray = ['Daily Count'];
 		params.sharedContext.lastDataPoint = { day: 1, hour: 0 };
 		params.sharedContext.secondsByHourDonationData = ['Donations Per Second'];
+	}
+
+	function TotalsEarnedChartViewModel( params ){
+
+		var self = this,
+			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
+
+		WidgetBase.call( this, params );
+
+		initializedSharedContext( params );
 
 		// Get the date
 		self.displayDate = ko.observable( moment().format( timeFormat ) );
@@ -36,11 +35,43 @@ define( [
 
 		self.goal = params.sharedContext.goal = ko.observable( self.config.goal || 25000000 );
 		self.majorDonationCutoff = ko.observable( self.config.majorDonationCutoff || 5000 ).extend( { throttle: 500 } );
-		self.year = ko.observable( self.config.year || new Date().getFullYear() ).extend( { throttle: 500 } );
+
+		self.campaigns = [
+			new Campaign({
+				name: '2016',
+				startDate: Date.UTC( 2016, 10, 29 ),
+				endDate: Date.UTC( 2017, 0, 1 )
+			}),
+			new Campaign({
+				name: '2015',
+				startDate: Date.UTC( 2015, 11, 1 ),
+				endDate: Date.UTC( 2016, 0, 1 )
+			}),
+			new Campaign({
+				name: '2014',
+				startDate: Date.UTC( 2014, 11, 2 ),
+				endDate: Date.UTC( 2015, 0, 1 )
+			}),
+			new Campaign({
+				name: '2013',
+				startDate: Date.UTC( 2013, 11, 3 ),
+				endDate: Date.UTC( 2014, 0, 1 )
+			}),
+			new Campaign({
+				name: '2012',
+				startDate: Date.UTC( 2012, 10, 27 ),
+				endDate: Date.UTC( 2013, 0, 1 )
+			}),
+			new Campaign({
+				name: '2011',
+				startDate: Date.UTC( 2011, 10, 16 ),
+				endDate: Date.UTC( 2012, 0, 1 )
+			})
+		];
+		self.campaign = ko.observable( self.campaigns[0] );
+
 		self.isCurrentYear = ko.computed( function() {
-			/*jslint -W116*/
-			return self.year() == new Date().getFullYear();
-			/*jslint -W116*/
+			return self.campaign() === self.campaigns[0];
 		} );
 
 		// FIXME: do this stuff on 'Submit', actually cancel changes on 'Cancel'
@@ -55,8 +86,7 @@ define( [
 			self.reloadData();
 		} );
 
-		self.year.subscribe( function() {
-			self.config.year = self.year();
+		self.campaign.subscribe( function() {
 			self.logStateChange();
 			self.reloadData();
 		} );
@@ -85,9 +115,12 @@ define( [
 		self.loadData = function ( data, timestamp ) {
 			var runningTotal = 0,
 				currentDate = new Date(),
-				lastData = params.sharedContext.lastDataPoint,
-				days = campaign().getLengthInDays(),
-				offset = campaign().getDayOfYearOffset();
+				lastData,
+				days = self.campaign().getLengthInDays(),
+				offset = self.campaign().getDayOfYearOffset();
+
+			initializedSharedContext( params );
+			lastData = params.sharedContext.lastDataPoint;
 
 			currentDate.setTime( timestamp );
 			self.displayDate( moment( currentDate ).format( timeFormat ) );
@@ -125,9 +158,12 @@ define( [
 				// FIXME
 				lastData.day = currentDate.getUTCDate();
 				lastData.hour = currentDate.getUTCHours();
-			} else {
-				lastData.day = data[dataCount - 1].day;
+			} else if ( dataCount > 0 ) {
+				lastData.day = data[dataCount - 1].day - offset;
 				lastData.hour = data[dataCount - 1].hour;
+			} else {
+				lastData.day = 1;
+				lastData.hour = 0;
 			}
 
 			self.makeCharts();
@@ -140,7 +176,7 @@ define( [
 		self.reloadData = function( automatic ){
 			// FIXME: use some common filter logic
 			var url = '/data/big-english?$filter=' +
-					campaign().getDateFilter() + ' and ' +
+					self.campaign().getDateFilter() + ' and ' +
 					'Amount lt \'' + self.majorDonationCutoff() + '\'',
 				interval = 500000,
 				firstLoad = ( self.raised() === 0 ),
