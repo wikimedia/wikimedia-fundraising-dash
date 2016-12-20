@@ -34,7 +34,7 @@ define( [
 		self.dailyChart = ko.observable( false );
 
 		self.goal = params.sharedContext.goal = ko.observable( self.config.goal || 25000000 );
-		self.majorDonationCutoff = ko.observable( self.config.majorDonationCutoff || 5000 ).extend( { throttle: 500 } );
+		self.majorDonationCutoff = ko.observable( self.config.majorDonationCutoff || 1000 ).extend( { throttle: 500 } );
 
 		self.campaigns = [
 			new Campaign({
