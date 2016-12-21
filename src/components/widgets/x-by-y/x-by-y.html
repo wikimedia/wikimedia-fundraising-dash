@@ -1,12 +1,3 @@
-
-
-	<span data-bind="if: preDataLoading">
-		<div class="loadingWidget">
-			<img src="/images/catloader.gif" />
-			<h3 class="text-center">Loading.....</h3>
-		</div>
-	</span>
-
 	<div class="panel panel-purple">
 		<div class="panel-heading">
 			<div class="btn-group btn-group-xs pull-right">
@@ -90,7 +81,7 @@
 									</span>
 								</h4>
 							</div>
-							<div data-bind="{ c3: xByYChart, attr: { width: chartWidth, height: chartHeight } }"></div>
+							<div data-bind="{ c3: xByYChart }"></div>
 						</div>
 					</div>
 				</div>

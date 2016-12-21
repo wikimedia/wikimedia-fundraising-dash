@@ -21,7 +21,6 @@ define( [
 		self.queryString = '';
 		self.chosenFilters = ko.observableArray(); // FIXME: remove, maybe adapt display to use filterText
 		self.xByYChart = ko.observable( false );
-		self.chartWidth( 950 );
 
 		self.title = ko.computed( function () {
 			if ( self.displayedTimeChoice() === 'Year' ) {
@@ -57,8 +56,7 @@ define( [
 
 			settings = {
 				size: {
-					height: 450,
-					width: window.width
+					height: 450
 				},
 				zoom: { enabled: true },
 				grid: {
@@ -216,7 +214,7 @@ define( [
 		};
 
 		self.populateChoices().then( function () {
-			self.preDataLoading( false );
+			self.dataLoading( false );
 			if ( wasSaved ) {
 				// restore choices and show the chart
 				self.bySlice( self.config.bySlice );
