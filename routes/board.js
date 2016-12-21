@@ -1,7 +1,7 @@
 var persistence = require( '../persistence.js' );
 
 module.exports = {
-	save: function( req, res ) {
+	save: function ( req, res ) {
 		var board = {
 			ownerId: req.session.passport.user.localId,
 			displayName: req.body.displayName,
@@ -12,36 +12,36 @@ module.exports = {
 		if ( req.params.id ) {
 			board.id = req.params.id;
 		}
-		persistence.saveBoard( board ).then( function() {
+		persistence.saveBoard( board ).then( function () {
 			res.json( { success: true, id: board.id } );
-		}, function( error ) {
+		}, function ( error ) {
 			res.json( { error: error } );
-		});
+		} );
 	},
-	get: function( req, res ) {
-		persistence.getBoard( req.params.id, req.session.passport.user.localId ).then( function( board ) {
+	get: function ( req, res ) {
+		persistence.getBoard( req.params.id, req.session.passport.user.localId ).then( function ( board ) {
 			res.json( board );
-		}, function( error ) {
+		}, function ( error ) {
 			res.json( { error: error } );
-		});
+		} );
 	},
-	addWidget: function( req, res ) {
+	addWidget: function ( req, res ) {
 		var board = {
 			ownerId: req.session.passport.user.localId,
 			id: req.params.id,
 			addWidget: req.body.instanceId
 		};
-		persistence.saveBoard( board ).then( function() {
+		persistence.saveBoard( board ).then( function () {
 			res.json( { success: true, id: board.id } );
 		} );
 	},
-	deleteWidget: function( req, res ) {
+	deleteWidget: function ( req, res ) {
 		var board = {
 			ownerId: req.session.passport.user.localId,
 			id: req.params.id,
 			deleteWidget: req.params.instanceId
 		};
-		persistence.saveBoard( board ).then( function() {
+		persistence.saveBoard( board ).then( function () {
 			res.json( { success: true, id: board.id } );
 		} );
 	}

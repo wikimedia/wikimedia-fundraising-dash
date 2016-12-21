@@ -1,7 +1,7 @@
 var persistence = require( '../persistence.js' );
 
 module.exports = {
-	info: function( req, res ) {
+	info: function ( req, res ) {
 		var user = req.session.passport.user;
 
 		res.json( {
@@ -13,18 +13,18 @@ module.exports = {
 			email: user.email
 		} );
 	},
-	boards: function( req, res ) {
-		persistence.listBoards( req.session.passport.user.localId ).then( function( boards ) {
+	boards: function ( req, res ) {
+		persistence.listBoards( req.session.passport.user.localId ).then( function ( boards ) {
 			res.json( boards );
-		}, function( error ) {
+		}, function ( error ) {
 			res.json( { error: error } );
-		});
+		} );
 	},
-	widgetInstances: function( req, res ) {
-		persistence.listWidgetInstances( req.session.passport.user.localId ).then( function( instances ) {
+	widgetInstances: function ( req, res ) {
+		persistence.listWidgetInstances( req.session.passport.user.localId ).then( function ( instances ) {
 			res.json( instances );
-		}, function( error ) {
+		}, function ( error ) {
 			res.json( { error: error } );
-		});
+		} );
 	}
 };

@@ -1,6 +1,6 @@
 var hasSyslog = true,
 	LOG_DEBUG = 0,
-	LOG_INFO = 1,	
+	LOG_INFO = 1,
 	LOG_ERR = 2,
 	syslog,
 	constMap = [];
@@ -8,10 +8,10 @@ var hasSyslog = true,
 // FIXME: remove the old one when we upgrade the dash host
 try {
 	syslog = require( 'node-syslog' );
-} catch( ex ) {
-	try{
+} catch ( ex1 ) {
+	try {
 		syslog = require( 'modern-syslog' );
-	} catch( ex ) {
+	} catch ( ex2 ) {
 		hasSyslog = false;
 	}
 }
@@ -20,14 +20,14 @@ if ( hasSyslog ) {
 	/*jslint bitwise: true*/
 	syslog.init( 'dash', syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0 );
 	/*jslint bitwise: false*/
-	constMap[LOG_DEBUG] = syslog.LOG_DEBUG;
-	constMap[LOG_INFO] = syslog.LOG_INFO;
-	constMap[LOG_ERR] = syslog.LOG_ERR;
+	constMap[ LOG_DEBUG ] = syslog.LOG_DEBUG;
+	constMap[ LOG_INFO ] = syslog.LOG_INFO;
+	constMap[ LOG_ERR ] = syslog.LOG_ERR;
 }
 
 function log( level, message ) {
 	if ( hasSyslog ) {
-		syslog.log( constMap[level], message );
+		syslog.log( constMap[ level ], message );
 	}
 	if ( level === LOG_ERR ) {
 		console.error( message );
@@ -37,13 +37,13 @@ function log( level, message ) {
 }
 
 module.exports = {
-	error: function( message ) {
+	error: function ( message ) {
 		log( LOG_ERR, message );
 	},
-	debug: function( message ) {
+	debug: function ( message ) {
 		log( LOG_DEBUG, message );
 	},
-	info: function( message ) {
+	info: function ( message ) {
 		log( LOG_INFO, message );
 	}
 };

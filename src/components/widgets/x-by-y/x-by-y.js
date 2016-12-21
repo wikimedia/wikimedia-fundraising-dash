@@ -5,13 +5,13 @@ define( [
 	'momentjs',
 	'numeraljs',
 	'WidgetBase'
-], function( ko, $, template, moment, numeral, WidgetBase ) {
+], function ( ko, $, template, moment, numeral, WidgetBase ) {
 
 	function XByYChartViewModel( params ) {
 
 		WidgetBase.call( this, params );
 		var self = this,
-			wasSaved = self.chartSaved(); //populateChoices() may overwrite
+			wasSaved = self.chartSaved(); // populateChoices() may overwrite
 
 		self.showSlice = ko.observable();
 		self.bySlice = ko.observable();
@@ -143,8 +143,8 @@ define( [
 			$( '#' + area + 'body' ).toggleClass( 'hide' );
 		};
 
-		//saved charts
-		//TODO: these will trigger a saved set of parameters to draw the chart with.
+		// saved charts
+		// TODO: these will trigger a saved set of parameters to draw the chart with.
 		self.presetTitles = ko.observableArray( [
 			'This does not work yet.',
 			'Donations During Big English 2015',
@@ -153,16 +153,16 @@ define( [
 
 		self.ySlices = ko.observableArray( [
 			'Donations'
-			//'Failed Donations'
+			// 'Failed Donations'
 		] );
 
 		self.xSlices = ko.observableArray();
 		self.timeChoices = ko.observableArray();
 		self.groupChoices = ko.observableArray();
 
-		//populate user choices dynamically
+		// populate user choices dynamically
 		self.populateChoices = function () {
-			//populate y slices
+			// populate y slices
 			return self.metadataRequest.then( function ( reqData ) {
 				self.metadata = reqData;
 
@@ -188,7 +188,7 @@ define( [
 
 			self.queryRequest.ySlice = self.showSlice();
 			self.queryRequest.xSlice = self.bySlice();
-			//self.queryRequest.additionalFilters = self.chosenFilters();
+			// self.queryRequest.additionalFilters = self.chosenFilters();
 			self.queryRequest.timeBreakout = self.timeChoice();
 
 			self.queryString = self.convertToQuery( self.queryRequest );

@@ -2,8 +2,7 @@ define( [
 	'knockout',
 	'text!components/filters/number-filter/number-filter.html',
 	'operators'
-	],
-function( ko, template, ops ) {
+], function ( ko, template, ops ) {
 
 	function NumberFilterViewModel( params ) {
 		var self = this;

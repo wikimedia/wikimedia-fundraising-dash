@@ -4,8 +4,7 @@ define( [
 	'text!components/widgets/donation-age/donation-age.html',
 	'momentjs',
 	'WidgetBase'
-	],
-function( ko, $, template, moment, WidgetBase ) {
+], function ( ko, $, template, moment, WidgetBase ) {
 
 	function DonationAgeViewModel( params ) {
 

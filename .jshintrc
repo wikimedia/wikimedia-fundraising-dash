@@ -42,6 +42,7 @@
 		"console": false,
 		"define": false,
 		"__dirname": false,
+		"JSON": true,
 		"module": false,
 		"process": false,
 		"require": true

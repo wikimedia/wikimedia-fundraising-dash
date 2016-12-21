@@ -1,9 +1,9 @@
-define([
+define( [
 	'knockout',
 	'jquery',
 	'c3',
 	'select2' // source this file to create the $( 'foo' ).select2 function
-], function( ko, $, c3, select2 ) {
+], function ( ko, $, c3, select2 ) {
 	function destroyChart( element ) {
 		var chart = ko.utils.domData.get( element, 'chart' );
 		if ( chart ) {
@@ -63,31 +63,33 @@ define([
 			$( el ).select2( select2 );
 		},
 		update: function ( el, valueAccessor, allBindingsAccessor, viewModel ) {
-			var allBindings = allBindingsAccessor();
+			var allBindings = allBindingsAccessor(),
+				converted,
+				textAccessor;
 
 			if ( 'value' in allBindings ) {
 				if ( allBindings.select2.multiple && allBindings.value().constructor !== Array ) {
 					$( el ).select2( 'val', allBindings.value().split( ',' ) );
-				}
-				else {
+				} else {
 					$( el ).select2( 'val', allBindings.value() );
 				}
 			} else if ( 'selectedOptions' in allBindings ) {
-				var converted = [];
-				var textAccessor = function ( value ) {
+				converted = [];
+				textAccessor = function ( value ) {
 					return value;
 				};
 				if ( 'optionsText' in allBindings ) {
 					textAccessor = function ( value ) {
-						var valueAccessor = function ( item ) {
-							return item;
-						};
+						var items,
+							valueAccessor = function ( item ) {
+								return item;
+							};
 						if ( 'optionsValue' in allBindings ) {
 							valueAccessor = function ( item ) {
 								return item[ allBindings.optionsValue ];
 							};
 						}
-						var items = $.grep( ko.utils.unwrapObservable( allBindings.options ), function ( e ) {
+						items = $.grep( ko.utils.unwrapObservable( allBindings.options ), function ( e ) {
 							return valueAccessor( e ) === value;
 						} );
 						if ( items.length === 0 || items.length > 1 ) {

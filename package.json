@@ -2,6 +2,9 @@
 	"name": "dash",
 	"description": "Fundraising Dashboard App",
 	"version": "0.0.1",
+	"scripts": {
+		"test": "grunt test"
+	},
 	"private": true,
 	"repository": {
 		"type": "git",
@@ -37,6 +40,10 @@
 		"chalk": "^0.5.1",
 		"deeply": "^0.1.0",
 		"event-stream": "^3.1.7",
+		"grunt": "0.4.5",
+		"grunt-cli": "0.1.13",
+		"grunt-contrib-jshint": "0.11.3",
+		"grunt-jscs": "2.6.0",
 		"gulp-clean": "^0.3.1",
 		"gulp-concat": "^2.4.1",
 		"gulp-css-url-adjuster": "^0.2.3",

@@ -1,4 +1,4 @@
-define({
+define( {
 	ge: {
 		value: 'ge',
 		text: 'At least',
@@ -36,4 +36,4 @@ define({
 		value: 'fn|substringof',
 		text: 'Contains'
 	}
-});
+} );

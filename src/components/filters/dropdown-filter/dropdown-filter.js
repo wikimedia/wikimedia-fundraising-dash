@@ -2,10 +2,9 @@ define( [
 	'knockout',
 	'jquery',
 	'text!components/filters/dropdown-filter/dropdown-filter.html'
-	],
-function( ko, $, template ){
+], function ( ko, $, template ) {
 
-	function DropdownFilterViewModel( params ){
+	function DropdownFilterViewModel( params ) {
 		var i, numValues;
 
 		this.opt = [];
@@ -16,15 +15,15 @@ function( ko, $, template ){
 		}
 		numValues = params.metadata.values.length;
 		for ( i = 0; i < numValues; i++ ) {
-			this.opt[i] = {
-				text: params.metadata.labels[i],
-				value: params.metadata.values[i]
+			this.opt[ i ] = {
+				text: params.metadata.labels[ i ],
+				value: params.metadata.values[ i ]
 			};
 		}
 
-		this.setQueryString = function( vals ) {
+		this.setQueryString = function ( vals ) {
 			var qs = '';
-			$.each( vals, function( i, value ) {
+			$.each( vals, function ( i, value ) {
 				if ( i > 0 ) {
 					qs += ' or ';
 				}

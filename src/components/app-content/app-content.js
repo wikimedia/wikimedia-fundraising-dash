@@ -2,7 +2,7 @@ define( [
 	'jquery',
 	'knockout',
 	'text!./app-content.html'
-], function( $, ko, templateMarkup ) {
+], function ( $, ko, templateMarkup ) {
 
 	function AppContent() {
 		var self = this;
@@ -60,7 +60,7 @@ define( [
 							instanceId: data.id
 						} ),
 						success: function ( stuff ) {
-							//refresh the displayed board
+							// refresh the displayed board
 							$.get( 'board/' + self.displayedBoard().id, function ( moredata ) {
 								self.displayedBoard( moredata );
 							} );
@@ -86,7 +86,8 @@ define( [
 		};
 
 		self.setDisplayPage = function ( e, data ) {
-			var pages = [ 'Library', 'Profile', 'Home' ], view = data.target.id;
+			var pages = [ 'Library', 'Profile', 'Home' ],
+				view = data.target.id;
 
 			if ( pages.indexOf( data.target.id ) > -1 ) {
 				self.displayPage( view );

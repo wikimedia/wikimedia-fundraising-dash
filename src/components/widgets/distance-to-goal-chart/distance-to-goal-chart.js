@@ -3,7 +3,7 @@ define( [
 	'text!components/widgets/distance-to-goal-chart/distance-to-goal-chart.html',
 	'numeraljs',
 	'WidgetBase'
-], function( ko, template, numeral, WidgetBase ) {
+], function ( ko, template, numeral, WidgetBase ) {
 
 	function DistanceToGoalChartViewModel( params ) {
 
@@ -47,7 +47,7 @@ define( [
 					x: {
 						tick: {
 							format: function ( x ) {
-								return 'Day ' + (x + 1);
+								return 'Day ' + ( x + 1 );
 							}
 						}
 					},

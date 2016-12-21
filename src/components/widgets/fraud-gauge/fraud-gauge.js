@@ -7,22 +7,22 @@ define( [
 	],
 function ( ko, $, template, Chart, WidgetBase ) {
 
-	//extend the chart so we can flip the circle
+	// extend the chart so we can flip the circle
 	Chart.types.Doughnut.extend( {
 		addData: function ( segment, atIndex, silent ) {
 			var index = atIndex || this.segments.length;
 			this.segments.splice( index, 0, new this.SegmentArc( {
 				value: segment.value,
-				outerRadius: (this.options.animateScale) ? 0 : this.outerRadius,
-				innerRadius: (this.options.animateScale) ? 0 :
-					(this.outerRadius / 100) * this.options.percentageInnerCutout,
+				outerRadius: this.options.animateScale ? 0 : this.outerRadius,
+				innerRadius: this.options.animateScale ? 0 :
+					( this.outerRadius / 100 ) * this.options.percentageInnerCutout,
 				fillColor: segment.color,
 				highlightColor: segment.highlight || segment.color,
 				showStroke: this.options.segmentShowStroke,
 				strokeWidth: this.options.segmentStrokeWidth,
 				strokeColor: this.options.segmentStrokeColor,
 				startAngle: Math.PI * 2.5,
-				circumference: (this.options.animateRotate) ? 0 : this.calculateCircumference( segment.value ),
+				circumference: this.options.animateRotate ? 0 : this.calculateCircumference( segment.value ),
 				label: segment.label
 			} ) );
 
@@ -52,24 +52,26 @@ function ( ko, $, template, Chart, WidgetBase ) {
 		self.renderPercentRangeChart = function () {
 
 			var canvas = $( '#fraudPercentRanges' )[ 0 ],
-				ctx = canvas.getContext( '2d' );
+				ctx = canvas.getContext( '2d' ),
+				placeholder = document.createElement( 'canvas' ),
+				placeholderctx,
+				ddata;
 
-			var placeholder = document.createElement( 'canvas' );
 			placeholder.width = 200;
 			placeholder.height = placeholder.width;
-			var placeholderctx = placeholder.getContext( '2d' );
+			placeholderctx = placeholder.getContext( '2d' );
 
-			var ddata = [ {
+			ddata = [ {
 				value: 90,
 				color: '#000000'
 			}, {
-				value: 1.8 * (self.greenHighRange()),
+				value: 1.8 * ( self.greenHighRange() ),
 				color: '#4cae4c'
 			}, {
-				value: 1.8 * (self.redLowRange() - self.greenHighRange()),
+				value: 1.8 * ( self.redLowRange() - self.greenHighRange() ),
 				color: '#eea236'
 			}, {
-				value: 1.8 * (100 - self.redLowRange()),
+				value: 1.8 * ( 100 - self.redLowRange() ),
 				color: '#c9302c'
 			}, {
 				value: 90,
@@ -142,37 +144,46 @@ function ( ko, $, template, Chart, WidgetBase ) {
 		self.createQueryString = function () {
 			var qs = self.filterQueryString(),
 				ds = '',
-				timePresets = [ 'Last 15 Minutes',
+				timePresets = [
+					'Last 15 Minutes',
 					'Last Hour',
 					'Last 24 Hours',
-					'Last 5 Minutes' ];
+					'Last 5 Minutes'
+				],
+				lfm,
+				lh,
+				ltfh,
+				lfvm,
+				lfm2,
+				currentDate = new Date(),
+				postQS;
 
-			var currentDate = new Date();
+			// FIXME: this should all be server time
 			switch ( self.selectedTimePeriod() ) {
 				case timePresets[ 0 ]:
-					var lfm = new Date( currentDate.getTime() - (15 * 60 * 1000) );
+					lfm = new Date( currentDate.getTime() - ( 15 * 60 * 1000 ) );
 					ds += 'DT gt \'' + lfm.toISOString() + '\'';
 					break;
 				case timePresets[ 1 ]:
-					var lh = new Date( currentDate.getTime() - (60 * 60 * 1000) );
+					lh = new Date( currentDate.getTime() - ( 60 * 60 * 1000 ) );
 					ds += 'DT gt \'' + lh.toISOString() + '\'';
 					break;
 				case timePresets[ 2 ]:
-					var ltfh = new Date( currentDate.getTime() - (24 * 60 * 60 * 1000) );
+					ltfh = new Date( currentDate.getTime() - ( 24 * 60 * 60 * 1000 ) );
 					ds += 'DT gt \'' + ltfh.toISOString() + '\'';
 					break;
 				case timePresets[ 3 ]:
-					var lfvm = new Date( currentDate.getTime() - (5 * 60 * 1000) );
+					lfvm = new Date( currentDate.getTime() - ( 5 * 60 * 1000 ) );
 					ds += 'DT gt \'' + lfvm.toISOString() + '\'';
 					break;
 				default:
-					var lfm2 = new Date( currentDate.getTime() - (15 * 60 * 1000) );
+					lfm2 = new Date( currentDate.getTime() - ( 15 * 60 * 1000 ) );
 					ds += 'DT gt \'' + lfm2.toISOString() + '\'';
 					break;
 
 			}
 
-			var postQS = '';
+			postQS = '';
 			if ( qs.length > 0 ) {
 				postQS = qs + ' and ' + ds;
 			} else {
@@ -210,8 +221,8 @@ function ( ko, $, template, Chart, WidgetBase ) {
 
 				self.queryString = self.createQueryString();
 
-				//put gauge mods into temp config to be pushed if/when saved
-				//width, queryString, timeBreakout, showSlice
+				// put gauge mods into temp config to be pushed if/when saved
+				// width, queryString, timeBreakout, showSlice
 				self.config = {
 					width: self.config.width,
 					queryString: self.queryString,

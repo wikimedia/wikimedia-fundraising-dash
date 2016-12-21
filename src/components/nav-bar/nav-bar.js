@@ -2,7 +2,7 @@ define( [
 	'knockout',
 	'jquery',
 	'text!components/nav-bar/nav-bar.html'
-	], function( ko, $, template ) {
+], function ( ko, $, template ) {
 
 	function NavBarViewModel( params ) {
 		var self = this;
@@ -14,7 +14,7 @@ define( [
 		self.boardError = ko.observable( '' );
 
 		self.hideNav = function () {
-			//make the nav menu fold out of view.
+			// make the nav menu fold out of view.
 			$( '#navContainer .navWrapper' ).toggleClass( 'hide' );
 			$( '#showNavMenu' ).css( 'display', 'inline' );
 			$( '#dashApp' ).css( 'padding', '0 0 0 10px' );

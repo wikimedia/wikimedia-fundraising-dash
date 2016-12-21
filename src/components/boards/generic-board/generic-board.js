@@ -3,7 +3,7 @@ define( [
 	'jquery',
 	'text!components/boards/generic-board/generic-board.html',
 	'momentjs'
-], function( ko, $, template, moment ) {
+], function ( ko, $, template, moment ) {
 
 	function GenericBoardViewModel( params ) {
 
@@ -26,10 +26,10 @@ define( [
 		setWidgetLoads();
 		self.displayedBoard.subscribe( setWidgetLoads );
 
-		//TODO: be able to change board name
-		//self.boardName(self.displayedBoard().displayName);
+		// TODO: be able to change board name
+		// self.boardName(self.displayedBoard().displayName);
 
-		//This will return true if any child widget is loading
+		// This will return true if any child widget is loading
 		self.dataLoading = ko.computed( function () {
 			var i,
 				loads = self.widgetLoads(),
@@ -45,9 +45,9 @@ define( [
 
 		self.dataLoading.subscribe( function ( value ) {
 			if ( value ) {
-				$( '#loadingModal' ).modal( 'show' ); //todo: knockout-style!
+				$( '#loadingModal' ).modal( 'show' ); // todo: knockout-style!
 			} else {
-				$( '#loadingModal' ).modal( 'hide' ); //todo: knockout-style!
+				$( '#loadingModal' ).modal( 'hide' ); // todo: knockout-style!
 			}
 		} );
 

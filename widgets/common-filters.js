@@ -8,10 +8,10 @@ module.exports = {
 	civicrmContribution: {
 		DT: {
 			table: 'cc',
-			column : 'receive_date',
+			column: 'receive_date',
 			display: 'Date',
 			type: 'datetime',
-			//TODO: dynamic min/max
+			// TODO: dynamic min/max
 			min: '2005-01-01',
 			max: '2099-12-31'
 		},
@@ -45,7 +45,7 @@ module.exports = {
 		},
 		YearsAgo: {
 			table: 'cc',
-			column : 'receive_date',
+			column: 'receive_date',
 			func: 'timestampdiff(YEAR, [[COL]], utc_timestamp())',
 			type: 'number',
 			min: 0,
@@ -53,7 +53,7 @@ module.exports = {
 		},
 		MonthsAgo: {
 			table: 'cc',
-			column : 'receive_date',
+			column: 'receive_date',
 			func: 'timestampdiff(MONTH, [[COL]], utc_timestamp())',
 			type: 'number',
 			min: 0,
@@ -61,7 +61,7 @@ module.exports = {
 		},
 		DaysAgo: {
 			table: 'cc',
-			column : 'receive_date',
+			column: 'receive_date',
 			func: 'timestampdiff(DAY, [[COL]], utc_timestamp())',
 			type: 'number',
 			min: 0,
@@ -69,11 +69,11 @@ module.exports = {
 		},
 		Amount: {
 			table: 'cc',
-			column : 'total_amount',
-			display : 'Amount',
-			type : 'number',
-			min : 0,
-			max : 5000000
+			column: 'total_amount',
+			display: 'Amount',
+			type: 'number',
+			min: 0,
+			max: 5000000
 		},
 		Status: {
 			table: 'cc',
@@ -110,9 +110,9 @@ module.exports = {
 		},
 		Referrer: {
 			table: 'ct',
-			column : 'referrer',
-			display : 'Referrer',
-			type : 'text'
+			column: 'referrer',
+			display: 'Referrer',
+			type: 'text'
 		}
 	},
 	paymentsInitial: {
@@ -126,11 +126,11 @@ module.exports = {
 		},
 		Currency: {
 			table: 'pi',
-			column : 'currency_code',
-			display : 'Currency',
-			type : 'dropdown',
-			//TODO: get values dynamically
-			values : [ 'AED', 'ARS', 'AUD', 'BBD', 'BDT', 'BGN', 'BHD', 'BMD', 'BOB', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CRC', 'CZK', 'DKK', 'DOP', 'DZD', 'EGP', 'EUR', 'GBP', 'GTQ', 'HKD', 'HNL', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'JMD', 'JOD', 'JPY', 'KES', 'KRW', 'KZT', 'LKR', 'LTL', 'MAD', 'MKD', 'MXN', 'MYR', 'NIO', 'NOK', 'NZD', 'OMR', 'PAB', 'PEN', 'PHP', 'PKR', 'PLN', 'QAR', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TTD', 'TWD', 'UAH', 'USD', 'UYU', 'VEF', 'XCD', 'ZAR' ],
+			column: 'currency_code',
+			display: 'Currency',
+			type: 'dropdown',
+			// TODO: get values dynamically
+			values: [ 'AED', 'ARS', 'AUD', 'BBD', 'BDT', 'BGN', 'BHD', 'BMD', 'BOB', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CRC', 'CZK', 'DKK', 'DOP', 'DZD', 'EGP', 'EUR', 'GBP', 'GTQ', 'HKD', 'HNL', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'JMD', 'JOD', 'JPY', 'KES', 'KRW', 'KZT', 'LKR', 'LTL', 'MAD', 'MKD', 'MXN', 'MYR', 'NIO', 'NOK', 'NZD', 'OMR', 'PAB', 'PEN', 'PHP', 'PKR', 'PLN', 'QAR', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TTD', 'TWD', 'UAH', 'USD', 'UYU', 'VEF', 'XCD', 'ZAR' ],
 			canGroup: true
 		},
 		Method: {
@@ -151,11 +151,11 @@ module.exports = {
 		},
 		Amount: {
 			table: 'pi',
-			column : 'amount',
-			display : 'Amount',
-			type : 'number',
-			min : 0,
-			max : 5000000
+			column: 'amount',
+			display: 'Amount',
+			type: 'number',
+			min: 0,
+			max: 5000000
 		}
 	},
 	paymentsFraud: {
@@ -170,10 +170,10 @@ module.exports = {
 		},
 		DT: {
 			table: 'pf',
-			column : 'date',
+			column: 'date',
 			display: 'Date',
 			type: 'datetime',
-			//TODO: dynamic min/max
+			// TODO: dynamic min/max
 			min: '2005-01-01',
 			max: '2099-12-31'
 		},
@@ -207,7 +207,7 @@ module.exports = {
 		},
 		YearsAgo: {
 			table: 'pf',
-			column : 'date',
+			column: 'date',
 			func: 'timestampdiff(YEAR, [[COL]], utc_timestamp())',
 			type: 'number',
 			min: 0,
@@ -215,7 +215,7 @@ module.exports = {
 		},
 		MonthsAgo: {
 			table: 'pf',
-			column : 'date',
+			column: 'date',
 			func: 'timestampdiff(MONTH, [[COL]], utc_timestamp())',
 			type: 'number',
 			min: 0,
@@ -223,7 +223,7 @@ module.exports = {
 		},
 		DaysAgo: {
 			table: 'pf',
-			column : 'date',
+			column: 'date',
 			func: 'timestampdiff(DAY, [[COL]], utc_timestamp())',
 			type: 'number',
 			min: 0,

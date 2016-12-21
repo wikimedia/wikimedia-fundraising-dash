@@ -3,7 +3,7 @@ define( [
 	'jquery',
 	'text!components/utils/date-pickers/date-pickers.html',
 	'bootstrap-timepicker'
-	], function( ko, $, template ) {
+], function ( ko, $, template ) {
 
 	function DatePickerViewModel( params ) {
 		var self = this;
@@ -15,7 +15,7 @@ define( [
 			} );
 		};
 
-		//initialize inputs
+		// initialize inputs
 		self.dateBeginRange = ko.observable( '' );
 		self.dateEndRange = ko.observable( '' );
 		self.chosenTimePeriodPresetDate = ko.observable( '' );
@@ -24,7 +24,7 @@ define( [
 		self.chosenTimePeriodToTime = ko.observable( '' );
 		self.selectedTimePeriod = params.selectedTimePeriod;
 
-		//TODO: handle resetting fields
+		// TODO: handle resetting fields
 		self.chosenTimePeriod = ko.pureComputed( function () {
 			var timePeriod;
 
