@@ -1,8 +1,8 @@
-define([
+define( [
 	'jquery',
 	'knockout',
 	'operators'
-], function( $, ko, ops ){
+], function ( $, ko, ops ) {
 
 	function zeroPad( number ) {
 		if ( number < 10 ) {
@@ -10,40 +10,41 @@ define([
 		}
 		return number;
 	}
-	function WidgetBase( params ){
+
+	function WidgetBase( params ) {
 
 		var self = this;
 
-		self.retrievedResults 	= ko.observable();
-		self.queryStringSQL 	= ko.observable('This widget hasn\'t been set up yet!');
-		self.tempConfig			= ko.observable();
-		self.config 			= params.configuration || {};
-		self.instanceID 		= params.widgetInstance;
-		self.widgetCode			= params.widgetCode;
-		self.preDataLoading		= ko.observable(true);
-		self.dataLoading 		= params.dataLoading;
-		self.chartSaved 		= ko.observable(!!params.configuration);
-		self.optionStateChanged = ko.observable(false);
-		self.chartWidth 		= ko.observable('900');
-		self.chartHeight 		= ko.observable('550');
-		self.chartLoaded		= ko.observable(false);
-		self.title				= ko.observable(params.title);
-		self.userChoices		= ko.observable(self.config.userChoices || {});
-		self.filterQueryString	= ko.observable(self.config.filterQueryString || '');
-		self.metadataRequest	= ( function() {
+		self.retrievedResults = ko.observable();
+		self.queryStringSQL = ko.observable( 'This widget hasn\'t been set up yet!' );
+		self.tempConfig = ko.observable();
+		self.config = params.configuration || {};
+		self.instanceID = params.widgetInstance;
+		self.widgetCode = params.widgetCode;
+		self.preDataLoading = ko.observable( true );
+		self.dataLoading = params.dataLoading;
+		self.chartSaved = ko.observable( !!params.configuration );
+		self.optionStateChanged = ko.observable( false );
+		self.chartWidth = ko.observable( '900' );
+		self.chartHeight = ko.observable( '550' );
+		self.chartLoaded = ko.observable( false );
+		self.title = ko.observable( params.title );
+		self.userChoices = ko.observable( self.config.userChoices || {} );
+		self.filterQueryString = ko.observable( self.config.filterQueryString || '' );
+		self.metadataRequest = ( function () {
 			var storageKey = 'metadata-' + self.widgetCode,
 				data = localStorage.getItem( storageKey );
 
 			if ( data && data.timestamp + 600000 > new Date().getTime ) {
 				return $.Deferred().resolve( JSON.parse( data ) ).promise();
 			}
-			return $.get( 'metadata/' + self.widgetCode, function( fetchedData ) {
+			return $.get( 'metadata/' + self.widgetCode, function ( fetchedData ) {
 				fetchedData.timestamp = new Date().getTime();
 				localStorage.setItem( storageKey, JSON.stringify( fetchedData ) );
 			} );
 		} )();
 
-		self.filterText			= ko.computed( function() {
+		self.filterText = ko.computed( function () {
 			var filterName,
 				text,
 				parts = [],
@@ -56,7 +57,7 @@ define([
 					continue;
 				}
 				text = filterName + ' ';
-				filterChoices = choices[filterName];
+				filterChoices = choices[ filterName ];
 				// FIXME: this should be part of a filter base class so different
 				// types of filter can define their own summary text generation
 				if ( filterChoices.constructor === Array ) {
@@ -65,7 +66,7 @@ define([
 						continue;
 					}
 					if ( filterChoices.length === 1 ) {
-						text += '= ' + filterChoices[0];
+						text += '= ' + filterChoices[ 0 ];
 					} else {
 						text += 'in (' + filterChoices.join( ', ' ) + ')';
 					}
@@ -74,7 +75,7 @@ define([
 					if ( filterChoices.value === '' ) {
 						continue;
 					}
-					operator = ops[filterChoices.operator.replace( 'fn|', '' )];
+					operator = ops[ filterChoices.operator.replace( 'fn|', '' ) ];
 					if ( operator.abbr ) {
 						text += operator.abbr;
 					} else {
@@ -87,19 +88,19 @@ define([
 			return parts.join( ', ' );
 		} );
 
-		self.getChartData = function( qs ){
-			self.dataLoading(true);
-			return $.ajax({
+		self.getChartData = function ( qs ) {
+			self.dataLoading( true );
+			return $.ajax( {
 				url: '/data/' + self.widgetCode + '?' + ( qs ).replace( /\+/g, '%20' ),
 				success: function ( dataget ) {
-					self.dataLoading(false);
+					self.dataLoading( false );
 					self.retrievedResults( dataget.results );
 					self.queryStringSQL( dataget.sqlQuery );
 				}
-			});
+			} );
 		};
 
-		self.saveWidgetConfig = function(){
+		self.saveWidgetConfig = function () {
 			self.config.userChoices = self.userChoices();
 			self.config.filterQueryString = self.filterQueryString();
 
@@ -109,34 +110,34 @@ define([
 				displayName: self.title()
 			} );
 
-			if( self.instanceID ){
-				$.ajax({
+			if ( self.instanceID ) {
+				$.ajax( {
 					method: 'PUT',
 					url: '/widget-instance/' + self.instanceID,
 					contentType: 'application/json; charset=UTF-8',
 					data: data,
-					success: function( data ) {
-						self.chartSaved(true);
-						self.logStateChange(false);
+					success: function ( data ) {
+						self.chartSaved( true );
+						self.logStateChange( false );
 					}
-				});
+				} );
 			} else {
-				$.ajax({
+				$.ajax( {
 					method: 'POST',
 					url: '/widget-instance/',
 					contentType: 'application/json; charset=UTF-8',
 					data: data,
-					success: function( data ) {
+					success: function ( data ) {
 						self.instanceID = data.id;
-						self.chartSaved(true);
-						self.logStateChange(false);
+						self.chartSaved( true );
+						self.logStateChange( false );
 					}
-				});
+				} );
 			}
 
 		};
 
-		self.processData = function( rawdata, timescale, grouping, timestamp ){
+		self.processData = function ( rawdata, timescale, grouping, timestamp ) {
 
 			var timeWord = ( timescale === 'Day' ? 'Dai' : timescale ) + 'ly',
 				totals,
@@ -171,13 +172,13 @@ define([
 				totals = [];
 				counts = [];
 			} else {
-				totals = [timeWord + ' Total'];
-				counts = [timeWord + ' Count'];
+				totals = [ timeWord + ' Total' ];
+				counts = [ timeWord + ' Count' ];
 			}
 			// coerce UTC into the default timezone.  Comparing offset values
 			// so we only have to adjust 'now', not each data point
 			now.setHours( now.getHours() + now.getTimezoneOffset() / 60 );
-			$.each( rawdata, function( index, dataPoint ) {
+			$.each( rawdata, function ( index, dataPoint ) {
 				var year = dataPoint.Year || defaultYear,
 					month = dataPoint.Month || defaultMonth,
 					day = dataPoint.Day || 1,
@@ -193,25 +194,25 @@ define([
 				tempDate += zeroPad( day );
 				tempDate += ' ' + zeroPad( hour );
 
-				if ( !usedDates[tempDate] ){
+				if ( !usedDates[ tempDate ] ) {
 					xs.push( tempDate );
-					usedDates[tempDate] = true;
+					usedDates[ tempDate ] = true;
 				}
 				if ( isGrouped ) {
-					groupValue = dataPoint[grouping];
-					if ( !totals[groupValue] ) {
+					groupValue = dataPoint[ grouping ];
+					if ( !totals[ groupValue ] ) {
 						groupValues.push( groupValue );
 						totalName = groupValue + ' total';
-						totals[groupValue] = [totalName];
-						groupedTotals[groupValue] = [];
+						totals[ groupValue ] = [ totalName ];
+						groupedTotals[ groupValue ] = [];
 						totalGroupNames.push( totalName );
 						countName = groupValue + ' count';
-						counts[groupValue] = [countName];
-						groupedCounts[groupValue] = [];
+						counts[ groupValue ] = [ countName ];
+						groupedCounts[ groupValue ] = [];
 						countGroupNames.push( countName );
 					}
-					groupedTotals[groupValue][tempDate] = dataPoint.usd_total;
-					groupedCounts[groupValue][tempDate] = dataPoint.donations;
+					groupedTotals[ groupValue ][ tempDate ] = dataPoint.usd_total;
+					groupedCounts[ groupValue ][ tempDate ] = dataPoint.donations;
 				} else {
 					// not grouped
 					totals.push( dataPoint.usd_total );
@@ -223,31 +224,31 @@ define([
 				// second pass to create data arrays with an entry for each x val
 				// FIXME: remove this and use the xs property
 				// http://c3js.org/reference.html#data-xs
-				$.each( xs, function( index, xVal ) {
+				$.each( xs, function ( index, xVal ) {
 					if ( xVal === 'x' ) {
 						return;
 					}
-					//clobber index because who cares
-					$.each( groupValues, function( index, groupVal ) {
-						if ( groupedTotals[groupVal][xVal] !== undefined ) {
-							totals[groupVal].push( groupedTotals[groupVal][xVal] );
-							counts[groupVal].push( groupedCounts[groupVal][xVal] );
+					// clobber index because who cares
+					$.each( groupValues, function ( index, groupVal ) {
+						if ( groupedTotals[ groupVal ][ xVal ] !== undefined ) {
+							totals[ groupVal ].push( groupedTotals[ groupVal ][ xVal ] );
+							counts[ groupVal ].push( groupedCounts[ groupVal ][ xVal ] );
 						} else {
-							totals[groupVal].push( 0 );
-							counts[groupVal].push( 0 );
+							totals[ groupVal ].push( 0 );
+							counts[ groupVal ].push( 0 );
 						}
 					} );
 				} );
 				groupValues.sort();
 				totalGroupNames.sort();
 				countGroupNames.sort();
-				sortFunction = function( seriesA, seriesB ) {
-					return seriesA[0] < seriesB[0] ? -1 : 1;
+				sortFunction = function ( seriesA, seriesB ) {
+					return seriesA[ 0 ] < seriesB[ 0 ] ? -1 : 1;
 				};
 				totals.sort( sortFunction );
 				counts.sort( sortFunction );
 			}
-			switch(timescale){
+			switch ( timescale ) {
 				case 'Year':
 					timeFormat = '%Y';
 					break;
@@ -273,9 +274,9 @@ define([
 			};
 		};
 
-		self.convertToQuery = function( userChoices ){
+		self.convertToQuery = function ( userChoices ) {
 
-			var timeArray = ['Year', 'Month', 'Day', 'Hour'],
+			var timeArray = [ 'Year', 'Month', 'Day', 'Hour' ],
 				index = timeArray.indexOf( userChoices.timeBreakout ),
 				query = 'group=' + userChoices.timeBreakout,
 				filterQueryString = self.filterQueryString(),
@@ -285,13 +286,13 @@ define([
 			// If we're grouping by anything finer than year, add a filter and
 			// also group by the next levels up.
 			for ( levelDiff = 1; index - levelDiff >= 0; levelDiff++ ) {
-				query = query + '&group=' + timeArray[index - levelDiff];
+				query = query + '&group=' + timeArray[ index - levelDiff ];
 			}
 			if ( userChoices.xSlice ) {
 				query = query + '&group=' + userChoices.xSlice;
 			}
 			if ( index > 0 ) {
-				extraFilter = timeArray[index - 1] + 'sAgo lt \'1\'';
+				extraFilter = timeArray[ index - 1 ] + 'sAgo lt \'1\'';
 				if ( filterQueryString === '' ) {
 					filterQueryString = '$filter=' + extraFilter;
 				} else {
@@ -301,63 +302,31 @@ define([
 			if ( filterQueryString !== '' ) {
 				query = query + '&' + filterQueryString;
 			}
-			//groupStr = timeBreakout + '&group=' + userChoices.xSlice;
 
-			// if( userChoices.additionalFilters.length > 0 ){
-
-			//	 var filterStr = '$filter=', filterObj = {}, haveMultipleSubfilters = [];
-
-			//	 $.each( userChoices.additionalFilters, function( el, subfilter ){
-			//		 var filter = subfilter.substr(0, subfilter.indexOf(' '));
-			//		 if(!filterObj[ filter ]){
-			//		   filterObj[ filter ] = subfilter;
-			//		 } else {
-			//		   filterObj[ filter ] += ' or ' + subfilter;
-			//		   haveMultipleSubfilters.push( filter );
-			//		 }
-			//	 });
-
-			//	 $.each( filterObj, function( el, s ){
-			//		 if( haveMultipleSubfilters.indexOf( el ) > -1){
-			//		   filterStr += '(' + filterObj[ el ] + ')';
-			//		 } else {
-			//		   filterStr += filterObj[ el ];
-			//		 }
-			//		 filterStr += ' and ';
-			//	 });
-
-			//	 if( filterStr !== '$filter=' ){
-			//		 return groupStr + '&' + ( filterStr.slice(0, -5) );
-			//	 } else {
-			//		 return groupStr;
-			//	 }
-			// } else {
-			//	 return groupStr;
-			// }
 			return query;
 		};
 
-		self.logStateChange = function(n){
-			self.optionStateChanged(n);
+		self.logStateChange = function ( n ) {
+			self.optionStateChanged( n );
 			if ( n !== false ) {
-				self.chartSaved(false);
+				self.chartSaved( false );
 			}
 		};
 
-		self.subscribe = function( parent, member, callback ) {
-			if ( !parent[member] ) {
+		self.subscribe = function ( parent, member, callback ) {
+			if ( !parent[ member ] ) {
 				window.setTimeout( function () {
 					self.subscribe( parent, member, callback );
 				}, 50 );
 				return;
 			}
-			parent[member].subscribe( callback );
+			parent[ member ].subscribe( callback );
 			callback();
 		};
 
 		return this;
 	}
 
-	return( WidgetBase );
+	return ( WidgetBase );
 
-});
+} );

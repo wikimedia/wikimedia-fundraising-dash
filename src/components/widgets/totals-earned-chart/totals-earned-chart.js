@@ -6,19 +6,19 @@ define( [
 	'momentjs',
 	'Campaign',
 	'WidgetBase'
-], function( ko, template, c3, numeral, moment, Campaign, WidgetBase ){
+], function ( ko, template, c3, numeral, moment, Campaign, WidgetBase ) {
 
 	function initializedSharedContext( params ) {
 		// initialize day/hour data
 		// sharing these for other widgets
 		params.sharedContext.dayObj = [];
-		params.sharedContext.dailyDataArray = ['Daily Total'];
-		params.sharedContext.dailyCountArray = ['Daily Count'];
+		params.sharedContext.dailyDataArray = [ 'Daily Total' ];
+		params.sharedContext.dailyCountArray = [ 'Daily Count' ];
 		params.sharedContext.lastDataPoint = { day: 1, hour: 0 };
-		params.sharedContext.secondsByHourDonationData = ['Donations Per Second'];
+		params.sharedContext.secondsByHourDonationData = [ 'Donations Per Second' ];
 	}
 
-	function TotalsEarnedChartViewModel( params ){
+	function TotalsEarnedChartViewModel( params ) {
 
 		var self = this,
 			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
@@ -34,90 +34,99 @@ define( [
 		self.dailyChart = ko.observable( false );
 
 		self.goal = params.sharedContext.goal = ko.observable( self.config.goal || 25000000 );
-		self.majorDonationCutoff = ko.observable( self.config.majorDonationCutoff || 5000 ).extend( { throttle: 500 } );
+		self.majorDonationCutoff = ko.observable( self.config.majorDonationCutoff || 1000 ).extend( { throttle: 500 } );
 
 		self.campaigns = [
-			new Campaign({
+			new Campaign( {
 				name: '2016',
 				startDate: Date.UTC( 2016, 10, 29 ),
 				endDate: Date.UTC( 2017, 0, 1 )
-			}),
-			new Campaign({
+			} ),
+			new Campaign( {
 				name: '2015',
 				startDate: Date.UTC( 2015, 11, 1 ),
 				endDate: Date.UTC( 2016, 0, 1 )
-			}),
-			new Campaign({
+			} ),
+			new Campaign( {
 				name: '2014',
 				startDate: Date.UTC( 2014, 11, 2 ),
 				endDate: Date.UTC( 2015, 0, 1 )
-			}),
-			new Campaign({
+			} ),
+			new Campaign( {
 				name: '2013',
 				startDate: Date.UTC( 2013, 11, 3 ),
 				endDate: Date.UTC( 2014, 0, 1 )
-			}),
-			new Campaign({
+			} ),
+			new Campaign( {
 				name: '2012',
 				startDate: Date.UTC( 2012, 10, 27 ),
 				endDate: Date.UTC( 2013, 0, 1 )
-			}),
-			new Campaign({
+			} ),
+			new Campaign( {
 				name: '2011',
 				startDate: Date.UTC( 2011, 10, 16 ),
 				endDate: Date.UTC( 2012, 0, 1 )
-			})
+			} )
 		];
-		self.campaign = ko.observable( self.campaigns[0] );
+		self.campaign = ko.observable( self.campaigns[ 0 ] );
 
-		self.isCurrentYear = ko.computed( function() {
-			return self.campaign() === self.campaigns[0];
+		self.isCurrentYear = ko.computed( function () {
+			return self.campaign() === self.campaigns[ 0 ];
 		} );
 
 		// FIXME: do this stuff on 'Submit', actually cancel changes on 'Cancel'
-		params.sharedContext.goal.subscribe( function() {
+		params.sharedContext.goal.subscribe( function () {
 			self.config.goal = params.sharedContext.goal();
 			self.logStateChange();
 		} );
 
-		self.majorDonationCutoff.subscribe( function() {
+		self.majorDonationCutoff.subscribe( function () {
 			self.config.majorDonationCutoff = self.majorDonationCutoff();
 			self.logStateChange();
 			self.reloadData();
 		} );
 
-		self.campaign.subscribe( function() {
+		self.campaign.subscribe( function () {
 			self.logStateChange();
 			self.reloadData();
 		} );
 
-		self.raised = ko.observable(0);
+		self.raised = ko.observable( 0 );
 
 		// Let other widgets subscribe to changes in the goal or the totals
-		params.sharedContext.totalsChanged = ko.computed( function() {
+		params.sharedContext.totalsChanged = ko.computed( function () {
 			return self.raised() - params.sharedContext.goal();
 		} );
 
-		self.formattedGoal = ko.computed(function(){
-			return numeral(params.sharedContext.goal()).format('$0,0');
-		});
+		self.formattedGoal = ko.computed( function () {
+			return numeral( params.sharedContext.goal() ).format( '$0,0' );
+		} );
 
-		self.totalRaisedToDate = ko.computed(function(){
-			return numeral(self.raised()).format('$0,0');
-		});
+		self.totalRaisedToDate = ko.computed( function () {
+			return numeral( self.raised() ).format( '$0,0' );
+		} );
 
-		self.totalRemainingToDate = ko.computed( function(){
+		self.totalRemainingToDate = ko.computed( function () {
 			var trtd = params.sharedContext.goal() - self.raised();
-			return numeral(trtd >= 0 ? trtd : 0).format('$0,0');
-		});
+			return numeral( trtd >= 0 ? trtd : 0 ).format( '$0,0' );
+		} );
 
-		//get the data needed for this chart
+		// get the data needed for this chart
 		self.loadData = function ( data, timestamp ) {
 			var runningTotal = 0,
 				currentDate = new Date(),
 				lastData,
 				days = self.campaign().getLengthInDays(),
-				offset = self.campaign().getDayOfYearOffset();
+				offset = self.campaign().getDayOfYearOffset(),
+				d,
+				h,
+				i,
+				el,
+				day,
+				hour,
+				total,
+				seconds,
+				dataCount;
 
 			initializedSharedContext( params );
 			lastData = params.sharedContext.lastDataPoint;
@@ -125,33 +134,33 @@ define( [
 			currentDate.setTime( timestamp );
 			self.displayDate( moment( currentDate ).format( timeFormat ) );
 
-			for (var d = 1; d < days + 1; d++) {
-				params.sharedContext.dailyDataArray[d] = 0;
-				params.sharedContext.dailyCountArray[d] = 0;
-				if (!params.sharedContext.dayObj[d]) {
-					params.sharedContext.dayObj[d] = new Array(25);
-					params.sharedContext.dayObj[d][0] = 'Hourly Totals';
-					for (var h = 0; h < 24; h++) {
-						params.sharedContext.dayObj[d][h + 1] = { total: 0, count: 0 };
-						params.sharedContext.secondsByHourDonationData[(d - 1) * 24 + h + 1] = 0;
+			for ( d = 1; d < days + 1; d++ ) {
+				params.sharedContext.dailyDataArray[ d ] = 0;
+				params.sharedContext.dailyCountArray[ d ] = 0;
+				if ( !params.sharedContext.dayObj[ d ] ) {
+					params.sharedContext.dayObj[ d ] = new Array( 25 );
+					params.sharedContext.dayObj[ d ][ 0 ] = 'Hourly Totals';
+					for ( h = 0; h < 24; h++ ) {
+						params.sharedContext.dayObj[ d ][ h + 1 ] = { total: 0, count: 0 };
+						params.sharedContext.secondsByHourDonationData[ ( d - 1 ) * 24 + h + 1 ] = 0;
 					}
 				}
 			}
 
-			var dataCount = data.length;
-			for (var i = 0; i < dataCount; i++ ) {
+			dataCount = data.length;
+			for ( i = 0; i < dataCount; i++ ) {
 
-				var el = data[i],
-						day = el.day - offset,
-						hour = el.hour,
-						total = el.usd_total,
-						seconds = Math.min( el.minutes * 60, 60 ); // Don't divide by zero
-				params.sharedContext.dayObj[day][hour + 1] = { total: total, count: el.donations };
+				el = data[ i ];
+				day = el.day - offset;
+				hour = el.hour;
+				total = el.usd_total;
+				seconds = Math.max( el.minutes * 60, 60 ); // Don't divide by zero
+				params.sharedContext.dayObj[ day ][ hour + 1 ] = { total: total, count: el.donations };
 
-				params.sharedContext.secondsByHourDonationData[(day - 1) * 24 + hour + 1] = el.usd_total / seconds;
+				params.sharedContext.secondsByHourDonationData[ ( day - 1 ) * 24 + hour + 1 ] = el.usd_total / seconds;
 				runningTotal += total;
-				params.sharedContext.dailyDataArray[day] += total;
-				params.sharedContext.dailyCountArray[day] += el.donations;
+				params.sharedContext.dailyDataArray[ day ] += total;
+				params.sharedContext.dailyCountArray[ day ] += el.donations;
 			}
 
 			if ( self.isCurrentYear() ) {
@@ -159,8 +168,8 @@ define( [
 				lastData.day = currentDate.getUTCDate();
 				lastData.hour = currentDate.getUTCHours();
 			} else if ( dataCount > 0 ) {
-				lastData.day = data[dataCount - 1].day - offset;
-				lastData.hour = data[dataCount - 1].hour;
+				lastData.day = data[ dataCount - 1 ].day - offset;
+				lastData.hour = data[ dataCount - 1 ].hour;
 			} else {
 				lastData.day = 1;
 				lastData.hour = 0;
@@ -168,12 +177,12 @@ define( [
 
 			self.makeCharts();
 
-			self.raised(runningTotal);
+			self.raised( runningTotal );
 		};
 
 		// Reload the data.  For the automatic reload, we're fine getting
 		// something from the cache.
-		self.reloadData = function( automatic ){
+		self.reloadData = function ( automatic ) {
 			// FIXME: use some common filter logic
 			var url = '/data/big-english?$filter=' +
 					self.campaign().getDateFilter() + ' and ' +
@@ -181,11 +190,11 @@ define( [
 				interval = 500000,
 				firstLoad = ( self.raised() === 0 ),
 				threshold = interval + self.raised() - self.raised() % interval;
-			self.dataLoading(true);
+			self.dataLoading( true );
 			if ( automatic !== true ) {
 				url += '&cache=false';
 			}
-			$.get( url , function ( dataget ) {
+			$.get( url, function ( dataget ) {
 				self.loadData( dataget.results, dataget.timestamp );
 				self.dataLoading( false );
 				self.queryStringSQL( dataget.sqlQuery );
@@ -200,7 +209,7 @@ define( [
 						$( '.credit' ).fadeOut( 'slow' );
 					}, 6000 );
 				}
-			});
+			} );
 			if ( self.isCurrentYear() ) {
 				// Do it every 5 minutes as well
 				setTimeout( function () {
@@ -211,8 +220,8 @@ define( [
 
 		self.reloadData( true );
 
-		self.makeCharts = function() {
-			if (params.sharedContext.dailyDataArray.length < 2) {
+		self.makeCharts = function () {
+			if ( params.sharedContext.dailyDataArray.length < 2 ) {
 				return;
 			}
 			self.showChart( '' );
@@ -220,13 +229,14 @@ define( [
 			self.showChart( 'daily' );
 		};
 
-		self.makeHourlyChart = function(d,i){
-			var hourlyData = params.sharedContext.dayObj[d.x + 1 ],
-				hourlyCountArray = ['Hourly Count'],
-				hourlyTotalArray = ['Hourly Total'];
-			for(var j=1; j<25; j++){
-				hourlyCountArray.push(hourlyData[j].count);
-				hourlyTotalArray.push(hourlyData[j].total);
+		self.makeHourlyChart = function ( d, i ) {
+			var hourlyData = params.sharedContext.dayObj[ d.x + 1 ],
+				hourlyCountArray = [ 'Hourly Count' ],
+				hourlyTotalArray = [ 'Hourly Total' ],
+				j;
+			for ( j = 1; j < 25; j++ ) {
+				hourlyCountArray.push( hourlyData[ j ].count );
+				hourlyTotalArray.push( hourlyData[ j ].total );
 			}
 			return {
 				size: {
@@ -238,7 +248,7 @@ define( [
 					columns: [ hourlyTotalArray, hourlyCountArray ],
 					type: 'bar',
 					colors: { 'Hourly Total': 'rgb(92,184,92)', 'Hourly Count': '#f0ad4e' },
-					onclick: function (d, i) {
+					onclick: function ( d, i ) {
 						self.showChart( '' );
 						self.dailyChart( self.makeDailyChart() );
 						self.showChart( 'daily' );
@@ -263,30 +273,30 @@ define( [
 							position: 'outer-left'
 						},
 						tick: {
-							format: function(x){ return x + ':00'; }
+							format: function ( x ) { return x + ':00'; }
 						}
 					},
 					y: {
 						tick: {
-							format: function(x){ return numeral(x).format('$0,0'); }
+							format: function ( x ) { return numeral( x ).format( '$0,0' ); }
 						}
 					},
 					y2: {
 						tick: {
-							format: function(x){ return numeral(x).format('0,0'); }
+							format: function ( x ) { return numeral( x ).format( '0,0' ); }
 						},
 						show: true
 					}
 				},
 				tooltip: {
 					format: {
-						title: function (d) { return 'Hour ' + d; },
-						value: function (value, ratio, id) {
+						title: function ( d ) { return 'Hour ' + d; },
+						value: function ( value, ratio, id ) {
 							var display;
-							if(id === 'Hourly Total'){
-								display = numeral(value).format('$0,0');
+							if ( id === 'Hourly Total' ) {
+								display = numeral( value ).format( '$0,0' );
 							} else {
-								display = numeral(value).format('0,0');
+								display = numeral( value ).format( '0,0' );
 							}
 							return display;
 						}
@@ -300,7 +310,7 @@ define( [
 			};
 		};
 
-		self.makeDailyChart = function(d,i){
+		self.makeDailyChart = function ( d, i ) {
 			return {
 				size: {
 					height: 450,
@@ -332,30 +342,30 @@ define( [
 				axis: {
 					x: {
 						tick: {
-							format: function(x){ return 'Day ' + (x+1); }
+							format: function ( x ) { return 'Day ' + ( x + 1 ); }
 						}
 					},
 					y: {
 						tick: {
-							format: function(x){ return numeral(x).format('$0,0'); }
+							format: function ( x ) { return numeral( x ).format( '$0,0' ); }
 						}
 					},
 					y2: {
 						tick: {
-							format: function(x){ return numeral(x).format('0,0'); }
+							format: function ( x ) { return numeral( x ).format( '0,0' ); }
 						},
 						show: true
 					}
 				},
 				tooltip: {
 					format: {
-						title: function (d) { return 'Day ' + (d+1); },
-						value: function (value, ratio, id) {
+						title: function ( d ) { return 'Day ' + ( d + 1 ); },
+						value: function ( value, ratio, id ) {
 							var display;
-							if(id === 'Daily Total'){
-								display = numeral(value).format('$0,0');
+							if ( id === 'Daily Total' ) {
+								display = numeral( value ).format( '$0,0' );
 							} else {
-								display = numeral(value).format('0,0');
+								display = numeral( value ).format( '0,0' );
 							}
 							return display;
 						}
@@ -373,4 +383,4 @@ define( [
 
 	return { viewModel: TotalsEarnedChartViewModel, template: template };
 
-});
+} );

@@ -1,12 +1,12 @@
-var express			= require( 'express' ),
-	app				= express(),
-	routes			= require( './routes'),
-	passport		= require( 'passport' ),
-	DrupalStrategy	= require( 'passport-drupal' ).DrupalStrategy,
-	url				= require( 'url' ),
-	logger			= require( './logger.js' ),
-	config			= require( './config.js' ),
-	persistence		= require( './persistence.js' ),
+var express = require( 'express' ),
+	app = express(),
+	routes = require( './routes' ),
+	passport = require( 'passport' ),
+	DrupalStrategy = require( 'passport-drupal' ).DrupalStrategy,
+	url = require( 'url' ),
+	logger = require( './logger.js' ),
+	config = require( './config.js' ),
+	persistence = require( './persistence.js' ),
 	server,
 	serverConfig,
 	loginCheck;
@@ -14,18 +14,18 @@ var express			= require( 'express' ),
 logger.debug( 'Dash starting up' );
 
 // Log errors
-process.on( 'uncaughtException', function( err ) {
+process.on( 'uncaughtException', function ( err ) {
 	logger.error( 'Application error: ' + err );
-});
+} );
 
-serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec(config.listen);
-if (!serverConfig) {
+serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec( config.listen );
+if ( !serverConfig ) {
 	logger.error( 'Server cannot listen on "' + config.listen + '", invalid format.' );
-	process.exit(1);
+	process.exit( 1 );
 }
 
-logger.debug( 'Will try to listen on IP address: ' + serverConfig[2] );
-logger.debug( 'Will try to listen on port: ' + serverConfig[3] );
+logger.debug( 'Will try to listen on IP address: ' + serverConfig[ 2 ] );
+logger.debug( 'Will try to listen on port: ' + serverConfig[ 3 ] );
 
 if ( config.debug ) {
 	logger.debug( 'Running in debug mode - non-minified src and fake authentication' );
@@ -56,24 +56,24 @@ passport.use( new DrupalStrategy( {
 		providerURL: config.providerURL,
 		providerBackendURL: config.providerBackendURL
 	},
-	function(token, tokenSecret, profile, done) {
+	function ( token, tokenSecret, profile, done ) {
 		profile.oauth = { token: token, tokenSecret: tokenSecret };
 		done( null, profile );
 	}
 ) );
 
-passport.serializeUser( function( user, done ) {
+passport.serializeUser( function ( user, done ) {
 	done( null, user );
 } );
 
-passport.deserializeUser( function( user, done ) {
+passport.deserializeUser( function ( user, done ) {
 	done( null, user );
 } );
 
 app.use( passport.initialize() );
 app.use( passport.session() );
 
-loginCheck = function( req, res, next ) {
+loginCheck = function ( req, res, next ) {
 	if ( !req.session || !req.session.passport || !req.session.passport.user ) {
 		res.json( { error: 'Error: Not logged in' } );
 		return;
@@ -103,7 +103,7 @@ app.use( express.static( __dirname + ( config.debug ? '/src' : '/dist' ) ) );
 /*jslint +W024*/
 
 if ( config.debug ) {
-	app.get( '/auth/drupal', function( req, res ) {
+	app.get( '/auth/drupal', function ( req, res ) {
 		req.session.passport = {
 			user: {
 				displayName: 'HoneyD',
@@ -111,34 +111,34 @@ if ( config.debug ) {
 				provider: 'debug'
 			}
 		};
-		persistence.loginUser( req.session.passport.user ).then( function() {
+		persistence.loginUser( req.session.passport.user ).then( function () {
 			res.redirect( '/' );
-		}, function( error ) {
+		}, function ( error ) {
 			res.json( error );
-		});
-	});
+		} );
+	} );
 } else {
-	app.get( '/auth/drupal', passport.authenticate( 'drupal' ));
+	app.get( '/auth/drupal', passport.authenticate( 'drupal' ) );
 	app.get( '/auth/drupal/callback',
-		passport.authenticate( 'drupal', { failureRedirect: '/login' }),
-		function( req, res ) {
-			persistence.loginUser( req.session.passport.user ).then( function() {
+		passport.authenticate( 'drupal', { failureRedirect: '/login' } ),
+		function ( req, res ) {
+			persistence.loginUser( req.session.passport.user ).then( function () {
 				res.redirect( '/' );
-			}, function( error ) {
+			}, function ( error ) {
 				res.json( error );
-			});
+			} );
 		}
 	);
 }
-app.get( '/logout', function( req, res ) {
+app.get( '/logout', function ( req, res ) {
 	req.logout();
 	res.redirect( '/' );
-});
+} );
 
 server = app.listen(
-	serverConfig[3],
-	serverConfig[2],
-	function() {
+	serverConfig[ 3 ],
+	serverConfig[ 2 ],
+	function () {
 		logger.info( 'Dash listening on port ' + server.address().port );
 	}
 );

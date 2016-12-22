@@ -11690,3 +11690,28 @@ input[type="checkbox"] {
 #newBoard {
   text-align: right;
 }
+
+#top10Widget div.panel-body {
+  text-align: center;
+}
+
+#top10Widget table {
+  display: inline-table;
+  text-align: center;
+  margin: 0 auto;
+  width: 49%;
+}
+
+#top10Widget table th {
+  text-align: center;
+}
+
+#top10Widget table td.left {
+  text-align: right;
+  padding-right: 0.5em;
+}
+
+#top10Widget table td.right {
+  text-align: left;
+  padding-left: 0.5em;
+}

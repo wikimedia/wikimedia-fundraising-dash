@@ -2,16 +2,17 @@ define( [
 	'knockout',
 	'jquery',
 	'text!components/filters/filters.html'
-	],
-function( ko, $, template ){
+], function ( ko, $, template ) {
 
-	function FiltersViewModel( params ){
+	function FiltersViewModel( params ) {
 		var self = this;
 
 		this.filters = ko.observableArray( [] );
-		this.setChoices = function() {
-			var qs = '', choices = {};
-			$.each( self.filters(), function( i, filter ) {
+		this.setChoices = function () {
+			var qs = '',
+				choices = {};
+
+			$.each( self.filters(), function ( i, filter ) {
 				var filterQs = filter.queryString();
 				if ( !filterQs || filterQs === '' ) {
 					return;
@@ -23,41 +24,41 @@ function( ko, $, template ){
 				}
 				qs += filterQs;
 				qs += ')';
-				choices[filter.name] = filter.userChoices();
+				choices[ filter.name ] = filter.userChoices();
 			} );
 			params.queryString( qs );
 			params.userChoices( choices );
 			params.change();
 		};
 
-		params.metadataRequest.then( function( metadata ) {
+		params.metadataRequest.then( function ( metadata ) {
 			var filters = [];
-			$.each( metadata.filters, function( name, filterMeta ) {
+			$.each( metadata.filters, function ( name, filterMeta ) {
 				if ( !filterMeta.display ) {
 					return;
 				}
 				var filter = {
 					name: name,
 					metadata: filterMeta,
-					queryString: ko.observable('')
+					queryString: ko.observable( '' )
 				};
-				switch( filterMeta.type ) {
+				switch ( filterMeta.type ) {
 					case 'dropdown':
-						filter.userChoices = ko.observableArray( params.userChoices()[name] || [] );
+						filter.userChoices = ko.observableArray( params.userChoices()[ name ] || [] );
 						break;
 					case 'text':
 					case 'number':
-						filter.userChoices = ko.observable( params.userChoices()[name] || {} );
+						filter.userChoices = ko.observable( params.userChoices()[ name ] || {} );
 						break;
 					default:
-						//not yet supported filter type
+						// not yet supported filter type
 						return;
 				}
 				filter.queryString.subscribe( self.setChoices );
 				filters.push( filter );
 			} );
-			//sort filters by type then display name
-			filters.sort( function( a, b ) {
+			// sort filters by type then display name
+			filters.sort( function ( a, b ) {
 				var aMeta = a.metadata,
 					bMeta = b.metadata;
 

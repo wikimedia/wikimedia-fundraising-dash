@@ -2,10 +2,9 @@ define( [
 	'knockout',
 	'text!components/filters/text-filter/text-filter.html',
 	'operators'
-	],
-function( ko, template, ops ){
+], function ( ko, template, ops ) {
 
-	function TextFilterViewModel( params ){
+	function TextFilterViewModel( params ) {
 		var self = this;
 
 		this.operators = [
@@ -17,8 +16,9 @@ function( ko, template, ops ){
 		this.selectedOperator = ko.observable( params.userChoices().operator || 'eq' );
 		this.value = ko.observable( params.userChoices().value || '' );
 
-		this.changed = function() {
-			var value = self.value();
+		this.changed = function () {
+			var value = self.value(),
+				parts;
 
 			params.userChoices( {
 				operator: self.selectedOperator(),
@@ -29,13 +29,13 @@ function( ko, template, ops ){
 				params.queryString( '' );
 				return;
 			}
-			var parts = self.selectedOperator().split( '|' );
+			parts = self.selectedOperator().split( '|' );
 
 			if ( parts.length === 1 ) {
-				params.queryString( params.name + ' ' + parts[0] + ' \'' + value + '\'' );
+				params.queryString( params.name + ' ' + parts[ 0 ] + ' \'' + value + '\'' );
 				return;
 			}
-			params.queryString( parts[1] + '(\'' + value + '\',' + params.name + ')'  );
+			params.queryString( parts[ 1 ] + '(\'' + value + '\',' + params.name + ')' );
 		};
 
 		this.selectedOperator.subscribe( this.changed );
