@@ -45,6 +45,7 @@ var fs = require( 'fs' ),
 			'components/widgets/distance-to-goal-chart/distance-to-goal-chart',
 			'components/widgets/donation-age/donation-age',
 			'components/widgets/fraud-gauge/fraud-gauge',
+			'components/widgets/top10/top10',
 			'components/widgets/totals-earned-chart/totals-earned-chart',
 			'components/widgets/x-by-y/x-by-y'
 		],
