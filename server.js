@@ -1,5 +1,7 @@
 var express = require( 'express' ),
 	app = express(),
+	session = require( 'express-session' ),
+	bodyParser = require( 'body-parser' ),
 	routes = require( './routes' ),
 	passport = require( 'passport' ),
 	DrupalStrategy = require( 'passport-drupal' ).DrupalStrategy,
@@ -16,6 +18,7 @@ logger.debug( 'Dash starting up' );
 // Log errors
 process.on( 'uncaughtException', function ( err ) {
 	logger.error( 'Application error: ' + err );
+	logger.error( err.stack );
 } );
 
 serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec( config.listen );
@@ -45,9 +48,14 @@ if ( config.debug ) {
 	}
 }
 
-app.use( express.json() );
+app.use( bodyParser.json() );
 
-app.use( express.session( { secret: config.sessionSecret } ) );
+app.use( session( {
+	secret: config.sessionSecret,
+	resave: false,
+	saveUninitialized: false
+
+} ) );
 
 // Authentication
 passport.use( new DrupalStrategy( {
