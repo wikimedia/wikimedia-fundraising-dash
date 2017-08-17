@@ -242,7 +242,7 @@ function ( ko, $, template, Chart, WidgetBase ) {
 		};
 
 		self.metadataRequest.then( function () {
-			self.preDataLoading( false );
+			self.dataLoading( false );
 
 			if ( wasSaved ) {
 				// restore choices and show the chart

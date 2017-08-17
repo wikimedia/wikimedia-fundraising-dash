@@ -1,8 +1,5 @@
+node_modules
 npm-debug.log
-src/old/*
-src/bower_modules/*
-node_modules/*
-defaults.js
-src/app/models.txt
-nbproject
+src/bower_modules
+settings.js
 *swp

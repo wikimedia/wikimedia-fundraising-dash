@@ -14,7 +14,7 @@
 		"amdrequire": "0.0.3",
 		"commander": "~2.2.0",
 		"dotenv": "^0.4.0",
-		"evil-dns": "0.0.2",
+		"evil-dns": "0.1.0",
 		"express": "3.x",
 		"gulp": "^3.8.8",
 		"gulp-jshint": "^1.8.4",

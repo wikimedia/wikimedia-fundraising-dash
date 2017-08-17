@@ -15,18 +15,18 @@ define( [
 
 		var self = this;
 
+		// Things to clean up when the widget is removed
+		self.disposables = [];
+		self.timers = [];
+
 		self.retrievedResults = ko.observable();
 		self.queryStringSQL = ko.observable( 'This widget hasn\'t been set up yet!' );
-		self.tempConfig = ko.observable();
 		self.config = params.configuration || {};
 		self.instanceID = params.widgetInstance;
 		self.widgetCode = params.widgetCode;
-		self.preDataLoading = ko.observable( true );
 		self.dataLoading = params.dataLoading;
 		self.chartSaved = ko.observable( !!params.configuration );
 		self.optionStateChanged = ko.observable( false );
-		self.chartWidth = ko.observable( '900' );
-		self.chartHeight = ko.observable( '550' );
 		self.chartLoaded = ko.observable( false );
 		self.title = ko.observable( params.title );
 		self.userChoices = ko.observable( self.config.userChoices || {} );
@@ -315,13 +315,25 @@ define( [
 
 		self.subscribe = function ( parent, member, callback ) {
 			if ( !parent[ member ] ) {
+				// FIXME: replace this retry crap with a promise
 				window.setTimeout( function () {
 					self.subscribe( parent, member, callback );
 				}, 50 );
 				return;
 			}
-			parent[ member ].subscribe( callback );
+			self.disposables.push( parent[ member ].subscribe( callback ) );
 			callback();
+		};
+
+		self.dispose = function () {
+			ko.utils.arrayForEach( self.disposables, function ( disposable ) {
+				if ( disposable && disposable.dispose ) {
+					disposable.dispose();
+				}
+			} );
+			ko.utils.arrayForEach( self.timers, function ( timer ) {
+				window.clearTimeout( timer );
+			} );
 		};
 
 		return this;

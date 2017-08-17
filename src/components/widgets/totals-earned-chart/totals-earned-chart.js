@@ -75,21 +75,21 @@ define( [
 		} );
 
 		// FIXME: do this stuff on 'Submit', actually cancel changes on 'Cancel'
-		params.sharedContext.goal.subscribe( function () {
+		self.disposables.push( params.sharedContext.goal.subscribe( function () {
 			self.config.goal = params.sharedContext.goal();
 			self.logStateChange();
-		} );
+		} ) );
 
-		self.majorDonationCutoff.subscribe( function () {
+		self.disposables.push( self.majorDonationCutoff.subscribe( function () {
 			self.config.majorDonationCutoff = self.majorDonationCutoff();
 			self.logStateChange();
 			self.reloadData();
-		} );
+		} ) );
 
-		self.campaign.subscribe( function () {
+		self.disposables.push( self.campaign.subscribe( function () {
 			self.logStateChange();
 			self.reloadData();
-		} );
+		} ) );
 
 		self.raised = ko.observable( 0 );
 
@@ -212,9 +212,9 @@ define( [
 			} );
 			if ( self.isCurrentYear() ) {
 				// Do it every 5 minutes as well
-				setTimeout( function () {
+				self.timers.push( setTimeout( function () {
 					self.reloadData( true );
-				}, 300000 );
+				}, 300000 ) );
 			}
 		};
 
