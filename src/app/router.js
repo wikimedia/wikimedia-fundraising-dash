@@ -9,6 +9,16 @@ define(
 			defaultParams: { page: 'home', action: 'view' }
 		};
 
+		function startCrossroads() {
+			function parseHash( newHash, oldHash ) { crossroads.parse( newHash ); }
+
+			crossroads.normalizeFn = crossroads.NORM_AS_OBJECT;
+
+			hasher.initialized.add( parseHash );
+			hasher.changed.add( parseHash );
+			hasher.init();
+		}
+
 		function Router( config ) {
 			var self = this;
 
@@ -27,16 +37,6 @@ define(
 
 			startCrossroads();
 
-		}
-
-		function startCrossroads() {
-			function parseHash( newHash, oldHash ) { crossroads.parse( newHash ); }
-
-			crossroads.normalizeFn = crossroads.NORM_AS_OBJECT;
-
-			hasher.initialized.add( parseHash );
-			hasher.changed.add( parseHash );
-			hasher.init();
 		}
 
 		return new Router( routerConfig );
