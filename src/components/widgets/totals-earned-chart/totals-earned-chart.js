@@ -21,7 +21,9 @@ define( [
 	function TotalsEarnedChartViewModel( params ) {
 
 		var self = this,
-			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
+			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a',
+			getDay,
+			localUtcOffset = moment().utcOffset();
 
 		WidgetBase.call( this, params );
 
@@ -234,6 +236,13 @@ define( [
 			self.showChart( 'daily' );
 		};
 
+		getDay = function ( dayNum ) {
+			var result = moment( self.campaign().getStartDate() );
+			result.subtract( localUtcOffset, 'm' );
+			result.add( dayNum, 'd' );
+			return result.format( 'MMM D' );
+		};
+
 		self.makeHourlyChart = function ( d, i ) {
 			var hourlyData = params.sharedContext.dayObj[ d.x + 1 ],
 				hourlyCountArray = [ 'Hourly Count' ],
@@ -274,7 +283,7 @@ define( [
 				axis: {
 					x: {
 						label: {
-							text: 'Day ' + ( d.x + 1 ),
+							text: getDay( d.x ),
 							position: 'outer-left'
 						},
 						tick: {
@@ -347,7 +356,7 @@ define( [
 				axis: {
 					x: {
 						tick: {
-							format: function ( x ) { return 'Day ' + ( x + 1 ); }
+							format: function ( x ) { return getDay( x ); }
 						}
 					},
 					y: {
@@ -364,7 +373,7 @@ define( [
 				},
 				tooltip: {
 					format: {
-						title: function ( d ) { return 'Day ' + ( d + 1 ); },
+						title: function ( d ) { return getDay( d ); },
 						value: function ( value, ratio, id ) {
 							var display;
 							if ( id === 'Daily Total' ) {

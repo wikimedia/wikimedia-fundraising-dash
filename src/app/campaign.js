@@ -46,5 +46,13 @@ define( function () {
 		return msToDays( diff );
 	};
 
+	Campaign.prototype.getStartDate = function () {
+		return this.startDate;
+	};
+
+	Campaign.prototype.getEndDate = function () {
+		return this.endDate;
+	};
+
 	return Campaign;
 } );
