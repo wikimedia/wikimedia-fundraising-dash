@@ -25,6 +25,6 @@ module.exports = {
 	defaultFilter: {
 		type: 'lt',
 		left: { type: 'property', name: 'Amount' },
-		right: { type: 'literal', value: '1000' }
+		right: { type: 'literal', value: '5000' }
 	}
 };
