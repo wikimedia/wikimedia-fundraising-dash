@@ -41,7 +41,7 @@ To test OAuth, omit the "-d" option when starting the server.
 Test Data
 =========
 
-Start with a working install of [WMF's CiviCRM setup](http://git.wikimedia.org/summary/?r=wikimedia/fundraising/crm).  That should include the contribution_tracking table in the drupal database and tables civicrm_contribution and wmf_contribution_extra in the civicrm database.
+Start with a working install of [WMF's CiviCRM setup](https://phabricator.wikimedia.org/diffusion/WFCG/).  That should include the contribution_tracking table in the drupal database and tables civicrm_contribution and wmf_contribution_extra in the civicrm database.
 
 Then run the scripts in this app's schema/ folder to create a fredge database (skip 0000 if you already have a fredge db) and add the tables needed for dash.
 

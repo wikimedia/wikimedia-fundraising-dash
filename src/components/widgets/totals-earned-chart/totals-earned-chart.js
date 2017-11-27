@@ -21,7 +21,9 @@ define( [
 	function TotalsEarnedChartViewModel( params ) {
 
 		var self = this,
-			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a';
+			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a',
+			getDay,
+			localUtcOffset = moment().utcOffset();
 
 		WidgetBase.call( this, params );
 
@@ -33,14 +35,14 @@ define( [
 		self.hourlyChart = ko.observable( false );
 		self.dailyChart = ko.observable( false );
 
-		self.goal = params.sharedContext.goal = ko.observable( self.config.goal || 25000000 );
 		self.majorDonationCutoff = ko.observable( self.config.majorDonationCutoff || 1000 ).extend( { throttle: 500 } );
 
 		self.campaigns = [
 			new Campaign( {
 				name: '2017',
 				startDate: Date.UTC( 2017, 9, 2 ),
-				endDate: Date.UTC( 2018, 0, 1 )
+				endDate: Date.UTC( 2018, 0, 1 ),
+				target: 55000000
 			} ),
 			new Campaign( {
 				name: '2016',
@@ -74,6 +76,7 @@ define( [
 			} )
 		];
 		self.campaign = ko.observable( self.campaigns[ 0 ] );
+		self.goal = params.sharedContext.goal = ko.observable( self.config.goal || self.campaign().target );
 
 		self.isCurrentYear = ko.computed( function () {
 			return self.campaign() === self.campaigns[ 0 ];
@@ -92,6 +95,7 @@ define( [
 		} ) );
 
 		self.disposables.push( self.campaign.subscribe( function () {
+			self.goal( self.campaign().target );
 			self.logStateChange();
 			self.reloadData();
 		} ) );
@@ -234,6 +238,13 @@ define( [
 			self.showChart( 'daily' );
 		};
 
+		getDay = function ( dayNum ) {
+			var result = moment( self.campaign().getStartDate() );
+			result.subtract( localUtcOffset, 'm' );
+			result.add( dayNum, 'd' );
+			return result.format( 'MMM D' );
+		};
+
 		self.makeHourlyChart = function ( d, i ) {
 			var hourlyData = params.sharedContext.dayObj[ d.x + 1 ],
 				hourlyCountArray = [ 'Hourly Count' ],
@@ -274,7 +285,7 @@ define( [
 				axis: {
 					x: {
 						label: {
-							text: 'Day ' + ( d.x + 1 ),
+							text: getDay( d.x ),
 							position: 'outer-left'
 						},
 						tick: {
@@ -347,7 +358,7 @@ define( [
 				axis: {
 					x: {
 						tick: {
-							format: function ( x ) { return 'Day ' + ( x + 1 ); }
+							format: function ( x ) { return getDay( x ); }
 						}
 					},
 					y: {
@@ -364,7 +375,7 @@ define( [
 				},
 				tooltip: {
 					format: {
-						title: function ( d ) { return 'Day ' + ( d + 1 ); },
+						title: function ( d ) { return getDay( d ); },
 						value: function ( value, ratio, id ) {
 							var display;
 							if ( id === 'Daily Total' ) {
