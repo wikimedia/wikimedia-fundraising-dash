@@ -12,6 +12,7 @@ define( function () {
 		this.endDate = new Date( params.endDate ||
 			Date.UTC( currentYear + 1, 0, 1 ) );
 		this.name = params.name || currentYear.toString();
+		this.target = params.target || 25000000;
 	}
 
 	Campaign.prototype.getDayOfYearOffset = function () {
