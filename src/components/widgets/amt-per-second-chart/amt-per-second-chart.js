@@ -42,8 +42,7 @@ define( [
 					if ( remainingNeeded < 0 ) {
 						remainingNeeded = 0;
 					}
-					// FIXME: hardcoded 31 day campaign
-					hoursLeft = ( 31 - d ) * 24 + ( 24 - h );
+					hoursLeft = ( params.sharedContext.campaignLength - d ) * 24 + ( 24 - h );
 					xs[ index ] = index;
 					self.needPerSecond[ index ] = ( hoursLeft > 0 ) ?
 						( remainingNeeded / hoursLeft ) / 3600
@@ -82,9 +81,9 @@ define( [
 				axis: {
 					x: {
 						tick: {
-							count: 31,
+							count: params.sharedContext.campaignLength,
 							format: function ( x ) {
-								return 'Day ' + ( Math.floor( x / 24 ) + 1 );
+								return params.sharedContext.getDay( Math.floor( x / 24 ) );
 							}
 						}
 					},
@@ -99,9 +98,9 @@ define( [
 				tooltip: {
 					format: {
 						title: function ( x ) {
-							var day = Math.floor( x / 24 ) + 1,
+							var day = params.sharedContext.getDay( Math.floor( x / 24 ) ),
 								hour = x % 24;
-							return 'Day ' + day + ' ' + hour + ':00 &ndash; ' + hour + ':59 UTC';
+							return day + ' ' + hour + ':00 &ndash; ' + hour + ':59 UTC';
 						}
 					}
 				}

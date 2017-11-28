@@ -46,9 +46,7 @@ define( [
 				axis: {
 					x: {
 						tick: {
-							format: function ( x ) {
-								return 'Day ' + ( x + 1 );
-							}
+							format: params.sharedContext.getDay
 						}
 					},
 					y: {

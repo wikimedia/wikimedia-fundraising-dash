@@ -22,7 +22,6 @@ define( [
 
 		var self = this,
 			timeFormat = 'dddd, MMMM Do YYYY, h:mm:ss a',
-			getDay,
 			localUtcOffset = moment().utcOffset();
 
 		WidgetBase.call( this, params );
@@ -42,7 +41,7 @@ define( [
 				name: '2017',
 				startDate: Date.UTC( 2017, 9, 2 ),
 				endDate: Date.UTC( 2018, 0, 1 ),
-				target: 55000000
+				target: 50000000
 			} ),
 			new Campaign( {
 				name: '2016',
@@ -144,6 +143,7 @@ define( [
 			self.displayDate( moment( currentDate ).format( timeFormat ) );
 
 			for ( d = 1; d < days + 1; d++ ) {
+				params.sharedContext.campaignLength = days;
 				params.sharedContext.dailyDataArray[ d ] = 0;
 				params.sharedContext.dailyCountArray[ d ] = 0;
 				if ( !params.sharedContext.dayObj[ d ] ) {
@@ -238,7 +238,7 @@ define( [
 			self.showChart( 'daily' );
 		};
 
-		getDay = function ( dayNum ) {
+		params.sharedContext.getDay = function ( dayNum ) {
 			var result = moment( self.campaign().getStartDate() );
 			result.subtract( localUtcOffset, 'm' );
 			result.add( dayNum, 'd' );
@@ -285,7 +285,7 @@ define( [
 				axis: {
 					x: {
 						label: {
-							text: getDay( d.x ),
+							text: params.sharedContext.getDay( d.x ),
 							position: 'outer-left'
 						},
 						tick: {
@@ -358,7 +358,7 @@ define( [
 				axis: {
 					x: {
 						tick: {
-							format: function ( x ) { return getDay( x ); }
+							format: params.sharedContext.getDay
 						}
 					},
 					y: {
@@ -375,7 +375,7 @@ define( [
 				},
 				tooltip: {
 					format: {
-						title: function ( d ) { return getDay( d ); },
+						title: params.sharedContext.getDay,
 						value: function ( value, ratio, id ) {
 							var display;
 							if ( id === 'Daily Total' ) {
