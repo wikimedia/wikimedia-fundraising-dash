@@ -19,7 +19,8 @@ module.exports = function ( grunt ) {
 				'**/*.js',
 				'!node_modules/**/*.js',
 				'!src/bower_modules/**/*.js',
-				'!dist/**/*.js'
+				'!dist/**/*.js',
+				'!app.build.js'
 			]
 		},
 		jscs: {
