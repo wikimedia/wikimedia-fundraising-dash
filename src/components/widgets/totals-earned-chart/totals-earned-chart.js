@@ -134,7 +134,8 @@ define( [
 				hour,
 				total,
 				seconds,
-				dataCount;
+				dataCount,
+				ms;
 
 			initializedSharedContext( params );
 			lastData = params.sharedContext.lastDataPoint;
@@ -173,8 +174,8 @@ define( [
 			}
 
 			if ( self.isCurrentYear() ) {
-				// FIXME
-				lastData.day = currentDate.getUTCDate();
+				ms = currentDate.getTime() - self.campaign().getStartDate().getTime();
+				lastData.day = Math.floor( ms / ( 24 * 60 * 60 * 1000 ) ) + 1;
 				lastData.hour = currentDate.getUTCHours();
 			} else if ( dataCount > 0 ) {
 				lastData.day = data[ dataCount - 1 ].day - offset;
