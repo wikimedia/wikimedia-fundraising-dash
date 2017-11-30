@@ -139,3 +139,10 @@ WMF deployment involves a minification step, and requires NodeJS 0.10 (note this
 Don't worry about the lint errors :(
 
 Commit the dist/ output to the deployment branch and push for review.
+
+If you don't have that ancient version of node available and you just need to minify javascript and html templates, you can run the requirejs optimiser directly.
+
+```
+node node_modules/requirejs/bin/r.js -o app.build.js
+```
+Then copy the resulting scripts.js over the existing js file in the dist folder.
