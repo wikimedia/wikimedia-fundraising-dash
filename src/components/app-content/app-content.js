@@ -1,16 +1,20 @@
 define( [
+	'hasher',
 	'jquery',
 	'knockout',
 	'text!./app-content.html'
-], function ( $, ko, templateMarkup ) {
-
+], function ( hasher, $, ko, templateMarkup ) {
 	function AppContent() {
-		var self = this;
+		var self = this,
+			pages = [ 'Library', 'Profile', 'Home' ];
+
+		hasher.prependHash = '';
 
 		self.displayedBoard = ko.observable();
+		self.hashValue = location.hash.substring( 1 );
 		self.userBoards = ko.observableArray();
 		self.userdata = ko.observable();
-		self.displayPage = ko.observable( 'Home' );
+		self.displayedPage = ko.observable( 'Home' );
 		self.loggedIn = ko.observable( false );
 		self.welcome = ko.observable( '' );
 		self.widgetTemplates = ko.observableArray();
@@ -25,16 +29,28 @@ define( [
 			return widgets;
 		} );
 
+		self.displayPage = function ( view ) {
+			if ( pages.indexOf( view ) > -1 ) {
+				self.displayedPage( view );
+			} else if ( !isNaN( parseInt( view, 10 ) ) ) {
+				$.get( 'board/' + view, function ( bdata ) {
+					self.displayedPage( 'Home' );
+					self.displayedBoard( bdata );
+				} );
+			} else {
+				return false;
+			}
+		};
+
 		$.get( '/user/info', function ( userInfo ) {
 			if ( userInfo && !userInfo.error ) {
 				self.userdata( userInfo );
 				self.welcome( userInfo.name.charAt( 0 ).toUpperCase() + userInfo.name.slice( 1 ) );
 				self.loggedIn( true );
-
 				$.get( 'board/' + self.userdata().defaultBoard, function ( moredata ) {
 					self.displayedBoard( moredata );
+					self.displayPage( self.hashValue );
 				} );
-
 				$.get( 'board/', function ( boards ) {
 					self.userBoards( boards );
 				} );
@@ -86,18 +102,10 @@ define( [
 		};
 
 		self.setDisplayPage = function ( e, data ) {
-			var pages = [ 'Library', 'Profile', 'Home' ],
-				view = data.target.id;
-
-			if ( pages.indexOf( data.target.id ) > -1 ) {
-				self.displayPage( view );
-			} else if ( isNaN( parseInt( view, 10 ) ) ) {
-				self.displayPage( $.trim( $( data.target ).text() ) );
-			} else {
-				$.get( 'board/' + view, function ( bdata ) {
-					self.displayPage( 'Home' );
-					self.displayedBoard( bdata );
-				} );
+			var view = data.target.id;
+			hasher.setHash( view );
+			if ( !self.displayPage( view ) ) {
+				self.displayedPage( $.trim( $( data.target ).text() ) );
 			}
 		};
 
@@ -125,6 +133,12 @@ define( [
 		};
 		self.getUsersWidgetInstances();
 
+		self.handleChanges = function ( newHash ) {
+			self.displayPage( newHash );
+		};
+
+		hasher.changed.add( self.handleChanges );
+		hasher.init();
 	}
 
 	return { viewModel: AppContent, template: templateMarkup };

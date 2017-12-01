@@ -1,8 +1,8 @@
 <section id="navbar">
-	<nav-bar params="welcome: welcome, loggedIn: loggedIn, userBoards: userBoards, displayPage: displayPage"></nav-bar>
+	<nav-bar params="welcome: welcome, loggedIn: loggedIn, userBoards: userBoards, displayedPage: displayedPage"></nav-bar>
 </section>
 
-<section id="appContent" data-bind="if: displayPage() === 'Home'">
+<section id="appContent" data-bind="if: displayedPage() === 'Home'">
 
 	<div class="container-fluid" data-bind='if: loggedIn'>
 		<div class="row" data-bind='if:displayedBoard'>
@@ -20,7 +20,7 @@
 
 </section>
 
-<section id="appContent" data-bind="if: displayPage() === 'Library'">
+<section id="appContent" data-bind="if: displayedPage() === 'Library'">
 
 	<div class="container-fluid" data-bind='if: loggedIn()'>
 		<div class="row">
@@ -40,7 +40,7 @@
 
 </section>
 
-<section id="appContent" data-bind="if: displayPage() === 'Profile'">
+<section id="appContent" data-bind="if: displayedPage() === 'Profile'">
 
 	<div class="container-fluid" data-bind='if: loggedIn()'>
 		<div class="row">
