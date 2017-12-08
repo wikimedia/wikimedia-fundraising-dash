@@ -32,7 +32,7 @@ function insertWidgetList( board, connection ) {
 		values.push( board.id );
 		values.push( i );
 	}
-	return connection.query( insertWidgets + placeholders, values );
+	return connection.query( insertWidgets + placeholders, values ).then( connection.end() );
 }
 
 module.exports = {
@@ -96,7 +96,9 @@ module.exports = {
 					return;
 				}
 				user.defaultBoard = dbResults[ 0 ][ 2 ][ 0 ].id;
-				return connection.query( insertBigEnglish, [ userId ] );
+				var result = connection.query( insertBigEnglish, [ userId ] )
+					.then( connection.end() );
+				return result;
 			} );
 	},
 	/**
@@ -125,6 +127,7 @@ module.exports = {
 		}
 		return connection.query( insert, insertParams ).then( function ( dbResults ) {
 			instance.id = dbResults[ 0 ].insertId;
+			connection.end();
 		} );
 	},
 	/**
@@ -140,6 +143,7 @@ module.exports = {
 		return connection.query( select, [ instanceId, userId ] )
 			.then( function ( dbResults ) {
 				var result = dbResults[ 0 ][ 0 ];
+				connection.end();
 				if ( result.owner_id ) {
 					return {
 						id: instanceId,
@@ -187,6 +191,7 @@ module.exports = {
 						previewPath: rows[ i ].preview_path
 					};
 				}
+				connection.end();
 				return result;
 			} );
 	},
@@ -237,7 +242,7 @@ module.exports = {
 				board.id = dbResults[ 0 ].insertId;
 			} )
 			.then( function () {
-				return insertWidgetList( board, connection );
+				return insertWidgetList( board, connection ).then( connection.end() );
 			} );
 	},
 	/**
@@ -286,6 +291,7 @@ module.exports = {
 						configuration: JSON.parse( rows[ i ].configuration )
 					};
 				}
+				connection.end();
 				return board;
 			} );
 	},
@@ -315,6 +321,7 @@ module.exports = {
 						isShared: rows[ i ].is_shared === 1
 					};
 				}
+				connection.end();
 				return result;
 			} );
 	},
@@ -341,7 +348,9 @@ module.exports = {
 						previewPath: rows[ i ].preview_path
 					};
 				}
+				connection.end();
 				return result;
 			} );
 	}
+
 };
