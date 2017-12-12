@@ -1,6 +1,6 @@
 var widgets = require( '../widgets' ),
 	odataParser = require( 'odata-parser' ),
-	mysql = require( 'mysql' ),
+	persistence = require( '../persistence.js' ),
 	config = require( '../config.js' ),
 	util = require( 'util' ),
 	cache = require( 'memory-cache' ),
@@ -239,7 +239,6 @@ module.exports = function ( req, res ) {
 	var widget = widgets[ req.params.widget ],
 		qs = urlParser.parse( req.url ).query,
 		parsedQs = querystringParser.parse( qs ),
-		connection,
 		sqlQuery = '',
 		parsedFilters,
 		filter,
@@ -347,31 +346,18 @@ module.exports = function ( req, res ) {
 	sqlQuery = sqlQuery.replace( /\[\[GROUP\]\]/g, groupClause );
 	sqlQuery = sqlQuery.replace( /\[\[SELECTGROUP\]\]/g, selectGroup );
 
-	connection = mysql.createConnection( {
-		host: config.dbserver,
-		user: config.dblogin,
-		password: config.dbpwd,
-		database: config.db
-	} );
-	connection.connect( function ( error ) {
-		if ( error ) {
-			res.json( { error: 'Connection Error: ' + error } );
-			return;
-		}
-	} );
 	logger.debug( 'Query: ' + sqlQuery + '\nParams: ' + sqlParams.join( ', ' ) );
-	connection.query( sqlQuery, sqlParams, function ( error, dbResults ) {
-		if ( error ) {
-			res.json( { error: 'Query error: ' + error } );
-			return;
-		}
+	persistence.query( sqlQuery, sqlParams, function ( dbResults ) {
+		var results = dbResults[ 0 ];
 		result = {
-			results: dbResults,
+			results: results,
 			sqlQuery: substituteParams( sqlQuery, sqlParams ),
 			timestamp: new Date().getTime()
 		};
 		logger.debug( 'Storing results at cache key ' + cacheKey );
 		cache.put( cacheKey, result, config.cacheDuration );
 		res.json( result );
+	}, function ( error ) {
+		res.json( { error: 'Query error: ' + error } );
 	} );
 };

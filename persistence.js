@@ -32,10 +32,22 @@ function insertWidgetList( board, connection ) {
 		values.push( board.id );
 		values.push( i );
 	}
-	return connection.query( insertWidgets + placeholders, values ).then( connection.end() );
+	return connection.query( insertWidgets + placeholders, values );
 }
 
 module.exports = {
+	/**
+	 * Run a query
+	 */
+	query: function ( query, params, callback, errorCallback ) {
+		var connection = getConnection();
+
+		connection.query( query, params )
+			.then( callback )
+			/*jslint -W024*/
+			.catch( errorCallback );
+		/*jslint +W024*/
+	},
 	/**
 	 * Ensures a user exists in the user table and saves the user's local db id
 	 * in session.  Creates a default board if none exists.
@@ -96,9 +108,7 @@ module.exports = {
 					return;
 				}
 				user.defaultBoard = dbResults[ 0 ][ 2 ][ 0 ].id;
-				var result = connection.query( insertBigEnglish, [ userId ] )
-					.then( connection.end() );
-				return result;
+				return connection.query( insertBigEnglish, [ userId ] );
 			} );
 	},
 	/**
@@ -127,7 +137,6 @@ module.exports = {
 		}
 		return connection.query( insert, insertParams ).then( function ( dbResults ) {
 			instance.id = dbResults[ 0 ].insertId;
-			connection.end();
 		} );
 	},
 	/**
@@ -143,7 +152,6 @@ module.exports = {
 		return connection.query( select, [ instanceId, userId ] )
 			.then( function ( dbResults ) {
 				var result = dbResults[ 0 ][ 0 ];
-				connection.end();
 				if ( result.owner_id ) {
 					return {
 						id: instanceId,
@@ -191,7 +199,6 @@ module.exports = {
 						previewPath: rows[ i ].preview_path
 					};
 				}
-				connection.end();
 				return result;
 			} );
 	},
@@ -242,7 +249,7 @@ module.exports = {
 				board.id = dbResults[ 0 ].insertId;
 			} )
 			.then( function () {
-				return insertWidgetList( board, connection ).then( connection.end() );
+				return insertWidgetList( board, connection );
 			} );
 	},
 	/**
@@ -291,7 +298,6 @@ module.exports = {
 						configuration: JSON.parse( rows[ i ].configuration )
 					};
 				}
-				connection.end();
 				return board;
 			} );
 	},
@@ -321,7 +327,6 @@ module.exports = {
 						isShared: rows[ i ].is_shared === 1
 					};
 				}
-				connection.end();
 				return result;
 			} );
 	},
@@ -348,7 +353,6 @@ module.exports = {
 						previewPath: rows[ i ].preview_path
 					};
 				}
-				connection.end();
 				return result;
 			} );
 	}
