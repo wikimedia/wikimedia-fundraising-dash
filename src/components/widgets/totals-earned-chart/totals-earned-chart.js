@@ -41,7 +41,7 @@ define( [
 				name: '2017',
 				startDate: Date.UTC( 2017, 9, 2 ),
 				endDate: Date.UTC( 2018, 0, 1 ),
-				target: 50000000
+				target: 51000000
 			} ),
 			new Campaign( {
 				name: '2016',

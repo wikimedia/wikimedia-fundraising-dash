@@ -37,6 +37,18 @@ function insertWidgetList( board, connection ) {
 
 module.exports = {
 	/**
+	 * Run a query
+	 */
+	query: function ( query, params, callback, errorCallback ) {
+		var connection = getConnection();
+
+		connection.query( query, params )
+			.then( callback )
+			/*jslint -W024*/
+			.catch( errorCallback );
+		/*jslint +W024*/
+	},
+	/**
 	 * Ensures a user exists in the user table and saves the user's local db id
 	 * in session.  Creates a default board if none exists.
 	 *
@@ -344,4 +356,5 @@ module.exports = {
 				return result;
 			} );
 	}
+
 };

@@ -146,7 +146,7 @@ module.exports = {
 			column: 'gateway',
 			display: 'Gateway',
 			type: 'dropdown',
-			values: [ 'adyen', 'amazon', 'astropay', 'globalcollect', 'paypal', 'worldpay' ],
+			values: [ 'adyen', 'amazon', 'astropay', 'globalcollect', 'paypal', 'paypal_ec', 'worldpay' ],
 			canGroup: true
 		},
 		Amount: {
@@ -241,7 +241,7 @@ module.exports = {
 			column: 'gateway',
 			display: 'Gateway',
 			type: 'dropdown',
-			values: [ 'adyen', 'astropay', 'globalcollect', 'worldpay' ]
+			values: [ 'adyen', 'amazon', 'astropay', 'globalcollect', 'paypal', 'paypal_ec', 'worldpay' ]
 		},
 		Score: {
 			table: 'pf',

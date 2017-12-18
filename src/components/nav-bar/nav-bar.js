@@ -1,15 +1,17 @@
 define( [
-	'knockout',
+	'hasher',
 	'jquery',
+	'knockout',
 	'text!components/nav-bar/nav-bar.html'
-], function ( ko, $, template ) {
+], function ( hasher, $, ko, template ) {
 
 	function NavBarViewModel( params ) {
 		var self = this;
+
 		self.loggedIn = params.loggedIn;
 		self.welcome = params.welcome;
 		self.userBoards = params.userBoards;
-		self.displayPage = ko.observable( 'filler' );
+		self.displayedPage = ko.observable( 'filler' );
 		self.newBoardName = ko.observable( '' );
 		self.boardError = ko.observable( '' );
 
@@ -28,13 +30,18 @@ define( [
 		};
 
 		$( '.mainNavButton' ).click( function ( e ) {
-			$( '.mainNavButton' ).removeClass( 'selectedSubNav' );
-			if ( $( e.target ).hasClass( 'mainNavButton' ) ) {
-				$( e.target ).addClass( 'selectedSubNav' );
-			} else {
-				$( e.target.parentElement ).addClass( 'selectedSubNav' );
-			}
+			self.button = e.target;
+			self.toggleNav( self.button );
 		} );
+
+		self.toggleNav = function ( button ) {
+			$( '.mainNavButton' ).removeClass( 'selectedSubNav' );
+			if ( $( button ).hasClass( 'mainNavButton' ) ) {
+				$( button ).addClass( 'selectedSubNav' );
+			} else {
+				$( button.parentElement ).addClass( 'selectedSubNav' );
+			}
+		};
 
 		self.toggleBoardList = function ( e, data ) {
 			$( '#boards.subNavBoardOpts' ).slideDown( 200, 'swing', function () {
@@ -77,6 +84,14 @@ define( [
 				}
 			} );
 		};
+		self.readHashValue = function ( hashValue ) {
+			if ( hashValue.length ) {
+				self.button = '#' + hashValue;
+				self.toggleNav( self.button );
+			}
+		};
+		hasher.initialized.add( self.readHashValue );
+		hasher.changed.add( self.readHashValue );
 	}
 
 	return { viewModel: NavBarViewModel, template: template };
