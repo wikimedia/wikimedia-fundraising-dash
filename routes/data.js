@@ -1,6 +1,6 @@
 var widgets = require( '../widgets' ),
 	odataParser = require( 'odata-parser' ),
-	persistence = require( '../persistence.js' ),
+	mysql = require( 'mysql' ),
 	config = require( '../config.js' ),
 	util = require( 'util' ),
 	cache = require( 'memory-cache' ),
@@ -239,6 +239,7 @@ module.exports = function ( req, res ) {
 	var widget = widgets[ req.params.widget ],
 		qs = urlParser.parse( req.url ).query,
 		parsedQs = querystringParser.parse( qs ),
+		connection,
 		sqlQuery = '',
 		parsedFilters,
 		filter,
@@ -346,18 +347,34 @@ module.exports = function ( req, res ) {
 	sqlQuery = sqlQuery.replace( /\[\[GROUP\]\]/g, groupClause );
 	sqlQuery = sqlQuery.replace( /\[\[SELECTGROUP\]\]/g, selectGroup );
 
+	connection = mysql.createConnection( {
+		host: config.dbserver,
+		user: config.dblogin,
+		password: config.dbpwd,
+		database: config.db
+	} );
+	connection.connect( function ( error ) {
+		if ( error ) {
+			res.json( { error: 'Connection Error: ' + error } );
+			return;
+		}
+	} );
 	logger.debug( 'Query: ' + sqlQuery + '\nParams: ' + sqlParams.join( ', ' ) );
-	persistence.query( sqlQuery, sqlParams, function ( dbResults ) {
-		var results = dbResults[ 0 ];
+	connection.query( sqlQuery, sqlParams, function ( error, dbResults ) {
+		if ( error ) {
+			res.json( { error: 'Query error: ' + error } );
+			return;
+		}
 		result = {
-			results: results,
+			results: dbResults,
 			sqlQuery: substituteParams( sqlQuery, sqlParams ),
 			timestamp: new Date().getTime()
 		};
 		logger.debug( 'Storing results at cache key ' + cacheKey );
 		cache.put( cacheKey, result, config.cacheDuration );
 		res.json( result );
-	}, function ( error ) {
-		res.json( { error: 'Query error: ' + error } );
 	} );
+	// from documentation at https://github.com/mysqljs/mysql
+	// end() makes sure all remaining queries have executed before sending a quit package to mysql
+	connection.end();
 };
