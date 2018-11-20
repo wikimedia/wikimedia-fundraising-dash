@@ -12,7 +12,7 @@ module.exports = {
 		left: {
 			type: 'eq',
 			left: { type: 'property', name: 'Year' },
-			right: { type: 'literal', value: '2017' }
+			right: { type: 'literal', value: '2018' }
 		},
 		right: {
 			type: 'and',
