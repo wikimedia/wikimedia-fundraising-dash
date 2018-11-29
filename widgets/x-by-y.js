@@ -10,7 +10,7 @@ extend( filters, commonFilters.civicrmContribution );
 
 module.exports = {
 	name: 'x-by-y',
-	query: 'select count(*) as donations, sum(total_amount) as usd_total [[SELECTGROUP]] from ' + config.civicrmDb + '.civicrm_contribution cc [[JOINS]] [[WHERE]] [[GROUP]];',
+	query: 'select count(*) as donations, sum(total_amount) as usd_total [[SELECTGROUP]] from ' + config.civicrmDb + '.civicrm_contribution cc INNER JOIN ' + config.civicrmDb + '.civicrm_financial_type ft ON ft.id = cc.financial_type_id AND ft.name <> \'Endowment Gift\' [[JOINS]] [[WHERE]] [[GROUP]];',
 	mainTableAlias: 'cc',
 	optionalJoins: {
 		ct: {

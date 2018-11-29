@@ -10,7 +10,7 @@ delete( filters.Status );
 
 module.exports = {
 	name: 'top10',
-	query: 'SELECT * FROM (SELECT YEAR(receive_date) AS year, MONTH(receive_date) AS month, DAY(receive_date) AS day, -1 AS hour, count(*) AS donations, SUM(total_amount) AS usd_total FROM ' + config.civicrmDb + '.civicrm_contribution cc [[JOINS]] [[WHERE]] GROUP BY YEAR(receive_date), MONTH(receive_date), DAY(receive_date) ORDER BY usd_total DESC LIMIT 10) AS top_days UNION (SELECT YEAR(receive_date) AS year, MONTH(receive_date) AS month, DAY(receive_date) AS day, HOUR(receive_date) AS hour, count(*) AS donations, SUM(total_amount) AS usd_total FROM ' + config.civicrmDb + '.civicrm_contribution cc [[JOINS]] [[WHERE]] GROUP BY YEAR(receive_date), MONTH(receive_date), DAY(receive_date), HOUR(receive_date) ORDER BY usd_total DESC LIMIT 10);',
+	query: 'SELECT * FROM (SELECT YEAR(receive_date) AS year, MONTH(receive_date) AS month, DAY(receive_date) AS day, -1 AS hour, count(*) AS donations, SUM(total_amount) AS usd_total FROM ' + config.civicrmDb + '.civicrm_contribution cc INNER JOIN ' + config.civicrmDb + '.civicrm_financial_type ft ON ft.id = cc.financial_type_id AND ft.name <> \'Endowment Gift\' [[JOINS]] [[WHERE]] GROUP BY YEAR(receive_date), MONTH(receive_date), DAY(receive_date) ORDER BY usd_total DESC LIMIT 10) AS top_days UNION (SELECT YEAR(receive_date) AS year, MONTH(receive_date) AS month, DAY(receive_date) AS day, HOUR(receive_date) AS hour, count(*) AS donations, SUM(total_amount) AS usd_total FROM ' + config.civicrmDb + '.civicrm_contribution cc [[JOINS]] [[WHERE]] GROUP BY YEAR(receive_date), MONTH(receive_date), DAY(receive_date), HOUR(receive_date) ORDER BY usd_total DESC LIMIT 10);',
 	mainTableAlias: 'cc',
 	optionalJoins: {
 		ct: {
