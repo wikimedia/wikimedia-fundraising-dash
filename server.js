@@ -1,3 +1,4 @@
+/* eslint-env es6, node */
 var express = require( 'express' ),
 	app = express(),
 	session = require( 'express-session' ),
@@ -21,7 +22,7 @@ process.on( 'uncaughtException', function ( err ) {
 	logger.error( err.stack );
 } );
 
-serverConfig = /(([0-9\.]*|\[[0-9a-fA-F\:]*\]):)?([0-9]+)/.exec( config.listen );
+serverConfig = /(([0-9.]*|\[[0-9a-fA-F:]*\]):)?([0-9]+)/.exec( config.listen );
 if ( !serverConfig ) {
 	logger.error( 'Server cannot listen on "' + config.listen + '", invalid format.' );
 	process.exit( 1 );
@@ -58,17 +59,20 @@ app.use( session( {
 } ) );
 
 // Authentication
-passport.use( new DrupalStrategy( {
-		consumerKey: config.consumerKey,
-		consumerSecret: config.consumerSecret,
-		providerURL: config.providerURL,
-		providerBackendURL: config.providerBackendURL
-	},
-	function ( token, tokenSecret, profile, done ) {
-		profile.oauth = { token: token, tokenSecret: tokenSecret };
-		done( null, profile );
-	}
-) );
+passport.use(
+	new DrupalStrategy(
+		{
+			consumerKey: config.consumerKey,
+			consumerSecret: config.consumerSecret,
+			providerURL: config.providerURL,
+			providerBackendURL: config.providerBackendURL
+		},
+		function ( token, tokenSecret, profile, done ) {
+			profile.oauth = { token: token, tokenSecret: tokenSecret };
+			done( null, profile );
+		}
+	)
+);
 
 passport.serializeUser( function ( user, done ) {
 	done( null, user );
@@ -105,10 +109,8 @@ app.post( '/board', loginCheck, routes.board.save );
 app.put( '/board/:id', loginCheck, routes.board.save );
 app.get( '/board/:id', loginCheck, routes.board.get );
 app.post( '/board/:id/widgets', loginCheck, routes.board.addWidget );
-/*jslint -W024*/
 app.delete( '/board/:id/widgets/:instanceId', loginCheck, routes.board.deleteWidget );
 app.use( express.static( __dirname + ( config.debug ? '/src' : '/dist' ) ) );
-/*jslint +W024*/
 
 if ( config.debug ) {
 	app.get( '/auth/drupal', function ( req, res ) {

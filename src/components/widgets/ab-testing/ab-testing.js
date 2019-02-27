@@ -29,6 +29,7 @@ function ( ko, template, datePickersTemplate, WidgetBase ) {
 				max: '$100 ',
 				conversionrate: '0.68%',
 				mode: '$20 ',
+				// eslint-disable-next-line camelcase
 				mode_s: '$20 '
 			},
 			{
@@ -46,6 +47,7 @@ function ( ko, template, datePickersTemplate, WidgetBase ) {
 				max: '$250 ',
 				conversionrate: '0.71%',
 				mode: '$20 ',
+				// eslint-disable-next-line camelcase
 				mode_s: '$20 '
 			},
 			{
@@ -63,6 +65,7 @@ function ( ko, template, datePickersTemplate, WidgetBase ) {
 				max: '($150)',
 				conversionrate: '-0.03%',
 				mode: '$0 ',
+				// eslint-disable-next-line camelcase
 				mode_s: '$0 '
 			}
 		] );

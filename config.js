@@ -1,6 +1,8 @@
+/* eslint-env es6, node */
 var commander = require( 'commander' ),
 	defaults = require( './defaults.js' ),
 	logger = require( './logger.js' ),
+	hasOwn = Object.prototype.hasOwnProperty,
 	prop,
 	config;
 
@@ -14,7 +16,7 @@ try {
 	if ( commander.config ) {
 		config = require( commander.config );
 		for ( prop in defaults ) {
-			if ( defaults.hasOwnProperty( prop ) && !config.hasOwnProperty( prop ) ) {
+			if ( hasOwn.call( defaults, prop ) && !hasOwn.call( config, prop ) ) {
 				config[ prop ] = defaults[ prop ];
 			}
 		}

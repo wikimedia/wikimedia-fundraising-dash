@@ -1,5 +1,5 @@
-var commonFilters	= require( './common-filters.js' ),
-	config			= require( '../config.js' );
+var commonFilters = require( './common-filters.js' ),
+	config = require( '../config.js' );
 
 module.exports = {
 	name: 'big-english',

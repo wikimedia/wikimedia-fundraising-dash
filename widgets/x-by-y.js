@@ -1,7 +1,7 @@
-var extend			= require( 'node.extend' ),
-	commonFilters	= require( './common-filters.js' ),
-	config			= require( '../config.js' ),
-	filters			= {};
+var extend = require( 'node.extend' ),
+	commonFilters = require( './common-filters.js' ),
+	config = require( '../config.js' ),
+	filters = {};
 
 extend( filters, commonFilters.paymentsFraud );
 extend( filters, commonFilters.paymentsInitial );

@@ -57,7 +57,7 @@ define( [
 			}
 		} );
 
-		self.addWidgetToBoard = function ( event, data ) {
+		self.addWidgetToBoard = function ( event /* , data */ ) {
 			$.ajax( {
 				method: 'POST',
 				url: '/widget-instance',
@@ -75,7 +75,7 @@ define( [
 						data: JSON.stringify( {
 							instanceId: data.id
 						} ),
-						success: function ( stuff ) {
+						success: function ( /* stuff */ ) {
 							// refresh the displayed board
 							$.get( 'board/' + self.displayedBoard().id, function ( moredata ) {
 								self.displayedBoard( moredata );
@@ -87,7 +87,7 @@ define( [
 
 		};
 
-		self.removeWidgetFromBoard = function ( event, data ) {
+		self.removeWidgetFromBoard = function ( event /* , data */ ) {
 			var removingBoard = self.displayedBoard().id;
 			$.ajax( {
 				method: 'DELETE',
@@ -105,7 +105,7 @@ define( [
 			var view = data.target.id;
 			hasher.setHash( view );
 			if ( !self.displayPage( view ) ) {
-				self.displayedPage( $.trim( $( data.target ).text() ) );
+				self.displayedPage( ( $( data.target ).text() || '' ).trim() );
 			}
 		};
 

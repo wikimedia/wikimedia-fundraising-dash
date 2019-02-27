@@ -3,7 +3,7 @@ define( [
 	'jquery',
 	'c3',
 	'select2' // source this file to create the $( 'foo' ).select2 function
-], function ( ko, $, c3, select2 ) {
+], function ( ko, $, c3 /* , select2 */ ) {
 	function destroyChart( element ) {
 		var chart = ko.utils.domData.get( element, 'chart' );
 		if ( chart ) {
@@ -13,7 +13,7 @@ define( [
 	}
 
 	ko.bindingHandlers.c3 = {
-		init: function init( element, valueAccessor, allBindingsAccessor, viewModel, bindingContext ) {
+		init: function init( element, valueAccessor /* , allBindingsAccessor, viewModel, bindingContext */ ) {
 			var chart, options = ko.unwrap( valueAccessor() );
 			if ( !options ) {
 				return;
@@ -25,7 +25,7 @@ define( [
 			} );
 			ko.utils.domData.set( element, 'chart', chart );
 		},
-		update: function update( element, valueAccessor, allBindingsAccessor, viewModel, bindingContext ) {
+		update: function update( element, valueAccessor /* , allBindingsAccessor, viewModel, bindingContext */ ) {
 			var chart = ko.utils.domData.get( element, 'chart' ),
 				options = ko.unwrap( valueAccessor() );
 			if ( !options ) {
@@ -52,7 +52,7 @@ define( [
 	 * From https://github.com/select2/select2/wiki/Knockout.js-Integration
 	 */
 	ko.bindingHandlers.select2 = {
-		init: function ( el, valueAccessor, allBindingsAccessor, viewModel ) {
+		init: function ( el, valueAccessor, allBindingsAccessor /* , viewModel */ ) {
 			ko.utils.domNodeDisposal.addDisposeCallback( el, function () {
 				$( el ).select2( 'destroy' );
 			} );
@@ -62,7 +62,7 @@ define( [
 
 			$( el ).select2( select2 );
 		},
-		update: function ( el, valueAccessor, allBindingsAccessor, viewModel ) {
+		update: function ( el, valueAccessor, allBindingsAccessor /* , viewModel */ ) {
 			var allBindings = allBindingsAccessor(),
 				converted,
 				textAccessor;
@@ -89,7 +89,7 @@ define( [
 								return item[ allBindings.optionsValue ];
 							};
 						}
-						items = $.grep( ko.utils.unwrapObservable( allBindings.options ), function ( e ) {
+						items = ko.utils.unwrapObservable( allBindings.options ).filter( function ( e ) {
 							return valueAccessor( e ) === value;
 						} );
 						if ( items.length === 0 || items.length > 1 ) {

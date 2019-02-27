@@ -252,7 +252,7 @@ define( [
 			return result.format( 'MMM D' );
 		};
 
-		self.makeHourlyChart = function ( d, i ) {
+		self.makeHourlyChart = function ( d /* , i */ ) {
 			var hourlyData = params.sharedContext.dayObj[ d.x + 1 ],
 				hourlyCountArray = [ 'Hourly Count' ],
 				hourlyTotalArray = [ 'Hourly Total' ],
@@ -271,7 +271,7 @@ define( [
 					columns: [ hourlyTotalArray, hourlyCountArray ],
 					type: 'bar',
 					colors: { 'Hourly Total': 'rgb(92,184,92)', 'Hourly Count': '#f0ad4e' },
-					onclick: function ( d, i ) {
+					onclick: function ( /* d, i */ ) {
 						self.showChart( '' );
 						self.dailyChart( self.makeDailyChart() );
 						self.showChart( 'daily' );
@@ -333,7 +333,7 @@ define( [
 			};
 		};
 
-		self.makeDailyChart = function ( d, i ) {
+		self.makeDailyChart = function ( /* d, i */ ) {
 			return {
 				size: {
 					height: 450,

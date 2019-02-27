@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 var widgets = require( '../widgets' ),
 	odataParser = require( 'odata-parser' ),
 	mysql = require( 'mysql' ),

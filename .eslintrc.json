@@ -1,0 +1,25 @@
+{
+	"extends": [
+		"wikimedia/client",
+		"wikimedia/jquery"
+	],
+	"parserOptions": {
+		"sourceType": "module"
+	},
+	"env": {
+		"amd": true,
+		"commonjs": true
+	},
+	"globals": {
+	},
+	"rules": {
+		"max-len": "off",
+		"vars-on-top": "off",
+		"valid-jsdoc": "off",
+		"no-jquery/no-global-selector": "off",
+		"no-jquery/no-slide": "off",
+		"no-jquery/no-fade": "off",
+		"no-jquery/no-each-util": "off",
+		"no-jquery/no-map-util": "off"
+	}
+}

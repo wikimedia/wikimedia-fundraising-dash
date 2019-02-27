@@ -45,8 +45,8 @@ define( [
 					hoursLeft = ( params.sharedContext.campaignLength - d ) * 24 + ( 24 - h );
 					xs[ index ] = index;
 					self.needPerSecond[ index ] = ( hoursLeft > 0 ) ?
-						( remainingNeeded / hoursLeft ) / 3600
-						: 0;
+						( remainingNeeded / hoursLeft ) / 3600 :
+						0;
 				}
 			}
 			// extend last point to end of graph unless we're already there

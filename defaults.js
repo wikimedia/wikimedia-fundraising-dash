@@ -15,7 +15,7 @@ module.exports = {
 	providerBackendURL: 'http://localhost/civi',
 	// If providerBackendIP is set, we override DNS resolution for the hostname
 	// given in providerBackendURL.  This can be useful for SSL behind firewalls
-	consumerKey:  'kKq6LbU4ctDUzubSUdHJ7Pn9NvVWwQ2f',
+	consumerKey: 'kKq6LbU4ctDUzubSUdHJ7Pn9NvVWwQ2f',
 	consumerSecret: 'JfGs4nnfyoRQ9i9JQeTYP7geCEKQrenX',
 	sessionSecret: 'ds87naowiy3icaywri73tcin7eyyeI8634I71NYFIEA764',
 	cacheDuration: 300000 // 5 min in ms
