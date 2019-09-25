@@ -6,7 +6,7 @@ var extend = require( 'node.extend' ),
 extend( filters, commonFilters.paymentsInitial );
 extend( filters, commonFilters.contributionTracking );
 extend( filters, commonFilters.civicrmContribution );
-delete( filters.Status );
+delete filters.Status;
 
 module.exports = {
 	name: 'top10',

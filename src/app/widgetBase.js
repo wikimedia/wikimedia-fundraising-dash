@@ -42,7 +42,7 @@ define( [
 				fetchedData.timestamp = new Date().getTime();
 				localStorage.setItem( storageKey, JSON.stringify( fetchedData ) );
 			} );
-		} )();
+		}() );
 
 		self.filterText = ko.computed( function () {
 			var filterName,
@@ -53,7 +53,7 @@ define( [
 				operator;
 
 			for ( filterName in choices ) {
-				if ( !choices.hasOwnProperty( filterName ) ) {
+				if ( !Object.prototype.hasOwnProperty.call( choices, filterName ) ) {
 					continue;
 				}
 				text = filterName + ' ';
@@ -116,7 +116,7 @@ define( [
 					url: '/widget-instance/' + self.instanceID,
 					contentType: 'application/json; charset=UTF-8',
 					data: data,
-					success: function ( data ) {
+					success: function ( /* data */ ) {
 						self.chartSaved( true );
 						self.logStateChange( false );
 					}

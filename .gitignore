@@ -3,3 +3,4 @@ npm-debug.log
 src/bower_modules
 settings.js
 *swp
+.eslintcache

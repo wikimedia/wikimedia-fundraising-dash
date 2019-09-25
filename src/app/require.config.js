@@ -1,5 +1,4 @@
-/* jshint -W098 */
-
+// eslint-disable-next-line no-unused-vars
 var require = {
 	baseUrl: '.',
 	paths: {

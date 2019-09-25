@@ -10,7 +10,9 @@ define(
 		};
 
 		function startCrossroads() {
-			function parseHash( newHash, oldHash ) { crossroads.parse( newHash ); }
+			function parseHash( newHash /* , oldHash */ ) {
+				crossroads.parse( newHash );
+			}
 
 			crossroads.normalizeFn = crossroads.NORM_AS_OBJECT;
 

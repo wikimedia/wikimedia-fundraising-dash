@@ -1,3 +1,4 @@
+/* eslint-env es6, node */
 var path = require( 'path' );
 
 require( 'fs' ).readdirSync( __dirname )

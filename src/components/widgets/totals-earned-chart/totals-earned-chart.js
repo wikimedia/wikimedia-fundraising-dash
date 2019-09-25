@@ -38,6 +38,12 @@ define( [
 
 		self.campaigns = [
 			new Campaign( {
+				name: '2019',
+				startDate: Date.UTC( 2019, 9, 1 ),
+				endDate: Date.UTC( 2020, 0, 1 ),
+				target: 50000000
+			} ),
+			new Campaign( {
 				name: '2018',
 				startDate: Date.UTC( 2018, 9, 1 ),
 				endDate: Date.UTC( 2019, 0, 1 ),
@@ -252,7 +258,7 @@ define( [
 			return result.format( 'MMM D' );
 		};
 
-		self.makeHourlyChart = function ( d, i ) {
+		self.makeHourlyChart = function ( d /* , i */ ) {
 			var hourlyData = params.sharedContext.dayObj[ d.x + 1 ],
 				hourlyCountArray = [ 'Hourly Count' ],
 				hourlyTotalArray = [ 'Hourly Total' ],
@@ -271,7 +277,7 @@ define( [
 					columns: [ hourlyTotalArray, hourlyCountArray ],
 					type: 'bar',
 					colors: { 'Hourly Total': 'rgb(92,184,92)', 'Hourly Count': '#f0ad4e' },
-					onclick: function ( d, i ) {
+					onclick: function ( /* d, i */ ) {
 						self.showChart( '' );
 						self.dailyChart( self.makeDailyChart() );
 						self.showChart( 'daily' );
@@ -333,7 +339,7 @@ define( [
 			};
 		};
 
-		self.makeDailyChart = function ( d, i ) {
+		self.makeDailyChart = function ( /* d, i */ ) {
 			return {
 				size: {
 					height: 450,

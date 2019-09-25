@@ -1,5 +1,5 @@
-/* jshint -W098 */
-({
+/* eslint-disable no-unused-expressions, semi */
+( {
 	baseUrl: 'src',
 	paths: {
 		bootstrap: 'bower_modules/bootstrap/dist/js/bootstrap',
@@ -24,7 +24,7 @@
 		WidgetBase: 'app/widgetBase',
 		Campaign: 'app/campaign',
 		operators: 'components/filters/operators',
-			requireLib: 'bower_modules/requirejs/require'
+		requireLib: 'bower_modules/requirejs/require'
 	},
 	shim: {
 		bootstrap: {
@@ -47,33 +47,33 @@
 		}
 	},
 	out: 'scripts.js',
-		name: 'app/startup',
-		include: [
-			'requireLib',
-			'components/app-content/app-content',
-			'components/boards/generic-board/generic-board',
-			'components/filters/filters',
-			'components/filters/dropdown-filter/dropdown-filter',
-			'components/filters/number-filter/number-filter',
-			'components/filters/text-filter/text-filter',
-			'components/nav-bar/nav-bar',
-			'components/utils/date-pickers/date-pickers',
-			'components/widgets/ab-testing/ab-testing',
-			'components/widgets/amt-per-second-chart/amt-per-second-chart',
-			'components/widgets/cat-trombone/cat-trombone',
-			'components/widgets/distance-to-goal-chart/distance-to-goal-chart',
-			'components/widgets/donation-age/donation-age',
-			'components/widgets/fraud-gauge/fraud-gauge',
-			'components/widgets/top10/top10',
-			'components/widgets/totals-earned-chart/totals-earned-chart',
-			'components/widgets/x-by-y/x-by-y'
-		],
-		insertRequire: [ 'app/startup' ],
-		bundles: {
-			// If you want parts of the site to load on demand, remove them from the 'include' list
-			// above, and group them into bundles here.
-			'date-pickers': [ 'components/utils/date-pickers/date-pickers' ]
-			// 'vega-timeseries': ['components/visualizers/vega-timeseries/vega-timeseries']
+	name: 'app/startup',
+	include: [
+		'requireLib',
+		'components/app-content/app-content',
+		'components/boards/generic-board/generic-board',
+		'components/filters/filters',
+		'components/filters/dropdown-filter/dropdown-filter',
+		'components/filters/number-filter/number-filter',
+		'components/filters/text-filter/text-filter',
+		'components/nav-bar/nav-bar',
+		'components/utils/date-pickers/date-pickers',
+		'components/widgets/ab-testing/ab-testing',
+		'components/widgets/amt-per-second-chart/amt-per-second-chart',
+		'components/widgets/cat-trombone/cat-trombone',
+		'components/widgets/distance-to-goal-chart/distance-to-goal-chart',
+		'components/widgets/donation-age/donation-age',
+		'components/widgets/fraud-gauge/fraud-gauge',
+		'components/widgets/top10/top10',
+		'components/widgets/totals-earned-chart/totals-earned-chart',
+		'components/widgets/x-by-y/x-by-y'
+	],
+	insertRequire: [ 'app/startup' ],
+	bundles: {
+		// If you want parts of the site to load on demand, remove them from the 'include' list
+		// above, and group them into bundles here.
+		'date-pickers': [ 'components/utils/date-pickers/date-pickers' ]
+		// 'vega-timeseries': ['components/visualizers/vega-timeseries/vega-timeseries']
 
-		}
-})
+	}
+} )

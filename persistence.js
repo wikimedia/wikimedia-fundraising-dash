@@ -44,9 +44,7 @@ module.exports = {
 
 		connection.query( query, params )
 			.then( callback )
-			/*jslint -W024*/
 			.catch( errorCallback );
-		/*jslint +W024*/
 	},
 	/**
 	 * Ensures a user exists in the user table and saves the user's local db id

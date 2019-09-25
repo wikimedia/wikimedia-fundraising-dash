@@ -1,11 +1,11 @@
-var extend			= require( 'node.extend' ),
-	commonFilters	= require( './common-filters.js' ),
-	filters			= {};
+var extend = require( 'node.extend' ),
+	commonFilters = require( './common-filters.js' ),
+	filters = {};
 
 extend( filters, commonFilters.contributionTracking );
 extend( filters, commonFilters.paymentsInitial );
 extend( filters, commonFilters.paymentsFraud );
-delete( filters.Action ); // Hard-coded in query template
+delete filters.Action; // Hard-coded in query template
 
 module.exports = {
 	name: 'fraud',

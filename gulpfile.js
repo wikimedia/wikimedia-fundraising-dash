@@ -1,11 +1,12 @@
-/*jslint node: true, stupid: true */
+/* eslint-env es6, node */
+/* eslint-disable no-console */
 // Node modules
 var fs = require( 'fs' ),
 	vm = require( 'vm' ),
 	merge = require( 'deeply' ),
 	chalk = require( 'chalk' ),
 
-// Gulp and plugins
+	// Gulp and plugins
 	gulp = require( 'gulp' ),
 	rjs = require( 'gulp-requirejs-bundler' ),
 	concat = require( 'gulp-concat' ),
@@ -14,13 +15,12 @@ var fs = require( 'fs' ),
 	uglify = require( 'gulp-uglify' ),
 	htmlreplace = require( 'gulp-html-replace' ),
 	rev = require( 'gulp-rev' ),
-	jshint = require( 'gulp-jshint' ),
+	eslint = require( 'gulp-eslint' ),
 	rename = require( 'gulp-rename' ),
-	replace = require( 'gulp-replace' ),
 	flatten = require( 'gulp-flatten' ),
 	urlAdjuster = require( 'gulp-css-url-adjuster' ),
 
-// Config
+	// Config
 	requireJsRuntimeConfig = vm.runInNewContext( fs.readFileSync( 'src/app/require.config.js' ) + '; require;' ),
 	requireJsOptimizerConfig = merge( requireJsRuntimeConfig, {
 		out: 'scripts.js',
@@ -64,8 +64,8 @@ var fs = require( 'fs' ),
 // linting
 gulp.task( 'lint', function () {
 	return gulp.src( jsfilesToLint )
-		.pipe( jshint() )
-		.pipe( jshint.reporter( 'default' ) );
+		.pipe( eslint() )
+		.pipe( eslint.format() );
 } );
 
 // Discovers all AMD dependencies, concatenates together all required .js files, minifies them
@@ -129,10 +129,10 @@ gulp.task( 'replace', [ 'css', 'js' ], function () {
 		regex = '',
 		regexObj;
 
-	bundles.forEach( function ( element, index, array ) {
+	bundles.forEach( function ( element ) {
 		var l = element.length;
 		// we are trying to match  "project-selector" (quotes-included)
-		regex = regex + '\"(' + element.substr( 0, l - 3 ) + ')\":|';
+		regex = regex + '"(' + element.substr( 0, l - 3 ) + ')":|';
 
 	} );
 
@@ -141,13 +141,14 @@ gulp.task( 'replace', [ 'css', 'js' ], function () {
 
 	// this build system is so inflexible that makes me want to cry
 	function replaceByVersion( match ) {
+		var version;
 		// remove quotes from match and add ".js"
 		// so we can key on the manifest with versions
 		match = match.substring( 1, match.length - 2 );
 		match = match + '.js';
-		var version = jsManifest[ match ];
+		version = jsManifest[ match ];
 
-		version = '\"' + version + '\":';
+		version = '"' + version + '":';
 		return version;
 	}
 

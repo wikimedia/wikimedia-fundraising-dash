@@ -4,7 +4,7 @@ define( [
 	'text!components/widgets/fraud-gauge/fraud-gauge.html',
 	'chartjs',
 	'WidgetBase'
-	],
+],
 function ( ko, $, template, Chart, WidgetBase ) {
 
 	// extend the chart so we can flip the circle

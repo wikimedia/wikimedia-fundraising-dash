@@ -29,7 +29,7 @@ define( [
 			}, 200 );
 		};
 
-		$( '.mainNavButton' ).click( function ( e ) {
+		$( '.mainNavButton' ).on( 'click', function ( e ) {
 			self.button = e.target;
 			self.toggleNav( self.button );
 		} );
@@ -43,7 +43,7 @@ define( [
 			}
 		};
 
-		self.toggleBoardList = function ( e, data ) {
+		self.toggleBoardList = function ( /* e, data */ ) {
 			$( '#boards.subNavBoardOpts' ).slideDown( 200, 'swing', function () {
 				$( '#boards.subNavBoardOpts' ).toggleClass( 'hide' );
 			} );

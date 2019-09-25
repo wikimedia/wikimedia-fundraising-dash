@@ -17,15 +17,15 @@ try {
 }
 
 if ( hasSyslog ) {
-	/*jslint bitwise: true*/
+	// eslint-disable-next-line no-bitwise
 	syslog.init( 'dash', syslog.LOG_PID | syslog.LOG_ODELAY, syslog.LOG_LOCAL0 );
-	/*jslint bitwise: false*/
 	constMap[ LOG_DEBUG ] = syslog.LOG_DEBUG;
 	constMap[ LOG_INFO ] = syslog.LOG_INFO;
 	constMap[ LOG_ERR ] = syslog.LOG_ERR;
 }
 
 function log( level, message ) {
+	/* eslint-disable no-console */
 	if ( hasSyslog ) {
 		syslog.log( constMap[ level ], message );
 	}
@@ -34,6 +34,7 @@ function log( level, message ) {
 	} else {
 		console.log( message );
 	}
+	/* eslint-enable no-console */
 }
 
 module.exports = {
