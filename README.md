@@ -15,7 +15,7 @@ Prerequisites
 
 To play with Dash, you will need:
 
-+ NodeJS v. 0.8.2 (I recommend using [nvm](https://github.com/creationix/nvm) to manage node versions if you already have another version on your machine.)
++ NodeJS v. 4.8.2 (I recommend using [nvm](https://github.com/creationix/nvm) to manage node versions if you already have another version on your machine.)
 + [npm](https://www.npmjs.org/) to manage backend packages and because you need Bower.
 + [Bower](http://bower.io/), a package manager specifically optimized for front-end packages.
 + A local database that reflects fredge (not provided here since there is sensitive data involved)
@@ -31,7 +31,7 @@ the configured port in defaults.js, or in a new config file, using -c.
 
 ```
 + git submodule update -i
-+ nvm use 0.8.2
++ nvm use 4.8.2
 + cat schema/*.sql | mysql fredge
 + node server.js -d
 ```
@@ -129,7 +129,7 @@ Next Steps
 Deployment
 ==========
 
-WMF deployment involves a minification step, and requires NodeJS 0.10 (note this is more recent than the production execution requirement, 0.8.2).
+WMF deployment involves a minification step, and requires NodeJS 0.10
 
 + nvm use 0.10
 + npm install -g gulp
