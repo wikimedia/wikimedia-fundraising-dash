@@ -48,6 +48,7 @@ function ( ko, $, template, Chart, WidgetBase ) {
 		self.redLowRange = ko.observable( self.config.redLowRange || 68 );
 		self.configSet = ko.observable( Object.keys( self.config ).length > 0 );
 		self.gauge = ko.observable( false );
+		self.validationErrors = ko.observableArray( [] );
 
 		self.renderPercentRangeChart = function () {
 
@@ -125,18 +126,23 @@ function ( ko, $, template, Chart, WidgetBase ) {
 			} );
 		};
 
-		self.validateSubmission = function ( times ) {
+		self.validateSubmission = function () {
 			var validation = {
 				validated: '',
 				errors: []
 			};
 
-			if ( !times ) {
+			if ( !self.selectedTimePeriod ) {
 				validation.errors.push( 'You must submit a valid time.' );
-				validation.validated = false;
-			} else {
-				validation.validated = true;
 			}
+			if (
+				parseInt( self.greenHighRange() ).toString() !== self.greenHighRange().toString() ||
+				parseInt( self.redLowRange() ).toString() !== self.redLowRange().toString()
+			) {
+				validation.errors.push( 'Percentage cutoffs must be integers' );
+			}
+
+			validation.validated = ( validation.errors.length === 0 );
 
 			return validation;
 		};
@@ -207,16 +213,9 @@ function ( ko, $, template, Chart, WidgetBase ) {
 				self.logStateChange( true );
 			}
 
-			var validation = self.validateSubmission( self.selectedTimePeriod() );
-			if ( !validation.validated ) {
-
-				$( '#fraudSubmissionErrors' ).html(
-					'<p class="text-danger">you have errors in your submission:</p><ul></ul>' ).addClass( 'show' );
-				$.each( validation.errors, function ( el, i ) {
-					$( '#fraudSubmissionErrors ul' ).append( '<li>' + i + '</li>' );
-				} );
-
-			} else {
+			var validation = self.validateSubmission();
+			self.validationErrors( validation.errors );
+			if ( validation.validated ) {
 				self.configSet( true );
 
 				self.queryString = self.createQueryString();
@@ -238,6 +237,7 @@ function ( ko, $, template, Chart, WidgetBase ) {
 						self.queryStringSQL( dataget.sqlQuery );
 						self.makeChart();
 					} );
+				$( '#modifyModal' ).modal( 'hide' );
 			}
 		};
 
