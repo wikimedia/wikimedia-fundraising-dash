@@ -222,11 +222,7 @@ define( [
 				self.queryStringSQL( dataget.sqlQuery );
 				if ( !firstLoad && self.raised() > threshold ) {
 					$( '.credit' ).fadeIn( 'slow' );
-					$( 'body' ).append(
-						'<audio style="display:none" autoplay>' +
-						'<source src="images/b.ogg" type="audio/ogg"/>' +
-						'<source src="images/b.mp3" type="audio/mpeg"/></audio>'
-					);
+					document.getElementById( 'ding-a-ling' ).play();
 					setTimeout( function () {
 						$( '.credit' ).fadeOut( 'slow' );
 					}, 6000 );
