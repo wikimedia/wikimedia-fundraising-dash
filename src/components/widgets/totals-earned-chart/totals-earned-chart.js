@@ -41,7 +41,7 @@ define( [
 				name: '2019',
 				startDate: Date.UTC( 2019, 9, 1 ),
 				endDate: Date.UTC( 2020, 0, 1 ),
-				target: 50000000
+				target: 59400000
 			} ),
 			new Campaign( {
 				name: '2018',
@@ -222,11 +222,7 @@ define( [
 				self.queryStringSQL( dataget.sqlQuery );
 				if ( !firstLoad && self.raised() > threshold ) {
 					$( '.credit' ).fadeIn( 'slow' );
-					$( 'body' ).append(
-						'<audio style="display:none" autoplay>' +
-						'<source src="images/b.ogg" type="audio/ogg"/>' +
-						'<source src="images/b.mp3" type="audio/mpeg"/></audio>'
-					);
+					document.getElementById( 'ding-a-ling' ).play();
 					setTimeout( function () {
 						$( '.credit' ).fadeOut( 'slow' );
 					}, 6000 );

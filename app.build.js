@@ -72,8 +72,5 @@
 	bundles: {
 		// If you want parts of the site to load on demand, remove them from the 'include' list
 		// above, and group them into bundles here.
-		'date-pickers': [ 'components/utils/date-pickers/date-pickers' ]
-		// 'vega-timeseries': ['components/visualizers/vega-timeseries/vega-timeseries']
-
 	}
 } )
