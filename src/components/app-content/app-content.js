@@ -40,6 +40,7 @@ define( [
 			} else {
 				return false;
 			}
+			return true;
 		};
 
 		$.get( '/user/info', function ( userInfo ) {
