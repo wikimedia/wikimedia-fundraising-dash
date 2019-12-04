@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 var widgets = require( '../widgets' ),
 	odataParser = require( 'odata-parser' ),
-	mysql = require( 'mysql' ),
+	mysqlPromise = require( 'mysql-promise' )(),
 	config = require( '../config.js' ),
 	util = require( 'util' ),
 	cache = require( 'memory-cache' ),
@@ -50,6 +50,7 @@ function validateValue( value, column ) {
 		throw new Error( 'Invalid value ' + value + ' for filter ' + column.display );
 	}
 }
+
 /**
  * Adds to the list of join statements
  *
@@ -68,6 +69,7 @@ function addJoin( table, widget, joins ) {
 		joins.push( table );
 	}
 }
+
 /**
  * Gets a filter and adds it to joins if not yet present
  * Throws an error if the column does not exist
@@ -104,6 +106,7 @@ function getColumnText( column ) {
 	}
 	return colText;
 }
+
 /**
  * Create a SQL WHERE clause given a parsed filter node.
  * Uses '?' placeholders in clause, and appends literal values to values array
@@ -240,7 +243,6 @@ module.exports = function ( req, res ) {
 	var widget = widgets[ req.params.widget ],
 		qs = urlParser.parse( req.url ).query,
 		parsedQs = querystringParser.parse( qs ),
-		connection,
 		sqlQuery = '',
 		parsedFilters,
 		filter,
@@ -255,7 +257,8 @@ module.exports = function ( req, res ) {
 		result,
 		cacheKey,
 		whereCopies,
-		sqlParams = [];
+		sqlParams = [],
+		promise;
 
 	if ( !widget ) {
 		res.json( { error: 'Error: ' + req.params.widget + ' is not a valid widget' } );
@@ -347,35 +350,28 @@ module.exports = function ( req, res ) {
 	sqlQuery = sqlQuery.replace( /\[\[JOINS\]\]/g, joinClause );
 	sqlQuery = sqlQuery.replace( /\[\[GROUP\]\]/g, groupClause );
 	sqlQuery = sqlQuery.replace( /\[\[SELECTGROUP\]\]/g, selectGroup );
-
-	connection = mysql.createConnection( {
+	mysqlPromise.configure( {
 		host: config.dbserver,
 		user: config.dblogin,
 		password: config.dbpwd,
-		database: config.db
-	} );
-	connection.connect( function ( error ) {
-		if ( error ) {
-			res.json( { error: 'Connection Error: ' + error } );
-			return;
-		}
+		database: config.db,
+		multipleStatements: true
 	} );
 	logger.debug( 'Query: ' + sqlQuery + '\nParams: ' + sqlParams.join( ', ' ) );
-	connection.query( sqlQuery, sqlParams, function ( error, dbResults ) {
-		if ( error ) {
-			res.json( { error: 'Query error: ' + error } );
-			return;
-		}
+	promise = mysqlPromise.query( sqlQuery, sqlParams );
+	promise.then( function ( dbResults ) {
 		result = {
-			results: dbResults,
+			results: dbResults[ 0 ],
 			sqlQuery: substituteParams( sqlQuery, sqlParams ),
 			timestamp: new Date().getTime()
 		};
 		logger.debug( 'Storing results at cache key ' + cacheKey );
 		cache.put( cacheKey, result, config.cacheDuration );
 		res.json( result );
-	} );
-	// from documentation at https://github.com/mysqljs/mysql
-	// end() makes sure all remaining queries have executed before sending a quit package to mysql
-	connection.end();
+	} )
+		.catch( function ( error ) {
+			if ( error ) {
+				res.json( { error: 'Error: ' + error } );
+			}
+		} );
 };
