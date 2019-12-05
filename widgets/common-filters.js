@@ -105,7 +105,7 @@ module.exports = {
 			column: 'utm_medium',
 			display: 'Medium',
 			type: 'dropdown',
-			values: [ 'sitenotice', 'sidebar', 'email', 'civicrm', 'spontaneous', 'wmfWikiLink', 'WikipediaApp', 'wmfWikiRedirect', 'SocialMedia', 'WaysToGive', 'event' ],
+			values: [ 'civicrm', 'donateWiki404', 'donatewiki_page', ' email', 'endowment', 'facebook', 'MGAnnual', 'MGEventEmail', 'portal', 'sidebar', 'sitenotice', 'SocialMedia', 'spontaneous', 'Waystogive', 'WikipediaApp', 'wmfSite' ],
 			canGroup: true
 		},
 		Referrer: {
@@ -130,7 +130,7 @@ module.exports = {
 			display: 'Currency',
 			type: 'dropdown',
 			// TODO: get values dynamically
-			values: [ 'AED', 'ARS', 'AUD', 'BBD', 'BDT', 'BGN', 'BHD', 'BMD', 'BOB', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CRC', 'CZK', 'DKK', 'DOP', 'DZD', 'EGP', 'EUR', 'GBP', 'GTQ', 'HKD', 'HNL', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'JMD', 'JOD', 'JPY', 'KES', 'KRW', 'KZT', 'LKR', 'LTL', 'MAD', 'MKD', 'MXN', 'MYR', 'NIO', 'NOK', 'NZD', 'OMR', 'PAB', 'PEN', 'PHP', 'PKR', 'PLN', 'QAR', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TTD', 'TWD', 'UAH', 'USD', 'UYU', 'VEF', 'XCD', 'ZAR' ],
+			values: [ 'AED', 'ARS', 'AUD', 'BBD', 'BDT', 'BGN', 'BHD', 'BMD', 'BOB', 'BRL', 'BTC', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CRC', 'CZK', 'DKK', 'DOP', 'DZD', 'EGP', 'EUR', 'GBP', 'GTQ', 'HKD', 'HNL', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'JMD', 'JOD', 'JPY', 'KES', 'KRW', 'KZT', 'LKR', 'LTL', 'MAD', 'MKD', 'MXN', 'MYR', 'NIO', 'NOK', 'NZD', 'OMR', 'PAB', 'PEN', 'PHP', 'PKR', 'PLN', 'QAR', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TTD', 'TWD', 'UAH', 'USD', 'UYU', 'VEF', 'XCD', 'ZAR' ],
 			canGroup: true
 		},
 		Method: {
@@ -146,7 +146,7 @@ module.exports = {
 			column: 'gateway',
 			display: 'Gateway',
 			type: 'dropdown',
-			values: [ 'adyen', 'amazon', 'astropay', 'globalcollect', 'paypal', 'paypal_ec', 'worldpay' ],
+			values: [ 'adyen', 'amazon', 'astropay', 'benevity', 'bitpay', 'check', 'citibank', 'engage', 'globalcollect', 'ingenico', 'paypal', 'paypal_ec', 'worldpay' ],
 			canGroup: true
 		},
 		Amount: {
@@ -241,7 +241,7 @@ module.exports = {
 			column: 'gateway',
 			display: 'Gateway',
 			type: 'dropdown',
-			values: [ 'adyen', 'amazon', 'astropay', 'globalcollect', 'paypal', 'paypal_ec', 'worldpay' ]
+			values: [ 'adyen', 'amazon', 'astropay', 'benevity', 'bitpay', 'check', 'citibank', 'engage', 'globalcollect', 'ingenico', 'paypal', 'paypal_ec', 'worldpay' ]
 		},
 		Score: {
 			table: 'pf',
