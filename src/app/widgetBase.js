@@ -13,7 +13,8 @@ define( [
 
 	function WidgetBase( params ) {
 
-		var self = this;
+		var self = this,
+			MAX_RETRIES = 3;
 
 		// Things to clean up when the widget is removed
 		self.disposables = [];
@@ -88,7 +89,10 @@ define( [
 			return parts.join( ', ' );
 		} );
 
-		self.getChartData = function ( qs, successCallback ) {
+		self.getChartData = function ( qs, successCallback, retryCount ) {
+			if ( !retryCount ) {
+				retryCount = 0;
+			}
 			self.dataLoading( true );
 			$.ajax( {
 				url: '/data/' + self.widgetCode + '?' + ( qs ).replace( /\+/g, '%20' ),
@@ -98,6 +102,15 @@ define( [
 					self.queryStringSQL( dataget.sqlQuery );
 					if ( successCallback ) {
 						successCallback( dataget );
+					}
+				},
+				error: function ( req ) {
+					if ( req.status === 504 && retryCount < MAX_RETRIES ) {
+						// Retry on gateway timeout. If the previous query has finished
+						// in the background, we should get a result immediately. If it
+						// hasn't finished, we will be served via the same promise object
+						// rather than making another database query.
+						self.getChartData( qs, successCallback, retryCount + 1 );
 					}
 				}
 			} );
