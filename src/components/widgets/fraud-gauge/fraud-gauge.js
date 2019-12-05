@@ -234,7 +234,6 @@ function ( ko, $, template, Chart, WidgetBase ) {
 				self.getChartData( self.queryString )
 					.then( function ( dataget ) {
 						self.gaugeValue( parseFloat( dataget.results[ 0 ].fraud_percent ).toFixed( 2 ) );
-						self.queryStringSQL( dataget.sqlQuery );
 						self.makeChart();
 					} );
 				$( '#modifyModal' ).modal( 'hide' );
