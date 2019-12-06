@@ -16,6 +16,7 @@ define( [
 		self.queryStringSQL = ko.observable( 'This widget hasn\'t been set up yet!' );
 		self.days = ko.observableArray();
 		self.hours = ko.observableArray();
+		self.currentYear = new Date().getUTCFullYear();
 
 		self.loadData = function () {
 			var r,
@@ -29,12 +30,14 @@ define( [
 				if ( r.hour === -1 ) {
 					days.push( {
 						date: r.year + '-' + r.month + '-' + r.day,
-						total: numeral( r.usd_total ).format( '$0,0' )
+						total: numeral( r.usd_total ).format( '$0,0' ),
+						highlight: r.year === self.currentYear
 					} );
 				} else {
 					hours.push( {
 						hour: r.year + '-' + r.month + '-' + r.day + ' ' + r.hour + ':00',
-						total: numeral( r.usd_total ).format( '$0,0' )
+						total: numeral( r.usd_total ).format( '$0,0' ),
+						highlight: r.year === self.currentYear
 					} );
 				}
 			}

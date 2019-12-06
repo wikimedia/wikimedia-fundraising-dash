@@ -19,7 +19,7 @@
 				</tr>
 			</thead>
 			<tbody data-bind='foreach:days'>
-				<tr><td class='left' data-bind='text: date'></td> <td class='right' data-bind='text: total'></td></tr>
+				<tr data-bind="css: { 'bg-success' : highlight }"><td class='left' data-bind='text: date'></td> <td class='right' data-bind='text: total'></td></tr>
 			</tbody>
 		</table>
 		<table rules="none">
@@ -31,7 +31,7 @@
 				</tr>
 			</thead>
 			<tbody data-bind='foreach:hours'>
-				<tr><td class='left' data-bind='text: hour'></td> <td class='right' data-bind='text: total'></td></tr>
+				<tr data-bind="css: { 'bg-success' : highlight }"><td class='left' data-bind='text: hour'></td> <td class='right' data-bind='text: total'></td></tr>
 			</tbody>
 		</table>
 		<div class="row" id="fraudGaugeMeta" data-bind="visible: filterText() !== ''">
