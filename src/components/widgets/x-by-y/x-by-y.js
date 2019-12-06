@@ -196,9 +196,7 @@ define( [
 			self.config.timeBreakout = self.queryRequest.timeBreakout;
 			self.config.chartData = self.chartData;
 
-			var chartDataCall = self.getChartData( self.queryString );
-
-			$.when( chartDataCall ).then( function ( dataArray ) {
+			self.getChartData( self.queryString, function ( dataArray ) {
 				self.displayedTimeChoice( self.timeChoice() );
 				self.retrievedResults( dataArray.results );
 
@@ -208,7 +206,6 @@ define( [
 					dataArray.timestamp );
 
 				self.makeChart( self.chartData );
-
 			} );
 
 		};

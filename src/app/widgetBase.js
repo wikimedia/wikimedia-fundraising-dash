@@ -88,14 +88,17 @@ define( [
 			return parts.join( ', ' );
 		} );
 
-		self.getChartData = function ( qs ) {
+		self.getChartData = function ( qs, successCallback ) {
 			self.dataLoading( true );
-			return $.ajax( {
+			$.ajax( {
 				url: '/data/' + self.widgetCode + '?' + ( qs ).replace( /\+/g, '%20' ),
 				success: function ( dataget ) {
 					self.dataLoading( false );
 					self.retrievedResults( dataget.results );
 					self.queryStringSQL( dataget.sqlQuery );
+					if ( successCallback ) {
+						successCallback( dataget );
+					}
 				}
 			} );
 		};
