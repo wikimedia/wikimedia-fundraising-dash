@@ -105,7 +105,7 @@ module.exports = {
 			column: 'utm_medium',
 			display: 'Medium',
 			type: 'dropdown',
-			values: [ 'civicrm', 'donateWiki404', 'donatewiki_page', ' email', 'endowment', 'facebook', 'MGAnnual', 'MGEventEmail', 'portal', 'sidebar', 'sitenotice', 'SocialMedia', 'spontaneous', 'Waystogive', 'WikipediaApp', 'wmfSite' ],
+			values: [ 'civicrm', 'donateWiki404', 'donatewiki_page', 'email', 'endowment', 'facebook', 'MGAnnual', 'MGEventEmail', 'portal', 'sidebar', 'sitenotice', 'SocialMedia', 'spontaneous', 'Waystogive', 'WikipediaApp', 'wmfSite' ],
 			canGroup: true
 		},
 		Referrer: {
