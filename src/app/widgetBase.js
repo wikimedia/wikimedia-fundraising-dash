@@ -105,6 +105,10 @@ define( [
 					}
 				},
 				error: function ( req ) {
+					if ( req.status === 401 ) {
+						// User has been logged out. Reloading is an easy way to re-authenticate.
+						window.location.reload();
+					}
 					if ( req.status === 504 && retryCount < MAX_RETRIES ) {
 						// Retry on gateway timeout. If the previous query has finished
 						// in the background, we should get a result immediately. If it
