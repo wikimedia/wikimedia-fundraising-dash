@@ -239,10 +239,26 @@ function substituteParams( sqlQuery, values ) {
 	return sqlQuery;
 }
 
+function handleResultPromise( resultPromise, response, substitutedQuery ) {
+	resultPromise.then( function ( dbResults ) {
+		response.json( {
+			results: dbResults[ 0 ],
+			sqlQuery: substitutedQuery,
+			timestamp: new Date().getTime()
+		} );
+	} )
+		.catch( function ( error ) {
+			if ( error ) {
+				response.json( { error: 'Error: ' + error } );
+			}
+		} );
+}
+
 module.exports = function ( req, res ) {
 	var widget = widgets[ req.params.widget ],
 		qs = urlParser.parse( req.url ).query,
 		parsedQs = querystringParser.parse( qs ),
+		substitutedQuery,
 		sqlQuery = '',
 		parsedFilters,
 		filter,
@@ -254,7 +270,6 @@ module.exports = function ( req, res ) {
 		groupClause = '',
 		selectGroup = '',
 		i,
-		result,
 		cacheKey,
 		whereCopies,
 		sqlParams = [],
@@ -274,15 +289,6 @@ module.exports = function ( req, res ) {
 		cacheKey += '-' + parsedQs.group;
 	}
 
-	// cache=false param on QS means they want fresh results now
-	if ( !parsedQs.cache || parsedQs.cache === 'true' ) {
-		result = cache.get( cacheKey );
-		if ( result ) {
-			logger.debug( 'Serving results from cache key ' + cacheKey );
-			res.json( result );
-			return;
-		}
-	}
 	logger.debug( 'Group:' + util.inspect( parsedQs.group ) );
 	sqlQuery = widget.query;
 	if ( widget.defaultGroup && !parsedQs.group ) {
@@ -350,6 +356,18 @@ module.exports = function ( req, res ) {
 	sqlQuery = sqlQuery.replace( /\[\[JOINS\]\]/g, joinClause );
 	sqlQuery = sqlQuery.replace( /\[\[GROUP\]\]/g, groupClause );
 	sqlQuery = sqlQuery.replace( /\[\[SELECTGROUP\]\]/g, selectGroup );
+	substitutedQuery = substituteParams( sqlQuery, sqlParams );
+
+	// cache=false param on QS means they want fresh results now
+	if ( !parsedQs.cache || parsedQs.cache === 'true' ) {
+		promise = cache.get( cacheKey );
+		if ( promise ) {
+			logger.debug( 'Serving results from cache key ' + cacheKey );
+			handleResultPromise( promise, res, substitutedQuery );
+			return;
+		}
+	}
+
 	mysqlPromise.configure( {
 		host: config.dbserver,
 		user: config.dblogin,
@@ -359,19 +377,7 @@ module.exports = function ( req, res ) {
 	} );
 	logger.debug( 'Query: ' + sqlQuery + '\nParams: ' + sqlParams.join( ', ' ) );
 	promise = mysqlPromise.query( sqlQuery, sqlParams );
-	promise.then( function ( dbResults ) {
-		result = {
-			results: dbResults[ 0 ],
-			sqlQuery: substituteParams( sqlQuery, sqlParams ),
-			timestamp: new Date().getTime()
-		};
-		logger.debug( 'Storing results at cache key ' + cacheKey );
-		cache.put( cacheKey, result, config.cacheDuration );
-		res.json( result );
-	} )
-		.catch( function ( error ) {
-			if ( error ) {
-				res.json( { error: 'Error: ' + error } );
-			}
-		} );
+	logger.debug( 'Storing promise at cache key ' + cacheKey );
+	cache.put( cacheKey, promise, config.cacheDuration );
+	handleResultPromise( promise, res, substitutedQuery );
 };
