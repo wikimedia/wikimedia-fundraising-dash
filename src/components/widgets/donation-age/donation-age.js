@@ -29,9 +29,9 @@ define( [
 				self.averageAgeInitial( moment.duration( dataget.results[ 1 ].age, 'seconds' ).humanize() );
 			} );
 			// Do it every 5 minutes as well
-			setTimeout( function () {
+			self.timers.push( setTimeout( function () {
 				self.reloadData( true );
-			}, 300000 );
+			}, 300000 ) );
 		};
 		self.reloadData( true );
 	}
