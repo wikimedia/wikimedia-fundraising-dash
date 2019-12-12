@@ -249,6 +249,7 @@ function handleResultPromise( resultPromise, response, substitutedQuery ) {
 	} )
 		.catch( function ( error ) {
 			if ( error ) {
+				response.status( 500 ); // Either our SQL gen or the db has a Server Error
 				response.json( { error: 'Error: ' + error } );
 			}
 		} );
@@ -276,6 +277,7 @@ module.exports = function ( req, res ) {
 		promise;
 
 	if ( !widget ) {
+		res.status( 404 ); // Widget not found
 		res.json( { error: 'Error: ' + req.params.widget + ' is not a valid widget' } );
 		return;
 	}
@@ -315,6 +317,7 @@ module.exports = function ( req, res ) {
 				selectGroup += ', ' + getColumnText( groupCol ) + ' AS ' + parsedQs.group[ i ];
 			}
 		} catch ( err ) {
+			res.status( 400 ); // Invalid group column is a Bad Request
 			res.json( { error: err.message } );
 			return;
 		}
@@ -339,6 +342,7 @@ module.exports = function ( req, res ) {
 				whereClause = 'WHERE ' + buildWhere( filter, widget, values, joins );
 			}
 		} catch ( err ) {
+			res.status( 400 ); // Invalid filters is a Bad Request
 			res.json( { error: err.message } );
 			return;
 		}
