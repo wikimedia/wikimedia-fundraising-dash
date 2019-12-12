@@ -83,6 +83,16 @@ module.exports = {
 			values: [ '1', '2', '3', '4', '5', '6', '7', '8', '9' ],
 			labels: [ 'Completed', 'Pending', 'Cancelled', 'Failed', 'In Progress', 'Overdue', 'Settled', 'Paid', 'Refunded' ],
 			canGroup: true
+		},
+		IsRecurring: {
+			table: 'cc',
+			column: 'contribution_recur_id',
+			func: 'isnull([[COL]])',
+			display: 'Is Recurring',
+			type: 'dropdown',
+			values: [ '1', '0' ],
+			labels: [ 'No', 'Yes' ],
+			canGroup: true
 		}
 	},
 	contributionTracking: {
