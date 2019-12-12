@@ -20,21 +20,18 @@ define( [
 		// Reload the data.  For the automatic reload, we're fine getting
 		// something from the cache.
 		self.reloadData = function ( automatic ) {
-			self.dataLoading( true );
-			var url = '/data/donation-age';
+			var qs = '';
 			if ( automatic !== true ) {
-				url += '?cache=false';
+				qs = 'cache=false';
 			}
-			$.get( url, function ( dataget ) {
+			self.getChartData( qs, function ( dataget ) {
 				self.averageAgeCivi( moment.duration( dataget.results[ 0 ].age, 'seconds' ).humanize() );
 				self.averageAgeInitial( moment.duration( dataget.results[ 1 ].age, 'seconds' ).humanize() );
-				self.dataLoading( false );
-				self.queryStringSQL( dataget.sqlQuery );
 			} );
 			// Do it every 5 minutes as well
-			setTimeout( function () {
+			self.timers.push( setTimeout( function () {
 				self.reloadData( true );
-			}, 300000 );
+			}, 300000 ) );
 		};
 		self.reloadData( true );
 	}

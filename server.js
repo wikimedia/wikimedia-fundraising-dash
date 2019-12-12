@@ -87,6 +87,7 @@ app.use( passport.session() );
 
 loginCheck = function ( req, res, next ) {
 	if ( !req.session || !req.session.passport || !req.session.passport.user ) {
+		res.status( 401 );
 		res.json( { error: 'Error: Not logged in' } );
 		return;
 	}

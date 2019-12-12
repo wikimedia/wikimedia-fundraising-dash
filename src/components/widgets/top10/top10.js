@@ -46,7 +46,7 @@ define( [
 		};
 
 		self.reloadData = function () {
-			self.getChartData( self.filterQueryString() ).then( function () {
+			self.getChartData( self.filterQueryString(), function () {
 				self.loadData();
 			} );
 		};

@@ -206,20 +206,18 @@ define( [
 		// something from the cache.
 		self.reloadData = function ( automatic ) {
 			// FIXME: use some common filter logic
-			var url = '/data/big-english?$filter=' +
-					self.campaign().getDateFilter() + ' and ' +
+			var qs = '$filter=' + self.campaign().getDateFilter() + ' and ' +
 					'Amount lt \'' + self.majorDonationCutoff() + '\'',
 				interval = 500000,
 				firstLoad = ( self.raised() === 0 ),
 				threshold = interval + self.raised() - self.raised() % interval;
-			self.dataLoading( true );
+
 			if ( automatic !== true ) {
-				url += '&cache=false';
+				qs += '&cache=false';
 			}
-			$.get( url, function ( dataget ) {
+
+			self.getChartData( qs, function ( dataget ) {
 				self.loadData( dataget.results, dataget.timestamp );
-				self.dataLoading( false );
-				self.queryStringSQL( dataget.sqlQuery );
 				if ( !firstLoad && self.raised() > threshold ) {
 					$( '.credit' ).fadeIn( 'slow' );
 					document.getElementById( 'ding-a-ling' ).play();

@@ -231,12 +231,10 @@ function ( ko, $, template, Chart, WidgetBase ) {
 					userChoices: self.userChoices()
 				};
 
-				self.getChartData( self.queryString )
-					.then( function ( dataget ) {
-						self.gaugeValue( parseFloat( dataget.results[ 0 ].fraud_percent ).toFixed( 2 ) );
-						self.queryStringSQL( dataget.sqlQuery );
-						self.makeChart();
-					} );
+				self.getChartData( self.queryString, function ( dataget ) {
+					self.gaugeValue( parseFloat( dataget.results[ 0 ].fraud_percent ).toFixed( 2 ) );
+					self.makeChart();
+				} );
 				$( '#modifyModal' ).modal( 'hide' );
 			}
 		};
