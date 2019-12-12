@@ -164,7 +164,8 @@ define( [
 				counts,
 				isGrouped = ( grouping && grouping !== '' ),
 				groupValue,
-				groupValues,
+				displayValue,
+				displayValues,
 				groupedTotals,
 				groupedCounts,
 				totalGroupNames,
@@ -179,8 +180,8 @@ define( [
 				sortFunction;
 
 			if ( isGrouped ) {
-				// distinct values of the group column
-				groupValues = [];
+				// distinct values of the group column, mapped for display
+				displayValues = [];
 				// for c3 to stack totals with totals and counts with counts
 				totalGroupNames = [];
 				countGroupNames = [];
@@ -220,19 +221,20 @@ define( [
 				}
 				if ( isGrouped ) {
 					groupValue = dataPoint[ grouping ];
-					if ( !totals[ groupValue ] ) {
-						groupValues.push( groupValue );
-						totalName = groupValue + ' total';
-						totals[ groupValue ] = [ totalName ];
-						groupedTotals[ groupValue ] = [];
+					displayValue = self.getDisplayValue( grouping, groupValue );
+					if ( !totals[ displayValue ] ) {
+						displayValues.push( displayValue );
+						totalName = displayValue + ' total';
+						totals[ displayValue ] = [ totalName ];
+						groupedTotals[ displayValue ] = [];
 						totalGroupNames.push( totalName );
-						countName = groupValue + ' count';
-						counts[ groupValue ] = [ countName ];
-						groupedCounts[ groupValue ] = [];
+						countName = displayValue + ' count';
+						counts[ displayValue ] = [ countName ];
+						groupedCounts[ displayValue ] = [];
 						countGroupNames.push( countName );
 					}
-					groupedTotals[ groupValue ][ tempDate ] = dataPoint.usd_total;
-					groupedCounts[ groupValue ][ tempDate ] = dataPoint.donations;
+					groupedTotals[ displayValue ][ tempDate ] = dataPoint.usd_total;
+					groupedCounts[ displayValue ][ tempDate ] = dataPoint.donations;
 				} else {
 					// not grouped
 					totals.push( dataPoint.usd_total );
@@ -249,17 +251,17 @@ define( [
 						return;
 					}
 					// clobber index because who cares
-					$.each( groupValues, function ( index, groupVal ) {
-						if ( groupedTotals[ groupVal ][ xVal ] !== undefined ) {
-							totals[ groupVal ].push( groupedTotals[ groupVal ][ xVal ] );
-							counts[ groupVal ].push( groupedCounts[ groupVal ][ xVal ] );
+					$.each( displayValues, function ( index, displayVal ) {
+						if ( groupedTotals[ displayVal ][ xVal ] !== undefined ) {
+							totals[ displayVal ].push( groupedTotals[ displayVal ][ xVal ] );
+							counts[ displayVal ].push( groupedCounts[ displayVal ][ xVal ] );
 						} else {
-							totals[ groupVal ].push( 0 );
-							counts[ groupVal ].push( 0 );
+							totals[ displayVal ].push( 0 );
+							counts[ displayVal ].push( 0 );
 						}
 					} );
 				} );
-				groupValues.sort();
+				displayValues.sort();
 				totalGroupNames.sort();
 				countGroupNames.sort();
 				sortFunction = function ( seriesA, seriesB ) {
@@ -290,8 +292,28 @@ define( [
 				timeFormat: timeFormat,
 				totalGroups: totalGroupNames,
 				countGroups: countGroupNames,
-				groupValues: groupValues
+				groupValues: displayValues
 			};
+		};
+
+		/**
+		 * Look up in the metadata which label corresponds to a given value for a specific filter
+		 *
+		 * @param filterName string Name of filter
+		 * @param value string|number Value as returned from database
+		 * @returns string Label corresponding to value, or value if no labels are configured
+		 */
+		self.getDisplayValue = function ( filterName, value ) {
+			var index;
+			if ( !self.metadata.filters[ filterName ] || !self.metadata.filters[ filterName ].labels ) {
+				return value;
+			}
+			if ( typeof value === 'number' ) {
+				// Configured values are always specified as strings
+				value = value.toString( 10 );
+			}
+			index = self.metadata.filters[ filterName ].values.indexOf( value );
+			return self.metadata.filters[ filterName ].labels[ index ];
 		};
 
 		self.convertToQuery = function ( userChoices ) {
