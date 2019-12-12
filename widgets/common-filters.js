@@ -70,7 +70,7 @@ module.exports = {
 		Amount: {
 			table: 'cc',
 			column: 'total_amount',
-			display: 'Amount',
+			display: 'USD Amount',
 			type: 'number',
 			min: 0,
 			max: 5000000
@@ -159,10 +159,10 @@ module.exports = {
 			values: [ 'adyen', 'amazon', 'astropay', 'benevity', 'bitpay', 'check', 'citibank', 'engage', 'globalcollect', 'ingenico', 'paypal', 'paypal_ec', 'worldpay' ],
 			canGroup: true
 		},
-		Amount: {
+		OriginalAmount: {
 			table: 'pi',
 			column: 'amount',
-			display: 'Amount',
+			display: 'Original Amount',
 			type: 'number',
 			min: 0,
 			max: 5000000
@@ -258,6 +258,33 @@ module.exports = {
 			column: 'risk_score',
 			display: 'Score',
 			type: 'number'
+		}
+	},
+	contributionExtra: {
+		Currency: {
+			table: 'cx',
+			column: 'original_currency',
+			display: 'Currency',
+			type: 'dropdown',
+			// TODO: get values dynamically
+			values: [ 'AED', 'ARS', 'AUD', 'BBD', 'BDT', 'BGN', 'BHD', 'BMD', 'BOB', 'BRL', 'BTC', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CRC', 'CZK', 'DKK', 'DOP', 'DZD', 'EGP', 'EUR', 'GBP', 'GTQ', 'HKD', 'HNL', 'HRK', 'HUF', 'IDR', 'ILS', 'INR', 'JMD', 'JOD', 'JPY', 'KES', 'KRW', 'KZT', 'LKR', 'LTL', 'MAD', 'MKD', 'MXN', 'MYR', 'NIO', 'NOK', 'NZD', 'OMR', 'PAB', 'PEN', 'PHP', 'PKR', 'PLN', 'QAR', 'RON', 'RUB', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'TTD', 'TWD', 'UAH', 'USD', 'UYU', 'VEF', 'XCD', 'ZAR' ],
+			canGroup: true
+		},
+		Gateway: {
+			table: 'cx',
+			column: 'gateway',
+			display: 'Gateway',
+			type: 'dropdown',
+			values: [ 'adyen', 'amazon', 'astropay', 'benevity', 'bitpay', 'check', 'citibank', 'engage', 'globalcollect', 'ingenico', 'paypal', 'paypal_ec', 'worldpay' ],
+			canGroup: true
+		},
+		OriginalAmount: {
+			table: 'cx',
+			column: 'original_amount',
+			display: 'Original Amount',
+			type: 'number',
+			min: 0,
+			max: 5000000
 		}
 	}
 };

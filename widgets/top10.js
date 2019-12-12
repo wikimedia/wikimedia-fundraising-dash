@@ -5,6 +5,7 @@ var extend = require( 'node.extend' ),
 
 extend( filters, commonFilters.paymentsInitial );
 extend( filters, commonFilters.contributionTracking );
+extend( filters, commonFilters.contributionExtra );
 extend( filters, commonFilters.civicrmContribution );
 delete filters.Status;
 
@@ -15,6 +16,9 @@ module.exports = {
 	optionalJoins: {
 		ct: {
 			text: 'LEFT JOIN drupal.contribution_tracking ct ON ct.contribution_id = cc.id'
+		},
+		cx: {
+			text: 'LEFT JOIN ' + config.civicrmDb + '.wmf_contribution_extra cx ON cx.entity_id = cc.id'
 		},
 		pi: {
 			text: 'LEFT JOIN payments_initial pi ON pi.contribution_tracking_id = ct.id',
