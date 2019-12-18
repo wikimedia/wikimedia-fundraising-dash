@@ -286,5 +286,17 @@ module.exports = {
 			min: 0,
 			max: 5000000
 		}
+	},
+	financialType: {
+		IsEndowment: {
+			table: 'ft',
+			column: 'name',
+			func: 'case WHEN [[COL]] = \'Endowment Gift\' then 1 else 0 end',
+			display: 'Is Endowment',
+			type: 'dropdown',
+			values: [ '0', '1' ],
+			labels: [ 'No', 'Yes' ],
+			canGroup: true
+		}
 	}
 };

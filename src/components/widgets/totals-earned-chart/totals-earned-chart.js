@@ -207,7 +207,8 @@ define( [
 		self.reloadData = function ( automatic ) {
 			// FIXME: use some common filter logic
 			var qs = '$filter=' + self.campaign().getDateFilter() + ' and ' +
-					'Amount lt \'' + self.majorDonationCutoff() + '\'',
+					'Amount lt \'' + self.majorDonationCutoff() + '\' and ' +
+					'IsEndowment eq \'0\'',
 				interval = 500000,
 				firstLoad = ( self.raised() === 0 ),
 				threshold = interval + self.raised() - self.raised() % interval;
