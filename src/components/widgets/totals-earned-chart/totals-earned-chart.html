@@ -84,12 +84,17 @@
 					  <input type="text" class="form-control" data-bind="textInput: majorDonationCutoff">
 					  <span class="input-group-addon">.00</span>
 					</div>
+					<p>
 					<label>Campaign</label>
 					<select data-bind="options: campaigns,
 						optionsText: function(item) {
 							return item.name
 						},
 						value: campaign"></select>
+					</p>
+					<p>
+					<label>Include Endowment? <input type="checkbox" data-bind="checked: includeEndowment" /></label>
+					</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

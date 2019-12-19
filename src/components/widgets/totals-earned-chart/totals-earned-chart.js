@@ -88,6 +88,7 @@ define( [
 		];
 		self.campaign = ko.observable( self.campaigns[ 0 ] );
 		self.goal = params.sharedContext.goal = ko.observable( self.config.goal || self.campaign().target );
+		self.includeEndowment = ko.observable( self.config.includeEndowment || false );
 
 		self.isCurrentYear = ko.computed( function () {
 			return self.campaign() === self.campaigns[ 0 ];
@@ -97,6 +98,12 @@ define( [
 		self.disposables.push( params.sharedContext.goal.subscribe( function () {
 			self.config.goal = params.sharedContext.goal();
 			self.logStateChange();
+		} ) );
+
+		self.disposables.push( self.includeEndowment.subscribe( function () {
+			self.config.includeEndowment = self.includeEndowment();
+			self.logStateChange();
+			self.reloadData();
 		} ) );
 
 		self.disposables.push( self.majorDonationCutoff.subscribe( function () {
@@ -207,12 +214,14 @@ define( [
 		self.reloadData = function ( automatic ) {
 			// FIXME: use some common filter logic
 			var qs = '$filter=' + self.campaign().getDateFilter() + ' and ' +
-					'Amount lt \'' + self.majorDonationCutoff() + '\' and ' +
-					'IsEndowment eq \'0\'',
+					'Amount lt \'' + self.majorDonationCutoff() + '\'',
 				interval = 500000,
 				firstLoad = ( self.raised() === 0 ),
 				threshold = interval + self.raised() - self.raised() % interval;
 
+			if ( self.includeEndowment() === false ) {
+				qs += ' and IsEndowment eq \'0\'';
+			}
 			if ( automatic !== true ) {
 				qs += '&cache=false';
 			}
