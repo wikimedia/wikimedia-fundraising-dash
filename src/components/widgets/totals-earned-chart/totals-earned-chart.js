@@ -192,7 +192,7 @@ define( [
 				params.sharedContext.dailyCountArray[ day ] += el.donations;
 			}
 
-			if ( self.isCurrentYear() ) {
+			if ( self.isCurrentYear() && currentDate.getTime() < self.campaign().getEndDate().getTime() ) {
 				ms = currentDate.getTime() - self.campaign().getStartDate().getTime();
 				lastData.day = Math.floor( ms / ( 24 * 60 * 60 * 1000 ) ) + 1;
 				lastData.hour = currentDate.getUTCHours();
