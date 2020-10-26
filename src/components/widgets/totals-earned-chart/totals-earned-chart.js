@@ -38,6 +38,13 @@ define( [
 
 		self.campaigns = [
 			new Campaign( {
+				name: '2020',
+				startDate: Date.UTC( 2019, 9, 1 ),
+				endDate: Date.UTC( 2020, 0, 1 ),
+				target: 60000000
+			} ),
+
+			new Campaign( {
 				name: '2019',
 				startDate: Date.UTC( 2019, 9, 1 ),
 				endDate: Date.UTC( 2020, 0, 1 ),
